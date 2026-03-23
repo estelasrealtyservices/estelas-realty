@@ -207,7 +207,7 @@
     .search-field { border-right: none; border-bottom: 1px solid var(--border); }
     .property-grid { grid-template-columns: 1fr; }
     .zones-grid { grid-template-columns: 1fr 1fr; }
-    .zones-grid .zone-large { grid-column: span 2; }
+    .zones-grid .zone-large { grid-column: span 1; }
     .footer-grid { grid-template-columns: 1fr 1fr; }
     .form-grid { grid-template-columns: 1fr; }
     .form-group.full { grid-column: span 1; }
@@ -220,8 +220,7 @@
 
 <nav>
   <div class="nav-logo">
-    <div class="nav-logo-icon"><span>E</span></div>
-    <div class="nav-brand">Estela's Realty<small>Services</small></div>
+    <img src="logo.png" alt="Estela's Realty Services" style="height:44px;width:auto;object-fit:contain;">
   </div>
   <div class="nav-links">
     <a href="#">Inicio</a><a href="#propiedades">Propiedades</a>
@@ -259,8 +258,16 @@
       <span class="material-icons">location_on</span>
       <div style="flex:1"><label>Zona</label>
         <select id="zoneFilter" onchange="filterProperties()">
-          <option value="">Todas</option><option>San Francisco</option><option>Miraflores</option>
-          <option>Albrook</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Casco Viejo</option>
+          <option value="">Todas</option>
+          <option>San Francisco</option>
+          <option>Costa del Este</option>
+          <option>Punta Pacífica</option>
+          <option>Bella Vista</option>
+          <option>Santa Maria</option>
+          <option>Coronado</option>
+          <option>Buenaventura</option>
+          <option>Boquete</option>
+          <option>San Carlos</option>
         </select>
       </div>
     </div>
@@ -325,17 +332,29 @@
         <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80" alt="San Francisco">
         <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">San Francisco</div><div class="zone-count">Zona céntrica</div></div>
       </div>
-      <div class="zone-card" onclick="setZone('Casco Viejo')">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Casco Viejo">
-        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Casco Viejo</div><div class="zone-count">Patrimonio histórico</div></div>
+      <div class="zone-card" onclick="setZone('Bella Vista')">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="Bella Vista">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Bella Vista</div><div class="zone-count">Residencial y comercial</div></div>
       </div>
-      <div class="zone-card" onclick="setZone('Albrook')">
-        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80" alt="Albrook">
-        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Albrook</div><div class="zone-count">Familiar y tranquila</div></div>
+      <div class="zone-card" onclick="setZone('Santa Maria')">
+        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80" alt="Santa Maria">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Santa Maria</div><div class="zone-count">Golf y lujo</div></div>
       </div>
-      <div class="zone-card" onclick="setZone('Miraflores')">
-        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="Miraflores">
-        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Miraflores</div><div class="zone-count">Residencial premium</div></div>
+      <div class="zone-card" onclick="setZone('Coronado')">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Coronado">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Coronado</div><div class="zone-count">Playa y descanso</div></div>
+      </div>
+      <div class="zone-card" onclick="setZone('Buenaventura')">
+        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80" alt="Buenaventura">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Buenaventura</div><div class="zone-count">Resort frente al mar</div></div>
+      </div>
+      <div class="zone-card" onclick="setZone('Boquete')">
+        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80" alt="Boquete">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">Boquete</div><div class="zone-count">Montaña y naturaleza</div></div>
+      </div>
+      <div class="zone-card" onclick="setZone('San Carlos')">
+        <img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=600&q=80" alt="San Carlos">
+        <div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">San Carlos</div><div class="zone-count">Playa tranquila</div></div>
       </div>
     </div>
   </section>
@@ -360,8 +379,8 @@
       <h2 style="font-family:'Playfair Display',serif;font-size:32px;margin-bottom:16px;line-height:1.3;">¿Listo para encontrar<br>tu propiedad ideal?</h2>
       <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
       <div style="display:flex;flex-direction:column;gap:14px;">
-        <a href="tel:+50760000000" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">phone</span>+507 6000-0000</a>
-        <a href="mailto:info@estelarealtyservices.com" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span>info@estelarealtyservices.com</a>
+        <a href="tel:+50766740090" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">phone</span>+507 6674-0090</a>
+        <a href="/cdn-cgi/l/email-protection#e1888f878ea1849295848d809384808d95989284939788828492cf828e8c" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span><span class="__cf_email__" data-cfemail="5b32353d341b3e282f3e373a293e3a372f22283e292d32383e2875383436">[email&#160;protected]</span></a>
         <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">location_on</span>Ciudad de Panamá, Panamá</div>
       </div>
     </div>
@@ -383,8 +402,8 @@
       <div class="footer-brand">Estela's Realty Services</div>
       <p class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
       <div class="footer-contact">
-        <a href="tel:+50760000000"><span class="material-icons">phone</span>+507 6000-0000</a>
-        <a href="mailto:info@estelarealtyservices.com"><span class="material-icons">email</span>info@estelarealtyservices.com</a>
+        <a href="tel:+50766740090"><span class="material-icons">phone</span>+507 6674-0090</a>
+        <a href="/cdn-cgi/l/email-protection#375e59515877524443525b564552565b434e445245415e5452441954585a"><span class="material-icons">email</span><span class="__cf_email__" data-cfemail="60090e060f20051314050c011205010c141913051216090305134e030f0d">[email&#160;protected]</span></a>
         <a href="#"><span class="material-icons">location_on</span>Ciudad de Panamá</a>
       </div>
     </div>
@@ -402,7 +421,7 @@
 <div class="modal-overlay" id="loginModal">
   <div class="modal login-modal">
     <div class="login-body">
-      <div class="login-icon"><span class="material-icons">lock</span></div>
+      <div style="text-align:center;margin-bottom:20px;"><img src="logo.png" alt="Estela's Realty Services" style="height:60px;width:auto;object-fit:contain;"></div>
       <h3>Acceso administrador</h3>
       <p>Ingresa tu contraseña para gestionar propiedades</p>
       <div style="display:flex;flex-direction:column;gap:12px;">
@@ -431,7 +450,7 @@
         <div class="form-group"><label>Operación</label><select id="addOperation"><option>Alquiler</option><option>Venta</option></select></div>
         <div class="form-group full"><label>Título</label><input type="text" placeholder="Ej: Apartamento moderno en San Francisco" id="addTitle"></div>
         <div class="form-group"><label>Tipo</label><select id="addType"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option></select></div>
-        <div class="form-group"><label>Zona</label><select id="addZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Albrook</option><option>Miraflores</option><option>Casco Viejo</option></select></div>
+        <div class="form-group"><label>Zona</label><select id="addZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select></div>
         <div class="form-group"><label>Precio (USD)</label><input type="number" placeholder="1500" id="addPrice"></div>
         <div class="form-group"><label>Metraje (m²)</label><input type="number" placeholder="120" id="addSize"></div>
         <div class="form-group"><label>Habitaciones</label><select id="addRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
@@ -512,7 +531,7 @@
   <span id="toastMsg">Acción completada</span>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = 'https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const STORAGE_BUCKET = 'property-images';
@@ -773,7 +792,7 @@ function openDetail(id) {
       <div>
         <div class="contact-box">
           <h4>¿Te interesa esta propiedad?</h4>
-          <button class="contact-btn contact-whatsapp" onclick="window.open('https://wa.me/50760000000?text=Hola, me interesa la propiedad ${p.code}')"><span class="material-icons">chat</span>WhatsApp</button>
+          <button class="contact-btn contact-whatsapp" onclick="window.open('https://wa.me/50766740090?text=Hola, me interesa la propiedad ${p.code}')"><span class="material-icons">chat</span>WhatsApp</button>
           <button class="contact-btn contact-call"><span class="material-icons">phone</span>Llamar ahora</button>
           <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
             <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Compartir propiedad</div>
@@ -839,7 +858,7 @@ function toggleFeature(btn) { btn.classList.toggle('selected'); }
 function shareProperty(id) {
   const p = allProperties.find(x=>x.id===id);
   if (!p) return;
-  navigator.clipboard?.writeText(`${p.title}\nCódigo: ${p.code}\nPrecio: $${(p.price||0).toLocaleString()}${p.operation==='Alquiler'?' /mes':''}\nZona: ${p.zone}\nContacto: +507 6000-0000`);
+  navigator.clipboard?.writeText(`${p.title}\nCódigo: ${p.code}\nPrecio: $${(p.price||0).toLocaleString()}${p.operation==='Alquiler'?' /mes':''}\nZona: ${p.zone}\nContacto: +507 6674-0090`);
   showToast('Información copiada al portapapeles.');
 }
 
@@ -878,7 +897,7 @@ function generateListing(id) {
   </div>
   <p style="font-size:14px;line-height:1.7;color:#444">${p.description||''}</p>
   ${p.features?.length?`<div class="features">${p.features.map(f=>`<span class="feat">${f}</span>`).join('')}</div>`:''}
-  <div class="contact"><h3>Estela's Realty Services</h3><p style="font-size:14px;opacity:0.75">+507 6000-0000 · info@estelarealtyservices.com</p><p style="font-size:12px;opacity:0.5;margin-top:8px">Ref: ${p.code}</p></div>
+  <div class="contact"><h3>Estela's Realty Services</h3><p style="font-size:14px;opacity:0.75">+507 6674-0090 · erealtylegal@gmail.com</p><p style="font-size:12px;opacity:0.5;margin-top:8px">Ref: ${p.code}</p></div>
   <script>window.onload=()=>window.print()<\/script></body></html>`);
   win.document.close();
 }
@@ -887,17 +906,4 @@ function generateListing(id) {
 function showToast(msg, isError=false) {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
-  t.querySelector('.material-icons').textContent = isError ? 'error' : 'check_circle';
-  t.classList.toggle('error', isError);
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3500);
-}
-
-['addModal','detailModal','loginModal'].forEach(id => {
-  document.getElementById(id).addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
-});
-
-loadProperties();
-</script>
-</body>
-</html>
+  t.querySelector('.
