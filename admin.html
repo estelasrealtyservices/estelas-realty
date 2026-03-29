@@ -295,7 +295,7 @@
         <table>
           <thead><tr>
             <th>Foto</th><th>Código</th><th>Propiedad</th>
-            <th>Operación</th><th>Precio</th><th>Detalles</th><th>Acciones</th>
+            <th>Operación</th><th>Precio</th><th>Propietario</th><th>Acciones</th>
           </tr></thead>
           <tbody id="propTableBody">
             <tr><td colspan="7" class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite">sync</span><p>Cargando...</p></td></tr>
@@ -433,6 +433,23 @@
         </div>
         <div class="modal-prog" id="modalProg"><div class="modal-prog-fill" id="modalProgFill" style="width:0%"></div></div>
         <div class="upload-preview" id="uploadPreview"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
+          <span class="material-icons" style="font-size:16px;color:var(--accent)">person</span>
+          Información del propietario
+          <span style="font-size:10px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;">SOLO VISIBLE EN ADMIN</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre del propietario</label>
+            <input type="text" id="fOwnerName" placeholder="Ej: Juan Pérez">
+          </div>
+          <div class="form-group">
+            <label>Contacto del propietario</label>
+            <input type="text" id="fOwnerContact" placeholder="Ej: +507 6000-0000 / email">
+          </div>
+        </div>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Opciones</div>
@@ -657,7 +674,10 @@ function renderTable(){
       <td><div class="prop-title">${p.title}</div><div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div></td>
       <td><span class="badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}">${p.operation}</span>${p.featured?'<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>':''}</td>
       <td class="price-cell">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler'?' /mes':''}</span></td>
-      <td style="font-size:13px;color:var(--text2)">${p.rooms>0?`🛏 ${p.rooms} `:''}🚿 ${p.baths||1} · ${p.size||0} m²</td>
+      <td style="font-size:13px;color:var(--text2)">
+        ${p.owner_name?`<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>`:'<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
+        ${p.owner_contact?`<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>`:''}
+      </td>
       <td><div class="action-btns"><button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button><button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button></div></td>
     </tr>`).join('');
 }
@@ -686,6 +706,8 @@ function openModal(id=null){
     document.getElementById('fDesc').value=p.description||'';
     document.getElementById('fVideo').value=p.video_url||'';
     document.getElementById('fFeatured').checked=p.featured||false;
+    document.getElementById('fOwnerName').value=p.owner_name||'';
+    document.getElementById('fOwnerContact').value=p.owner_contact||'';
     if(p.features) p.features.forEach(f=>document.querySelectorAll('.feature-toggle').forEach(b=>{if(b.textContent===f)b.classList.add('selected');}));
     if(p.images?.length) document.getElementById('uploadPreview').innerHTML=p.images.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('');
     document.getElementById('deleteBtn').style.display='flex';
@@ -693,7 +715,7 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fVideo'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fVideo','fOwnerName','fOwnerContact'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fFeatured').checked=false;
     document.getElementById('deleteBtn').style.display='none';
   }
@@ -745,7 +767,9 @@ async function saveProperty(){
     features:[...document.querySelectorAll('.feature-toggle.selected')].map(b=>b.textContent),
     images:imageUrls,
     video_url:document.getElementById('fVideo').value||'',
-    featured:document.getElementById('fFeatured').checked
+    featured:document.getElementById('fFeatured').checked,
+    owner_name:document.getElementById('fOwnerName').value.trim()||null,
+    owner_contact:document.getElementById('fOwnerContact').value.trim()||null
   };
   const{error}=editingId
     ?await sb.from('properties').update(payload).eq('id',editingId)
