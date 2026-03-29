@@ -568,28 +568,45 @@ async function addHeroImages(input){
   const bar=document.getElementById('heroProgress');
   const fill=document.getElementById('heroProgressFill');
   bar.classList.add('visible');
+  let uploaded=0;
   for(let i=0;i<files.length;i++){
-    const path=`hero/${Date.now()}_${i}.${files[i].name.split('.').pop()}`;
-    const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,files[i],{upsert:true});
-    if(!error){
+    const ext=files[i].name.split('.').pop().toLowerCase();
+    const path=`hero/${Date.now()}_${i}.${ext}`;
+    const{data,error}=await sb.storage.from(STORAGE_BUCKET).upload(path,files[i],{upsert:true,contentType:files[i].type});
+    if(error){
+      console.error('Error subiendo imagen hero:', error);
+      showToast('Error subiendo imagen: '+error.message,true);
+    } else {
       const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
       heroImages.push(u.publicUrl);
+      uploaded++;
     }
     fill.style.width=`${Math.round(((i+1)/files.length)*100)}%`;
   }
   bar.classList.remove('visible');
   fill.style.width='0%';
   renderHeroEditor();
-  showToast('Fotos subidas. Haz clic en Guardar para aplicar los cambios.');
+  if(uploaded>0) showToast(`${uploaded} foto(s) subida(s). Haz clic en Guardar para aplicar.`);
 }
 
 async function saveHeroImages(){
   const btn=document.getElementById('saveHeroBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
   try{
-    await sb.from('site_config').upsert({id:'hero_images',value:heroImages,updated_at:new Date().toISOString()},{onConflict:'id'});
-    showToast('Banner actualizado. Se verá en la página principal.');
-  }catch(e){showToast('Error al guardar: '+e.message,true);}
+    // Primero intenta actualizar, si no existe inserta
+    const{data:existing}=await sb.from('site_config').select('id').eq('id','hero_images').single();
+    let error;
+    if(existing){
+      ({error}=await sb.from('site_config').update({value:heroImages,updated_at:new Date().toISOString()}).eq('id','hero_images'));
+    } else {
+      ({error}=await sb.from('site_config').insert({id:'hero_images',value:heroImages,updated_at:new Date().toISOString()}));
+    }
+    if(error) throw error;
+    showToast('¡Banner guardado! Ya se ve en la página principal.');
+  }catch(e){
+    console.error('Error guardando hero:', e);
+    showToast('Error: '+e.message,true);
+  }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar cambios del banner';
 }
 
@@ -631,9 +648,19 @@ async function saveZoneImages(){
   const btn=document.getElementById('saveZonesBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
   try{
-    await sb.from('site_config').upsert({id:'zone_images',value:zoneData,updated_at:new Date().toISOString()},{onConflict:'id'});
-    showToast('Fotos de zonas actualizadas. Se verán en la página principal.');
-  }catch(e){showToast('Error al guardar: '+e.message,true);}
+    const{data:existing}=await sb.from('site_config').select('id').eq('id','zone_images').single();
+    let error;
+    if(existing){
+      ({error}=await sb.from('site_config').update({value:zoneData,updated_at:new Date().toISOString()}).eq('id','zone_images'));
+    } else {
+      ({error}=await sb.from('site_config').insert({id:'zone_images',value:zoneData,updated_at:new Date().toISOString()}));
+    }
+    if(error) throw error;
+    showToast('¡Zonas guardadas! Ya se ven en la página principal.');
+  }catch(e){
+    console.error('Error guardando zonas:', e);
+    showToast('Error: '+e.message,true);
+  }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar cambios de zonas';
 }
 
