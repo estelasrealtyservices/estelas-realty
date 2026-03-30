@@ -28,7 +28,7 @@
   @keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
   /* NAV */
-  nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:72px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:90px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
   .nav-links{display:flex;gap:4px;}
   .nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
   .nav-links a:hover{background:var(--surface2);color:var(--text);}
@@ -177,24 +177,109 @@
   .footer-col a:hover{color:var(--accent);}
   .footer-bottom{max-width:1280px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.35);}
 
-  @media(max-width:768px){
-    .nav-links{display:none;}
-    .search-bar{flex-direction:column;}
-    .search-field{border-right:none;border-bottom:1px solid var(--border);}
-    .property-grid{grid-template-columns:1fr;}
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;border-radius:8px;}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:16px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.1);flex-direction:column;gap:4px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{padding:12px 16px;border-radius:8px;font-size:15px;font-weight:500;color:var(--text2);display:block;}
+  .mobile-menu a:hover{background:var(--surface2);color:var(--text);}
+  .mobile-menu .mobile-cta{background:var(--accent);color:var(--primary);text-align:center;font-weight:600;margin-top:8px;border-radius:8px;padding:13px;}
+  @media(max-width:768px){.hamburger{display:flex;}}
+  @media(max-width:1024px){
+    .container{padding:0 20px;}
+    .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
+    .admin-stats{grid-template-columns:1fr 1fr;}
+    .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
     .zones-grid{grid-template-columns:1fr 1fr;}
-    .zones-grid .zone-large{grid-column:span 1;}
-    .footer-grid{grid-template-columns:1fr 1fr;}
+    .zones-grid .zone-large{grid-column:span 2;}
+    .detail-gallery{grid-template-columns:1fr;}
+    .detail-thumbs{grid-template-columns:1fr 1fr;display:grid;}
     .detail-info{grid-template-columns:1fr;}
-    .stats{gap:24px;}
-    .hero{padding:48px 20px 60px;}
+    .contact-box{margin-top:20px;}
+  }
+
+  /* ===== MOBILE (max 768px) ===== */
+  @media(max-width:768px){
+    /* NAV */
+    nav{height:70px;padding:0 16px;}
+    nav img{height:52px!important;}
+    .nav-links{display:none;}
+    .nav-cta{padding:8px 14px;font-size:13px;}
+    .nav-cta span{display:none;}
+
+    /* HERO */
+    .hero{padding:36px 16px 48px;min-height:auto;}
+    .hero h1{font-size:26px;}
+    .hero p{font-size:14px;margin-bottom:24px;}
+    .hero-tag{font-size:11px;padding:5px 12px;}
+
+    /* SEARCH BAR */
+    .search-bar{flex-direction:column;border-radius:12px;gap:0;}
+    .search-field{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px;min-width:unset;width:100%;}
+    .search-field:last-of-type{border-bottom:none;}
+    .search-btn{width:100%;border-radius:8px;justify-content:center;padding:13px;}
+
+    /* STATS */
+    .stats{gap:16px;padding:16px;}
+    .stat-num{font-size:20px;}
+    .stat-label{font-size:10px;}
+
+    /* PROPERTIES */
+    .container{padding:0 16px;}
+    .section{padding:36px 0;}
+    .section-title{font-size:22px;}
+    .property-grid{grid-template-columns:1fr;gap:16px;}
+    .tabs{width:100%;}
+    .tab{flex:1;text-align:center;padding:8px 12px;font-size:13px;}
+    .filter-select{font-size:12px;padding:6px 10px;}
+
+    /* ZONES */
+    .zones-grid{grid-template-columns:1fr;gap:12px;}
+    .zones-grid .zone-large{grid-column:span 1;}
+    .zone-large{aspect-ratio:16/9!important;}
+
+    /* SERVICES */
+    .services-grid{grid-template-columns:1fr;gap:14px;}
+    .service-card{padding:20px 18px;}
+
+    /* CONTACT SECTION */
+    #contacto > div{grid-template-columns:1fr!important;gap:32px;}
+    #contacto h2{font-size:24px;}
+
+    /* FOOTER */
+    .footer-grid{grid-template-columns:1fr;gap:28px;}
+    .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+
+    /* MODAL */
+    .modal{border-radius:12px 12px 0 0;max-height:95vh;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
+    .modal-overlay{align-items:flex-end;padding:0;}
+    .modal-body{padding:20px;}
+    .modal-header{padding:16px 20px;}
+    .modal-actions{padding:14px 20px;}
+    .detail-gallery{grid-template-columns:1fr;}
+    .detail-thumbs{grid-template-columns:1fr 1fr;}
+    .detail-info{grid-template-columns:1fr;}
+    .detail-specs{gap:12px;}
+    .share-row{flex-wrap:wrap;}
+  }
+
+  /* ===== SMALL MOBILE (max 400px) ===== */
+  @media(max-width:400px){
+    .hero h1{font-size:22px;}
+    .stats{grid-template-columns:1fr 1fr;display:grid;gap:12px;}
+    .card-specs .spec{padding:0 4px;}
+    .spec .material-icons{font-size:14px;}
+    .spec strong{font-size:13px;}
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div><img src="logo.png" alt="Estela's Realty Services" style="height:48px;width:auto;object-fit:contain;display:block;"></div>
+  <div><img src="logo.png" alt="Estela's Realty Services" style="height:70px;width:auto;object-fit:contain;display:block;"></div>
   <div class="nav-links">
     <a href="#">Inicio</a>
     <a href="#propiedades">Propiedades</a>
@@ -202,10 +287,25 @@
     <a href="#servicios">Servicios</a>
     <a href="#contacto">Contacto</a>
   </div>
-  <a href="https://wa.me/50766740090" target="_blank" class="nav-cta">
-    <span class="material-icons" style="font-size:18px">chat</span>WhatsApp
-  </a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="https://wa.me/50766740090" target="_blank" class="nav-cta">
+      <span class="material-icons" style="font-size:18px">chat</span>WhatsApp
+    </a>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="closeMenu()">Inicio</a>
+  <a href="#propiedades" onclick="closeMenu()">Propiedades</a>
+  <a href="#zonas" onclick="closeMenu()">Zonas</a>
+  <a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#contacto" onclick="closeMenu()">Contacto</a>
+  <a href="https://wa.me/50766740090" target="_blank" class="mobile-cta" onclick="closeMenu()">WhatsApp +507 6674-0090</a>
+</div>
 
 <!-- HERO WITH SLIDESHOW -->
 <section class="hero">
@@ -374,7 +474,7 @@
 
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -681,4 +781,28 @@ async function sendContactForm(){
 }
 
 function showToast(msg){
-  const t=document.getElementById('toast');document.
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function toggleMenu(){
+  const btn=document.getElementById('hamburgerBtn');
+  const menu=document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  const menu=document.getElementById('mobileMenu');
+  const btn=document.getElementById('hamburgerBtn');
+  if(menu&&menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();
+});
+document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+
+init();
+</script>
+</body>
+</html>
