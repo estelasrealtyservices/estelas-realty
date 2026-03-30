@@ -315,7 +315,7 @@
       <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <a href="tel:+50766740090" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">phone</span>+507 6674-0090</a>
-        <a href="mailto:erealtylegal@gmail.com" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span>erealtylegal@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#7a1f081f1b160e03161f1d1b163a1d171b131654191517" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span><span class="__cf_email__" data-cfemail="81e4f3e4e0edf5f8ede4e6e0edc1e6ece0e8edafe2eeec">[email&#160;protected]</span></a>
         <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">location_on</span>Ciudad de Panamá, Panamá</div>
       </div>
     </div>
@@ -342,7 +342,7 @@
       <p class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
       <div class="footer-contact">
         <a href="tel:+50766740090"><span class="material-icons">phone</span>+507 6674-0090</a>
-        <a href="mailto:erealtylegal@gmail.com"><span class="material-icons">email</span>erealtylegal@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#a5c0d7c0c4c9d1dcc9c0c2c4c9e5c2c8c4ccc98bc6cac8"><span class="material-icons">email</span><span class="__cf_email__" data-cfemail="0b6e796e6a677f72676e6c6a674b6c666a626725686466">[email&#160;protected]</span></a>
         <a href="#"><span class="material-icons">location_on</span>Ciudad de Panamá</a>
       </div>
     </div>
@@ -372,7 +372,7 @@
 
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -452,7 +452,7 @@ function renderZones(zones) {
 // ---- PROPERTIES ----
 async function loadProperties() {
   try {
-    const {data,error}=await sb.from('properties').select('*').order('created_at',{ascending:false});
+    const {data,error}=await sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false});
     if(error) throw error;
     allProperties=data||[];
     updateStats();
@@ -679,14 +679,4 @@ async function sendContactForm(){
 }
 
 function showToast(msg){
-  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
-  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);
-}
-
-document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
-document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
-
-init();
-</script>
-</body>
-</html>
+  const t=document.getElementById('toast');document.

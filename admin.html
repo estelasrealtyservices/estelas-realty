@@ -118,6 +118,15 @@
   .btn-edit:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2);}
   .btn-del{padding:6px 10px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;font-size:12px;color:#E53935;display:flex;align-items:center;transition:var(--transition);}
   .btn-del:hover{background:rgba(229,57,53,0.08);}
+  .btn-toggle{padding:5px 10px;border-radius:6px;font-size:12px;font-family:inherit;display:flex;align-items:center;gap:4px;cursor:pointer;transition:var(--transition);border:none;font-weight:500;}
+  .btn-toggle.active{background:rgba(46,125,50,0.12);color:#2E7D32;}
+  .btn-toggle.active:hover{background:rgba(46,125,50,0.2);}
+  .btn-toggle.inactive{background:rgba(229,57,53,0.1);color:#C62828;}
+  .btn-toggle.inactive:hover{background:rgba(229,57,53,0.18);}
+  .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .status-dot.active{background:#2E7D32;}
+  .status-dot.inactive{background:#E53935;}
+  .date-cell{font-size:12px;color:var(--text3);}
   .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
   .empty-state .material-icons{font-size:48px;display:block;margin-bottom:12px;}
 
@@ -287,6 +296,11 @@
             <option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option>
             <option>Buenaventura</option><option>Boquete</option><option>San Carlos</option>
           </select>
+          <select class="filter-sel" id="adminStatusFilter" onchange="renderTable()">
+            <option value="">Todas</option>
+            <option value="active">Publicadas</option>
+            <option value="inactive">Despublicadas</option>
+          </select>
         </div>
         <button class="btn-add" onclick="openModal()"><span class="material-icons">add</span>Agregar propiedad</button>
       </div>
@@ -295,7 +309,8 @@
         <table>
           <thead><tr>
             <th>Foto</th><th>Código</th><th>Propiedad</th>
-            <th>Operación</th><th>Precio</th><th>Propietario</th><th>Acciones</th>
+            <th>Operación</th><th>Precio</th><th>Propietario</th>
+            <th>Estado</th><th>Publicada</th><th>Acciones</th>
           </tr></thead>
           <tbody id="propTableBody">
             <tr><td colspan="7" class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite">sync</span><p>Cargando...</p></td></tr>
@@ -679,34 +694,76 @@ async function loadProperties(){
 
 function updateStats(){
   document.getElementById('statTotal').textContent=allProperties.length;
-  document.getElementById('statRent').textContent=allProperties.filter(p=>p.operation==='Alquiler').length;
-  document.getElementById('statSale').textContent=allProperties.filter(p=>p.operation==='Venta').length;
-  document.getElementById('statFeatured').textContent=allProperties.filter(p=>p.featured).length;
+  document.getElementById('statRent').textContent=allProperties.filter(p=>p.operation==='Alquiler'&&p.is_active!==false).length;
+  document.getElementById('statSale').textContent=allProperties.filter(p=>p.operation==='Venta'&&p.is_active!==false).length;
+  document.getElementById('statFeatured').textContent=allProperties.filter(p=>p.featured&&p.is_active!==false).length;
+}
+
+async function toggleActive(id, currentActive){
+  const newActive=!currentActive;
+  const{error}=await sb.from('properties').update({is_active:newActive}).eq('id',id);
+  if(error){showToast('Error al cambiar estado.',true);return;}
+  const prop=allProperties.find(p=>p.id===id);
+  if(prop) prop.is_active=newActive;
+  renderTable();
+  updateStats();
+  showToast(newActive?'Propiedad publicada en la página web.':'Propiedad ocultada de la página web.');
 }
 
 function renderTable(){
   const s=document.getElementById('adminSearch').value.toLowerCase();
   const op=document.getElementById('adminOpFilter').value;
   const zone=document.getElementById('adminZoneFilter').value;
+  const status=document.getElementById('adminStatusFilter').value;
   let list=[...allProperties];
   if(s) list=list.filter(p=>p.title?.toLowerCase().includes(s)||p.code?.toLowerCase().includes(s)||p.zone?.toLowerCase().includes(s));
   if(op) list=list.filter(p=>p.operation===op);
   if(zone) list=list.filter(p=>p.zone===zone);
+  if(status==='active') list=list.filter(p=>p.is_active!==false);
+  if(status==='inactive') list=list.filter(p=>p.is_active===false);
   const body=document.getElementById('propTableBody');
-  if(!list.length){body.innerHTML=`<tr><td colspan="7" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;return;}
-  body.innerHTML=list.map(p=>`
-    <tr>
-      <td><img src="${p.images?.[0]||PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'"></td>
+  if(!list.length){body.innerHTML=`<tr><td colspan="9" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;return;}
+  body.innerHTML=list.map(p=>{
+    const active=p.is_active!==false;
+    const fecha=p.created_at?new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    const hora=p.created_at?new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}):'';
+    return `<tr style="opacity:${active?1:0.55}">
+      <td style="position:relative">
+        <img src="${p.images?.[0]||PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'">
+        ${!active?`<div style="position:absolute;inset:0;background:rgba(255,255,255,0.5);border-radius:6px;display:flex;align-items:center;justify-content:center"><span class="material-icons" style="font-size:16px;color:#888">visibility_off</span></div>`:''}
+      </td>
       <td><span class="prop-code">${p.code}</span></td>
-      <td><div class="prop-title">${p.title}</div><div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div></td>
-      <td><span class="badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}">${p.operation}</span>${p.featured?'<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>':''}</td>
+      <td>
+        <div class="prop-title">${p.title}</div>
+        <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
+      </td>
+      <td>
+        <span class="badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}">${p.operation}</span>
+        ${p.featured?'<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>':''}
+      </td>
       <td class="price-cell">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler'?' /mes':''}</span></td>
       <td style="font-size:13px;color:var(--text2)">
         ${p.owner_name?`<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>`:'<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
         ${p.owner_contact?`<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>`:''}
       </td>
-      <td><div class="action-btns"><button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button><button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button></div></td>
-    </tr>`).join('');
+      <td>
+        <button class="btn-toggle ${active?'active':'inactive'}" onclick="toggleActive('${p.id}',${active})">
+          <span class="status-dot ${active?'active':'inactive'}"></span>
+          ${active?'Publicada':'Oculta'}
+        </button>
+      </td>
+      <td class="date-cell">
+        <div>${fecha}</div>
+        <div style="font-size:11px;color:var(--text3)">${hora}</div>
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button>
+          <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 // ---- MODAL ----
