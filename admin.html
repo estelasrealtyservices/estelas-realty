@@ -646,19 +646,43 @@ function renderZonesEditor(){
 async function changeZoneImage(i, input){
   const file=input.files[0];
   if(!file) return;
+
+  const validTypes=['image/jpeg','image/jpg','image/png','image/webp'];
+  if(!validTypes.includes(file.type)){
+    showToast('Solo se permiten imágenes JPG, PNG o WEBP.',true);
+    return;
+  }
+
   const bar=document.getElementById('zoneProgress');
   const fill=document.getElementById('zoneProgressFill');
-  bar.classList.add('visible');fill.style.width='50%';
-  const path=`zones/${Date.now()}_${zoneData[i].name.replace(/\s/g,'_')}.${file.name.split('.').pop()}`;
-  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
-  if(!error){
-    const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-    zoneData[i].img=u.publicUrl;
-    renderZonesEditor();
-    showToast(`Foto de ${zoneData[i].name} actualizada. Haz clic en Guardar.`);
-  }else{showToast('Error al subir foto.',true);}
+  bar.classList.add('visible');
+  fill.style.width='30%';
+
+  const ext=file.name.split('.').pop().toLowerCase();
+  const safeName=zoneData[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+  const path=`zones/${Date.now()}_${safeName}.${ext}`;
+
+  fill.style.width='60%';
+
+  const{data, error}=await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+    upsert: true,
+    contentType: file.type
+  });
+
   fill.style.width='100%';
-  setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},500);
+
+  if(error){
+    console.error('Error subiendo foto de zona:', error);
+    showToast('Error: ' + error.message, true);
+    setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},500);
+    return;
+  }
+
+  const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+  zoneData[i].img=u.publicUrl;
+  renderZonesEditor();
+  showToast(`Foto de ${zoneData[i].name} lista. Haz clic en Guardar cambios.`);
+  setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
 }
 
 async function saveZoneImages(){
