@@ -6,12 +6,12 @@
 <title>Admin · Estela's Realty Services</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Vidaloka&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
+    --primary:#1A1A2E;--accent:#E8A000;--accent-light:#FFE082;
     --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
     --text:#1A1A1A;--text2:#555;--text3:#888;
     --border:#E0E0E0;--radius:12px;
@@ -20,7 +20,7 @@
     --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+  body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
   button{cursor:pointer;font-family:inherit;}
   @keyframes spin{to{transform:rotate(360deg);}}
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -30,7 +30,7 @@
   .login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:fadeIn 0.4s ease;}
   .login-logo{text-align:center;margin-bottom:32px;}
   .login-logo img{height:80px;width:auto;object-fit:contain;}
-  .login-card h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--primary);text-align:center;margin-bottom:6px;}
+  .login-card h2{font-family:'Vidaloka', serif;font-size:22px;color:var(--primary);text-align:center;margin-bottom:6px;}
   .login-card p{font-size:13px;color:var(--text3);text-align:center;margin-bottom:28px;}
   .login-input{width:100%;padding:13px 16px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);margin-bottom:12px;}
   .login-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,0.08);}
@@ -84,7 +84,7 @@
   .stat-icon.red .material-icons{color:#E53935;}
   .stat-icon .material-icons{font-size:24px;}
   .stat-info{flex:1;}
-  .stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--primary);line-height:1;}
+  .stat-num{font-family:'Vidaloka', serif;font-size:28px;font-weight:600;color:var(--primary);line-height:1;}
   .stat-label{font-size:12px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;}
 
   /* TOOLBAR */
@@ -112,10 +112,10 @@
   .prop-zone{font-size:12px;color:var(--text3);margin-top:2px;}
   .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
   .badge-rent{background:rgba(26,26,46,0.1);color:var(--primary);}
-  .badge-sale{background:rgba(201,168,76,0.15);color:#7a5c10;}
+  .badge-sale{background:rgba(201,168,76,0.15);color:#5a3e00;}
   .badge-vacation{background:rgba(46,125,50,0.12);color:#1B5E20;}
   .badge-featured{background:rgba(229,57,53,0.1);color:#C62828;}
-  .price-cell{font-family:'Playfair Display',serif;font-weight:600;color:var(--primary);}
+  .price-cell{font-family:'Vidaloka', serif;font-weight:600;color:var(--primary);}
   .action-btns{display:flex;gap:6px;}
   .btn-edit{padding:6px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;transition:var(--transition);}
   .btn-edit:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2);}
@@ -174,7 +174,7 @@
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border-radius:16px;width:100%;max-width:900px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:fadeIn 0.2s ease;}
   .modal-header{position:sticky;top:0;background:var(--surface);padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:1;}
-  .modal-header h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--primary);}
+  .modal-header h2{font-family:'Vidaloka', serif;font-size:22px;font-weight:600;color:var(--primary);}
   .modal-code{font-size:12px;color:var(--accent);font-weight:600;letter-spacing:1px;background:rgba(201,168,76,0.1);padding:4px 10px;border-radius:6px;margin-top:4px;}
   .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .modal-close .material-icons{font-size:20px;color:var(--text2);}
@@ -410,7 +410,7 @@
           </div>
           <div class="form-group"><label>Precio (USD)</label><input type="number" id="fPrice" placeholder="1500"></div>
           <div class="form-group" style="align-self:flex-end;padding-bottom:2px;">
-            <div id="pricePeriodShow" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;background:rgba(201,168,76,0.1);color:#7a5c10;">
+            <div id="pricePeriodShow" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;background:rgba(201,168,76,0.1);color:#5a3e00;">
               <span class="material-icons" style="font-size:16px">schedule</span>
               <span id="pricePeriodText">por mes</span>
             </div>
@@ -477,7 +477,7 @@
         <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
           <span class="material-icons" style="font-size:16px;color:var(--accent)">person</span>
           Información del propietario
-          <span style="font-size:10px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;">SOLO VISIBLE EN ADMIN</span>
+          <span style="font-size:10px;background:rgba(201,168,76,0.15);color:#5a3e00;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;">SOLO VISIBLE EN ADMIN</span>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -830,7 +830,7 @@ function updatePriceLabel(){
     if(text) text.textContent='por mes';
     if(priceInput) priceInput.placeholder='Precio mensual';
   } else {
-    if(badge){badge.style.background='rgba(201,168,76,0.1)';badge.style.color='#7a5c10';}
+    if(badge){badge.style.background='rgba(201,168,76,0.1)';badge.style.color='#5a3e00';}
     if(text) text.textContent='precio único';
     if(priceInput) priceInput.placeholder='Precio de venta';
   }
