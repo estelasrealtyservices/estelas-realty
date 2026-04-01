@@ -157,6 +157,7 @@
   .share-row{display:flex;gap:8px;margin-top:12px;}
   .share-btn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:white;font-size:12px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:4px;transition:var(--transition);}
   .share-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .property-map{height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:20px;position:relative;z-index:0;}
 
   /* TOAST */
   .toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
@@ -287,6 +288,8 @@
     .spec strong{font-size:13px;}
   }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -457,7 +460,7 @@
       <p class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
       <div class="footer-contact">
         <a href="tel:+50766740090"><span class="material-icons">phone</span>+507 6674-0090</a>
-        <a href="mailto:erealtylegal@gmail.com"><span class="material-icons">email</span>erealtylegal@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#056077606469717c6960626469456268646c692b666a68"><span class="material-icons">email</span><span class="__cf_email__" data-cfemail="c7a2b5a2a6abb3beaba2a0a6ab87a0aaa6aeabe9a4a8aa">[email&#160;protected]</span></a>
         <a href="#"><span class="material-icons">location_on</span>Ciudad de Panamá</a>
       </div>
     </div>
@@ -487,7 +490,7 @@
 
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -729,6 +732,7 @@ function openDetail(id){
         <p style="font-size:14px;color:var(--text2);line-height:1.7">${p.description||''}</p>
         ${p.features?.length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Características</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
         ${p.video_url?`<div style="margin-top:20px"><a href="${p.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video</a></div>`:''}
+        ${p.latitude&&p.longitude?`<div style="margin-top:20px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span class="material-icons" style="font-size:15px;color:var(--accent)">location_on</span>Ubicación aproximada</div><div class="property-map" id="clientMap"></div></div>`:''}
       </div>
       <div>
         <div class="contact-box">
@@ -747,6 +751,27 @@ function openDetail(id){
       </div>
     </div>`;
   document.getElementById('detailModal').classList.add('open');
+
+  // Init map if property has coordinates
+  if(p.latitude && p.longitude){
+    setTimeout(()=>{
+      const existingMap = document.getElementById('clientMap')?._leaflet_id;
+      if(existingMap) return;
+      const map = L.map('clientMap', {
+        zoomControl:true,
+        scrollWheelZoom:false,
+        attributionControl:false
+      }).setView([p.latitude, p.longitude], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+      const icon = L.divIcon({
+        html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+        iconSize:[24,24], iconAnchor:[12,24], className:''
+      });
+      L.marker([p.latitude, p.longitude], {icon}).addTo(map)
+        .bindPopup(`<strong>${p.title}</strong><br>${p.zone}`)
+        .openPopup();
+    }, 300);
+  }
 }
 
 function shareProperty(id){
@@ -836,11 +861,4 @@ function closeMenu(){
 document.addEventListener('click',function(e){
   const menu=document.getElementById('mobileMenu');
   const btn=document.getElementById('hamburgerBtn');
-  if(menu&&menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();
-});
-document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
-
-init();
-</script>
-</body>
-</html>
+  if(menu&&menu.classList.c

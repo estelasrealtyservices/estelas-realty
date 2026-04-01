@@ -204,6 +204,15 @@
   .modal-prog{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;display:none;}
   .modal-prog.visible{display:block;}
   .modal-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s;}
+  .map-container{height:320px;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px;position:relative;z-index:0;}
+  .map-search-bar{display:flex;gap:8px;margin-bottom:10px;}
+  .map-search-bar input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);}
+  .map-search-bar input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,0.06);}
+  .map-search-btn{padding:10px 16px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--transition);white-space:nowrap;}
+  .map-search-btn:hover{background:#2d2d4a;}
+  .map-coords{font-size:12px;color:var(--text3);padding:8px 12px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;gap:6px;}
+  .map-coords .material-icons{font-size:14px;color:var(--accent);}
+  .map-hint{font-size:12px;color:var(--text3);margin-top:6px;}
   .featured-toggle{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--transition);}
   .featured-toggle:hover{border-color:var(--accent);}
   .featured-toggle input{width:18px;height:18px;cursor:pointer;accent-color:var(--primary);}
@@ -231,6 +240,8 @@
     .admin-tabs{padding:0 16px;}
   }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -555,6 +566,26 @@
         </div>
       </div>
       <div class="modal-section">
+        <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
+          <span class="material-icons" style="font-size:16px;color:var(--accent)">location_on</span>
+          Ubicación en el mapa
+        </div>
+        <div class="map-search-bar">
+          <input type="text" id="mapSearchInput" placeholder="Buscar dirección o zona... Ej: Costa del Este, Panamá">
+          <button class="map-search-btn" onclick="searchMapLocation()">
+            <span class="material-icons" style="font-size:16px">search</span>Buscar
+          </button>
+        </div>
+        <div class="map-container" id="adminMap"></div>
+        <div class="map-coords" id="mapCoords">
+          <span class="material-icons">my_location</span>
+          <span id="mapCoordsText">Haz clic en el mapa o busca una dirección para ubicar la propiedad</span>
+        </div>
+        <p class="map-hint">💡 Arrastra el marcador para ajustar la ubicación exacta. Puedes mostrar una ubicación aproximada para proteger la privacidad.</p>
+        <input type="hidden" id="fLatitude">
+        <input type="hidden" id="fLongitude">
+      </div>
+      <div class="modal-section">
         <div class="modal-section-title">Opciones</div>
         <label class="featured-toggle">
           <input type="checkbox" id="fFeatured">
@@ -584,6 +615,8 @@ let selectedFiles=[];
 let codeCounter=1;
 let heroImages=[];
 let zoneData=[];
+let adminMap=null;
+let adminMarker=null;
 const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
 
 const DEFAULT_ZONES=[
@@ -880,6 +913,59 @@ function renderTable(){
   }).join('');
 }
 
+// ---- MAP ----
+function initAdminMap(lat=8.994, lng=-79.519){
+  if(adminMap){ adminMap.remove(); adminMap=null; adminMarker=null; }
+  setTimeout(()=>{
+    adminMap=L.map('adminMap',{zoomControl:true}).setView([lat,lng],13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'© OpenStreetMap',maxZoom:19
+    }).addTo(adminMap);
+    const icon=L.divIcon({
+      html:`<div style="background:var(--primary);width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+      iconSize:[28,28],iconAnchor:[14,28],className:''
+    });
+    adminMarker=L.marker([lat,lng],{icon,draggable:true}).addTo(adminMap);
+    adminMarker.on('dragend',function(){
+      const pos=adminMarker.getLatLng();
+      setMapCoords(pos.lat,pos.lng);
+    });
+    adminMap.on('click',function(e){
+      adminMarker.setLatLng(e.latlng);
+      setMapCoords(e.latlng.lat,e.latlng.lng);
+    });
+    if(lat!==8.994||lng!==(-79.519)) setMapCoords(lat,lng);
+  },200);
+}
+
+function setMapCoords(lat,lng){
+  document.getElementById('fLatitude').value=lat.toFixed(6);
+  document.getElementById('fLongitude').value=lng.toFixed(6);
+  document.getElementById('mapCoordsText').textContent=`Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+}
+
+async function searchMapLocation(){
+  const q=document.getElementById('mapSearchInput').value.trim();
+  if(!q) return;
+  const btn=document.querySelector('.map-search-btn');
+  btn.innerHTML='<span class="material-icons" style="font-size:16px;animation:spin 1s linear infinite">sync</span>';
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+', Panama')}&format=json&limit=1`);
+    const data=await res.json();
+    if(data.length){
+      const{lat,lon}=data[0];
+      adminMap.setView([parseFloat(lat),parseFloat(lon)],15);
+      adminMarker.setLatLng([parseFloat(lat),parseFloat(lon)]);
+      setMapCoords(parseFloat(lat),parseFloat(lon));
+    } else {
+      showToast('No se encontró esa dirección. Intenta con otro nombre.',true);
+    }
+  }catch(e){
+    showToast('Error al buscar la dirección.',true);
+  }
+  btn.innerHTML='<span class="material-icons" style="font-size:16px">search</span>Buscar';
+}
+
 // ---- MODAL ----
 function updatePriceLabel(){
   const op=document.getElementById('fOperation').value;
@@ -928,6 +1014,11 @@ function openModal(id=null){
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
     document.getElementById('fE24Code').value=p.encuentra24_code||'';
+    document.getElementById('fLatitude').value=p.latitude||'';
+    document.getElementById('fLongitude').value=p.longitude||'';
+    const lat=p.latitude||8.994;
+    const lng=p.longitude||(-79.519);
+    initAdminMap(parseFloat(lat),parseFloat(lng));
     if(p.features) p.features.forEach(f=>document.querySelectorAll('.feature-toggle').forEach(b=>{if(b.textContent===f)b.classList.add('selected');}));
     if(p.images?.length) document.getElementById('uploadPreview').innerHTML=p.images.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('');
     document.getElementById('deleteBtn').style.display='flex';
@@ -936,11 +1027,19 @@ function openModal(id=null){
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
     ['fTitle','fPrice','fSize','fFloor','fDesc','fVideo','fOwnerName','fOwnerContact','fE24Code'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fLatitude').value='';
+    document.getElementById('fLongitude').value='';
+    document.getElementById('mapCoordsText').textContent='Haz clic en el mapa o busca una dirección para ubicar la propiedad';
+    document.getElementById('mapSearchInput').value='';
     document.getElementById('fFeatured').checked=false;
     updatePriceLabel();
     document.getElementById('deleteBtn').style.display='none';
   }
   document.getElementById('propModal').classList.add('open');
+  setTimeout(()=>initAdminMap(
+    parseFloat(document.getElementById('fLatitude').value)||8.994,
+    parseFloat(document.getElementById('fLongitude').value)||(-79.519)
+  ),300);
 }
 
 function closeModal(){document.getElementById('propModal').classList.remove('open');}
@@ -991,7 +1090,9 @@ async function saveProperty(){
     featured:document.getElementById('fFeatured').checked,
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
     owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
-    encuentra24_code:document.getElementById('fE24Code').value.trim()||null
+    encuentra24_code:document.getElementById('fE24Code').value.trim()||null,
+    latitude:parseFloat(document.getElementById('fLatitude').value)||null,
+    longitude:parseFloat(document.getElementById('fLongitude').value)||null
   };
   const{error}=editingId
     ?await sb.from('properties').update(payload).eq('id',editingId)
