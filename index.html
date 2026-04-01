@@ -90,6 +90,7 @@
   .card-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
   .badge-rent{background:var(--primary);color:white;}
   .badge-sale{background:var(--accent);color:var(--primary);}
+  .badge-vacation{background:#2E7D32;color:white;}
   .badge-featured{background:#E53935;color:white;}
   .card-code{position:absolute;bottom:10px;left:12px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.9);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:1px;}
   .card-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;}
@@ -110,9 +111,7 @@
 
   /* ZONES */
   .zones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  .zones-grid .zone-large{grid-column:span 2;}
   .zone-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;cursor:pointer;transition:var(--transition);background:var(--surface2);}
-  .zone-large{aspect-ratio:16/10!important;}
   .zone-card:hover{transform:scale(1.01);box-shadow:var(--shadow-hover);}
   .zone-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
   .zone-card:hover img{transform:scale(1.06);}
@@ -194,7 +193,6 @@
     .admin-stats{grid-template-columns:1fr 1fr;}
     .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
     .zones-grid{grid-template-columns:1fr 1fr;}
-    .zones-grid .zone-large{grid-column:span 2;}
     .detail-gallery{grid-template-columns:1fr;}
     .detail-thumbs{grid-template-columns:1fr 1fr;display:grid;}
     .detail-info{grid-template-columns:1fr;}
@@ -238,8 +236,6 @@
 
     /* ZONES */
     .zones-grid{grid-template-columns:1fr;gap:12px;}
-    .zones-grid .zone-large{grid-column:span 1;}
-    .zone-large{aspect-ratio:16/9!important;}
 
     /* SERVICES */
     .services-grid{grid-template-columns:1fr;gap:14px;}
@@ -319,7 +315,7 @@
     <div class="search-bar">
       <div class="search-field">
         <span class="material-icons">search</span>
-        <div style="flex:1"><label>Buscar</label><input type="text" placeholder="Zona, título, referencia..." id="searchInput"></div>
+        <div style="flex:1"><label>Buscar</label><input type="text" placeholder="Zona, título, código E24..." id="searchInput"></div>
       </div>
       <div class="search-field">
         <span class="material-icons">home</span>
@@ -360,6 +356,7 @@
       <div class="tabs">
         <button class="tab active" onclick="setTab(this,'')">Todos</button>
         <button class="tab" onclick="setTab(this,'Alquiler')">Alquiler</button>
+        <button class="tab" onclick="setTab(this,'Alquiler vacacional')">Vacacional</button>
         <button class="tab" onclick="setTab(this,'Venta')">Venta</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -487,7 +484,7 @@ let currentSlide=0;
 const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
 
 const DEFAULT_ZONES=[
-  {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80',large:true},
+  {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80'},
   {name:'Punta Pacífica',subtitle:'Vista al mar',img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80'},
   {name:'San Francisco',subtitle:'Zona céntrica',img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'},
   {name:'Bella Vista',subtitle:'Residencial y comercial',img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'},
@@ -544,7 +541,7 @@ function goSlide(n) {
 // ---- ZONES ----
 function renderZones(zones) {
   document.getElementById('zonesGrid').innerHTML = zones.map((z,i)=>`
-    <div class="zone-card${z.large?' zone-large':''}" onclick="setZone('${z.name}')">
+    <div class="zone-card" onclick="setZone('${z.name}')">
       <img src="${z.img}" alt="${z.name}" loading="lazy" onerror="this.src='${PH}'">
       <div class="zone-overlay"></div>
       <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
@@ -566,7 +563,7 @@ async function loadProperties() {
 
 function updateStats() {
   document.getElementById('totalCount').textContent=allProperties.length;
-  document.getElementById('rentCount').textContent=allProperties.filter(p=>p.operation==='Alquiler').length;
+  document.getElementById('rentCount').textContent=allProperties.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional').length;
   document.getElementById('saleCount').textContent=allProperties.filter(p=>p.operation==='Venta').length;
 }
 
@@ -578,13 +575,15 @@ function applyFilters() {
   const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
-  if(activeTab) list=list.filter(p=>p.operation===activeTab);
+  if(activeTab==='Alquiler') list=list.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional');
+  else if(activeTab) list=list.filter(p=>p.operation===activeTab);
   if(s) list=list.filter(p=>
     p.title?.toLowerCase().includes(s)||
     p.zone?.toLowerCase().includes(s)||
     p.code?.toLowerCase().includes(s)||
     p.description?.toLowerCase().includes(s)||
-    p.type?.toLowerCase().includes(s)
+    p.type?.toLowerCase().includes(s)||
+    p.encuentra24_code?.toLowerCase().includes(s)
   );
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
@@ -639,7 +638,7 @@ function renderProperties(list){
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
         <img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
-        <div class="card-badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}">${p.operation}</div>
+        <div class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</div>
         ${p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
         <div class="card-actions" onclick="event.stopPropagation()">
@@ -648,7 +647,7 @@ function renderProperties(list){
         </div>
       </div>
       <div class="card-body">
-        <div class="card-price">$${(p.price||0).toLocaleString()}<span>${p.operation==='Alquiler'?' /mes':''}</span></div>
+        <div class="card-price">$${(p.price||0).toLocaleString()}<span>${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span></div>
         <div class="card-title">${p.title}</div>
         <div class="card-location"><span class="material-icons">location_on</span>${p.zone}</div>
         <div class="card-specs">
@@ -675,11 +674,11 @@ function openDetail(id){
     <div class="detail-info">
       <div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <span class="card-badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}" style="position:static">${p.operation}</span>
+          <span class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}" style="position:static">${p.operation}</span>
           <span style="font-size:13px;color:var(--text3)">${p.type} · ${p.zone}</span>
         </div>
         <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--primary)">
-          $${(p.price||0).toLocaleString()}<span style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler'?' /mes':''}</span>
+          $${(p.price||0).toLocaleString()}<span style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span>
         </div>
         <div class="detail-specs">
           ${p.rooms>0?`<div class="detail-spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong> hab.</div>`:''}
@@ -713,7 +712,7 @@ function openDetail(id){
 
 function shareProperty(id){
   const p=allProperties.find(x=>x.id===id);if(!p) return;
-  navigator.clipboard?.writeText(`${p.title}\nCódigo: ${p.code}\nPrecio: $${(p.price||0).toLocaleString()}${p.operation==='Alquiler'?' /mes':''}\nZona: ${p.zone}\nContacto: +507 6674-0090`);
+  navigator.clipboard?.writeText(`${p.title}\nCódigo: ${p.code}\nPrecio: $${(p.price||0).toLocaleString()}${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}\nZona: ${p.zone}\nContacto: +507 6674-0090`);
   showToast('Información copiada al portapapeles.');
 }
 
@@ -728,7 +727,7 @@ function generateListing(id){
   .code{font-size:12px;letter-spacing:2px;color:#888;background:#f4f4f2;padding:6px 14px;border-radius:20px;}
   img{width:100%;border-radius:12px;margin-bottom:20px;aspect-ratio:16/9;object-fit:cover;}
   h1{font-family:'Playfair Display',serif;font-size:26px;color:#1A1A2E;margin-bottom:8px;}
-  .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':'#C9A84C'};color:${p.operation==='Alquiler'?'white':'#1A1A2E'};margin-bottom:16px;}
+  .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#C9A84C'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
   .price{font-family:'Playfair Display',serif;font-size:30px;color:#C9A84C;margin:12px 0;}
   .specs{display:flex;gap:20px;padding:16px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:16px 0;}
   .spec{text-align:center;flex:1;font-size:13px;color:#666;}.spec strong{display:block;font-size:18px;color:#1a1a1a;}
@@ -740,7 +739,7 @@ function generateListing(id){
   <img src="${p.images?.[0]||PH}" alt="${p.title}">
   <span class="badge">${p.operation}</span><h1>${p.title}</h1>
   <div style="color:#888;font-size:14px">📍 ${p.zone} · ${p.type}</div>
-  <div class="price">$${(p.price||0).toLocaleString()}<span style="font-size:16px;font-weight:400">${p.operation==='Alquiler'?' / mes':''}</span></div>
+  <div class="price">$${(p.price||0).toLocaleString()}<span style="font-size:16px;font-weight:400">${p.operation==='Alquiler vacacional'?' / noche':p.operation==='Alquiler'?' / mes':''}</span></div>
   <div class="specs">
     ${p.rooms>0?`<div class="spec"><strong>${p.rooms}</strong>Habitaciones</div>`:''}
     <div class="spec"><strong>${p.baths}</strong>Baños</div>

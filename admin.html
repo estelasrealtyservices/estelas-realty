@@ -113,6 +113,7 @@
   .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
   .badge-rent{background:rgba(26,26,46,0.1);color:var(--primary);}
   .badge-sale{background:rgba(201,168,76,0.15);color:#7a5c10;}
+  .badge-vacation{background:rgba(46,125,50,0.12);color:#1B5E20;}
   .badge-featured{background:rgba(229,57,53,0.1);color:#C62828;}
   .price-cell{font-family:'Playfair Display',serif;font-weight:600;color:var(--primary);}
   .action-btns{display:flex;gap:6px;}
@@ -290,7 +291,7 @@
             <input type="text" class="search-input" placeholder="Buscar propiedad..." id="adminSearch" oninput="renderTable()">
           </div>
           <select class="filter-sel" id="adminOpFilter" onchange="renderTable()">
-            <option value="">Todas las operaciones</option><option>Alquiler</option><option>Venta</option>
+            <option value="">Todas las operaciones</option><option>Alquiler</option><option>Alquiler vacacional</option><option>Venta</option>
           </select>
           <select class="filter-sel" id="adminZoneFilter" onchange="renderTable()">
             <option value="">Todas las zonas</option>
@@ -395,13 +396,38 @@
       <div class="modal-section">
         <div class="modal-section-title">Información básica</div>
         <div class="form-grid">
-          <div class="form-group"><label>Operación</label><select id="fOperation"><option>Alquiler</option><option>Venta</option></select></div>
+          <div class="form-group"><label>Operación</label>
+            <select id="fOperation" onchange="updatePriceLabel()">
+              <option>Alquiler</option>
+              <option>Alquiler vacacional</option>
+              <option>Venta</option>
+            </select>
+          </div>
           <div class="form-group"><label>Tipo</label><select id="fType"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option></select></div>
           <div class="form-group full"><label>Título</label><input type="text" id="fTitle" placeholder="Ej: Apartamento moderno en San Francisco"></div>
           <div class="form-group"><label>Zona</label>
             <select id="fZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select>
           </div>
           <div class="form-group"><label>Precio (USD)</label><input type="number" id="fPrice" placeholder="1500"></div>
+          <div class="form-group">
+            <label id="priceLabel" style="font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:2px 8px;border-radius:10px;display:inline-block;" id="pricePeriodBadge">por mes</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Código de referencia externa</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Código Encuentra24</label>
+            <input type="text" id="fE24Code" placeholder="Ej: 32190464">
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:6px;">
+              Período de precio
+              <span id="pricePeriodShow" style="font-size:11px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;">por mes</span>
+            </label>
+            <input type="text" id="fPricePeriod" readonly style="background:var(--surface2);color:var(--text3);cursor:not-allowed;" placeholder="Se asigna automáticamente">
+          </div>
         </div>
       </div>
       <div class="modal-section">
@@ -501,7 +527,7 @@ let zoneData=[];
 const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
 
 const DEFAULT_ZONES=[
-  {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80',large:true},
+  {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80'},
   {name:'Punta Pacífica',subtitle:'Vista al mar',img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80'},
   {name:'San Francisco',subtitle:'Zona céntrica',img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'},
   {name:'Bella Vista',subtitle:'Residencial y comercial',img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'},
@@ -764,10 +790,11 @@ function renderTable(){
         <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
       </td>
       <td>
-        <span class="badge ${p.operation==='Alquiler'?'badge-rent':'badge-sale'}">${p.operation}</span>
+        <span class="badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</span>
         ${p.featured?'<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>':''}
+        ${p.encuentra24_code?`<br><span style="font-size:10px;color:var(--text3);margin-top:4px;display:inline-block;letter-spacing:0.5px">E24: ${p.encuentra24_code}</span>`:''}
       </td>
-      <td class="price-cell">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler'?' /mes':''}</span></td>
+      <td class="price-cell">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span></td>
       <td style="font-size:13px;color:var(--text2)">
         ${p.owner_name?`<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>`:'<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
         ${p.owner_contact?`<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>`:''}
@@ -793,6 +820,21 @@ function renderTable(){
 }
 
 // ---- MODAL ----
+function updatePriceLabel(){
+  const op=document.getElementById('fOperation').value;
+  const period = op==='Alquiler vacacional'?'noche':op==='Alquiler'?'mes':'';
+  const badge=document.getElementById('pricePeriodShow');
+  const periodInput=document.getElementById('fPricePeriod');
+  if(badge){
+    badge.textContent = period ? `por ${period}` : 'precio único';
+    badge.style.background = op==='Alquiler vacacional'?'rgba(46,125,50,0.12)':op==='Alquiler'?'rgba(26,26,46,0.08)':'rgba(201,168,76,0.15)';
+    badge.style.color = op==='Alquiler vacacional'?'#1B5E20':op==='Alquiler'?'var(--primary)':'#7a5c10';
+  }
+  if(periodInput) periodInput.value = period ? `/${period}` : '';
+  const priceInput=document.getElementById('fPrice');
+  if(priceInput) priceInput.placeholder = op==='Alquiler vacacional'?'Precio por noche':op==='Alquiler'?'Precio mensual':'Precio de venta';
+}
+
 function openModal(id=null){
   selectedFiles=[];
   document.getElementById('uploadPreview').innerHTML='';
@@ -804,6 +846,7 @@ function openModal(id=null){
     document.getElementById('modalCode').textContent=p.code;
     document.getElementById('editingId').value=p.id;
     document.getElementById('fOperation').value=p.operation;
+    updatePriceLabel();
     document.getElementById('fType').value=p.type;
     document.getElementById('fTitle').value=p.title;
     document.getElementById('fZone').value=p.zone;
@@ -818,6 +861,7 @@ function openModal(id=null){
     document.getElementById('fFeatured').checked=p.featured||false;
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
+    document.getElementById('fE24Code').value=p.encuentra24_code||'';
     if(p.features) p.features.forEach(f=>document.querySelectorAll('.feature-toggle').forEach(b=>{if(b.textContent===f)b.classList.add('selected');}));
     if(p.images?.length) document.getElementById('uploadPreview').innerHTML=p.images.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('');
     document.getElementById('deleteBtn').style.display='flex';
@@ -825,8 +869,9 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fVideo','fOwnerName','fOwnerContact'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fVideo','fOwnerName','fOwnerContact','fE24Code'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fFeatured').checked=false;
+    updatePriceLabel();
     document.getElementById('deleteBtn').style.display='none';
   }
   document.getElementById('propModal').classList.add('open');
@@ -879,7 +924,8 @@ async function saveProperty(){
     video_url:document.getElementById('fVideo').value||'',
     featured:document.getElementById('fFeatured').checked,
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
-    owner_contact:document.getElementById('fOwnerContact').value.trim()||null
+    owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
+    encuentra24_code:document.getElementById('fE24Code').value.trim()||null
   };
   const{error}=editingId
     ?await sb.from('properties').update(payload).eq('id',editingId)
