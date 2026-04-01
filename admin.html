@@ -409,24 +409,20 @@
             <select id="fZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select>
           </div>
           <div class="form-group"><label>Precio (USD)</label><input type="number" id="fPrice" placeholder="1500"></div>
-          <div class="form-group">
-            <label id="priceLabel" style="font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:2px 8px;border-radius:10px;display:inline-block;" id="pricePeriodBadge">por mes</label>
+          <div class="form-group" style="align-self:flex-end;padding-bottom:2px;">
+            <div id="pricePeriodShow" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;background:rgba(201,168,76,0.1);color:#7a5c10;">
+              <span class="material-icons" style="font-size:16px">schedule</span>
+              <span id="pricePeriodText">por mes</span>
+            </div>
           </div>
         </div>
       </div>
       <div class="modal-section">
-        <div class="modal-section-title">Código de referencia externa</div>
-        <div class="form-grid">
+        <div class="modal-section-title">Código de referencia</div>
+        <div style="max-width:320px;">
           <div class="form-group">
             <label>Código Encuentra24</label>
             <input type="text" id="fE24Code" placeholder="Ej: 32190464">
-          </div>
-          <div class="form-group">
-            <label style="display:flex;align-items:center;gap:6px;">
-              Período de precio
-              <span id="pricePeriodShow" style="font-size:11px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;">por mes</span>
-            </label>
-            <input type="text" id="fPricePeriod" readonly style="background:var(--surface2);color:var(--text3);cursor:not-allowed;" placeholder="Se asigna automáticamente">
           </div>
         </div>
       </div>
@@ -822,17 +818,22 @@ function renderTable(){
 // ---- MODAL ----
 function updatePriceLabel(){
   const op=document.getElementById('fOperation').value;
-  const period = op==='Alquiler vacacional'?'noche':op==='Alquiler'?'mes':'';
   const badge=document.getElementById('pricePeriodShow');
-  const periodInput=document.getElementById('fPricePeriod');
-  if(badge){
-    badge.textContent = period ? `por ${period}` : 'precio único';
-    badge.style.background = op==='Alquiler vacacional'?'rgba(46,125,50,0.12)':op==='Alquiler'?'rgba(26,26,46,0.08)':'rgba(201,168,76,0.15)';
-    badge.style.color = op==='Alquiler vacacional'?'#1B5E20':op==='Alquiler'?'var(--primary)':'#7a5c10';
-  }
-  if(periodInput) periodInput.value = period ? `/${period}` : '';
+  const text=document.getElementById('pricePeriodText');
   const priceInput=document.getElementById('fPrice');
-  if(priceInput) priceInput.placeholder = op==='Alquiler vacacional'?'Precio por noche':op==='Alquiler'?'Precio mensual':'Precio de venta';
+  if(op==='Alquiler vacacional'){
+    if(badge){badge.style.background='rgba(46,125,50,0.12)';badge.style.color='#1B5E20';}
+    if(text) text.textContent='por noche';
+    if(priceInput) priceInput.placeholder='Precio por noche';
+  } else if(op==='Alquiler'){
+    if(badge){badge.style.background='rgba(26,26,46,0.08)';badge.style.color='var(--primary)';}
+    if(text) text.textContent='por mes';
+    if(priceInput) priceInput.placeholder='Precio mensual';
+  } else {
+    if(badge){badge.style.background='rgba(201,168,76,0.1)';badge.style.color='#7a5c10';}
+    if(text) text.textContent='precio único';
+    if(priceInput) priceInput.placeholder='Precio de venta';
+  }
 }
 
 function openModal(id=null){
