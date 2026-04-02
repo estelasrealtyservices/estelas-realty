@@ -525,8 +525,8 @@ function goSlide(n){
   const s=document.querySelectorAll('.hero-slide');
   const d=document.querySelectorAll('.hero-dot');
   if(!s.length) return;
-  s[currentSlide]?.classList.remove('active');d[currentSlide]?.classList.remove('active');
-  currentSlide=n;s[currentSlide]?.classList.add('active');d[currentSlide]?.classList.add('active');
+  s[currentSlide] && s[currentSlide].classList.remove('active');d[currentSlide] && d[currentSlide].classList.remove('active');
+  currentSlide=n;s[currentSlide] && s[currentSlide].classList.add('active');d[currentSlide] && d[currentSlide].classList.add('active');
 }
 
 function renderZones(zones){
@@ -578,7 +578,7 @@ function applyFilters(){
   const order=document.getElementById('orderFilter').value;
   if(activeTab==='Alquiler') list=list.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional');
   else if(activeTab) list=list.filter(p=>p.operation===activeTab);
-  if(s) list=list.filter(p=>p.title?.toLowerCase().includes(s)||p.zone?.toLowerCase().includes(s)||p.code?.toLowerCase().includes(s)||p.description?.toLowerCase().includes(s)||p.type?.toLowerCase().includes(s)||p.encuentra24_code?.toLowerCase().includes(s));
+  if(s) list=list.filter(p=>(p.title&&p.title.toLowerCase().includes(s))||(p.zone&&p.zone.toLowerCase().includes(s))||(p.code&&p.code.toLowerCase().includes(s))||(p.description&&p.description.toLowerCase().includes(s))||(p.type&&p.type.toLowerCase().includes(s))||(p.encuentra24_code&&p.encuentra24_code.toLowerCase().includes(s)));
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
   if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
@@ -609,7 +609,7 @@ function renderProperties(list){
   grid.innerHTML=list.map(p=>`
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
-        <img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
+        <img src="${(p.images && p.images[0])||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
         <div class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</div>
         ${p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
@@ -637,7 +637,7 @@ function openDetail(id){
   const p=allProperties.find(x=>x.id===id);if(!p) return;
   document.getElementById('detailCode').textContent=p.code;
   document.getElementById('detailTitle').textContent=p.title;
-  const imgs=p.images?.filter(Boolean).length?p.images.filter(Boolean):[PH];
+  const imgs=(p.images&&p.images.filter(Boolean).length)?p.images.filter(Boolean):[PH];
   const pl=p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':'';
   const oc=p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale';
 
@@ -678,7 +678,7 @@ function openDetail(id){
           ${p.floor?`<div class="detail-spec"><span class="material-icons">apartment</span>Piso <strong>${p.floor}</strong></div>`:''}
         </div>
         <p style="font-size:14px;color:var(--text2);line-height:1.7">${p.description||''}</p>
-        ${p.features?.length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Características</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
+        ${(p.features&&p.features.length)?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Características</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
         ${p.video_url?`<div style="margin-top:20px"><a href="${p.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video</a></div>`:''}
         ${p.latitude&&p.longitude?`<div style="margin-top:20px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span class="material-icons" style="font-size:15px;color:var(--accent)">location_on</span>Ubicación aproximada</div><div class="property-map" id="clientMap"></div></div>`:''}
       </div>
@@ -737,7 +737,7 @@ function renderRelated(current){
     <div class="related-carousel">
       ${rel.map(p=>`
         <div class="related-card" onclick="closeDetailModal();setTimeout(()=>openDetail('${p.id}'),120)">
-          <div class="related-img"><img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'"></div>
+          <div class="related-img"><img src="${(p.images&&p.images[0])||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'"></div>
           <div class="related-body">
             <div class="related-price">$${(p.price||0).toLocaleString()}<span style="font-size:10px;color:var(--text3);font-family:'DM Sans',sans-serif">${priceTag(p.operation)}</span></div>
             <div class="related-title">${p.title}</div>
@@ -751,7 +751,7 @@ function renderRelated(current){
 // ============= SHARE — URL ONLY =============
 function shareProperty(id){
   const url=`${window.location.origin}${window.location.pathname}?propiedad=${id}`;
-  if(navigator.clipboard?.writeText){
+  if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(()=>showToast('URL de la propiedad copiada.')).catch(()=>fallbackCopy(url));
   }else{fallbackCopy(url);}
 }
@@ -794,7 +794,7 @@ async function generateBrochure(id){
     const opC=p.operation==='Venta'?gold:p.operation==='Alquiler vacacional'?[46,125,50]:navy;
     doc.setFillColor(...opC);doc.roundedRect(8,y,32,8,2,2,'F');
     doc.setFontSize(7);doc.setFont('helvetica','bold');
-    doc.setTextColor(p.operation==='Venta'?...navy:...white);
+    if(p.operation==='Venta'){doc.setTextColor(navy[0],navy[1],navy[2]);}else{doc.setTextColor(white[0],white[1],white[2]);}
     doc.text((p.operation||'').toUpperCase(),24,y+5.5,{align:'center'});
     y+=12;
 
@@ -840,7 +840,7 @@ async function generateBrochure(id){
     }
 
     // Features
-    if(p.features?.length){
+    if(p.features && p.features.length){
       doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(...navy);doc.text('CARACTERÍSTICAS',10,y);y+=5;
       doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(...gray);
       const fl=doc.splitTextToSize(p.features.join('  ·  '),W-20);
