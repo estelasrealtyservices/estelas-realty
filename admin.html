@@ -1214,15 +1214,17 @@ function onPhotoDragEnd(){
 async function saveProperty(){
   const title=document.getElementById('fTitle').value.trim();
   if(!title){showToast('Por favor ingresa el título.',true);return;}
-  const btn=document.getElementById('saveBtn');
-  btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Guardando...';
+
+  // Cerrar el modal inmediatamente
+  closeModal();
+  showToast('Guardando propiedad…');
+
   const editingId=document.getElementById('editingId').value;
 
   // Subir SOLO los archivos nuevos (File object), mantener URLs ya subidas
   const filesToUpload=newFiles.filter(f=>f instanceof File);
   const totalNew=filesToUpload.length;
   if(totalNew>0){
-    document.getElementById('modalProg').classList.add('visible');
     let uploadIdx=0;
     for(let i=0;i<newFiles.length;i++){
       if(!(newFiles[i] instanceof File)) continue;
@@ -1236,7 +1238,6 @@ async function saveProperty(){
       uploadIdx++;
       document.getElementById('modalProgFill').style.width=`${Math.round((uploadIdx/totalNew)*100)}%`;
     }
-    document.getElementById('modalProg').classList.remove('visible');
   }
 
   // Limpiar blob URLs que no se pudieron subir
@@ -1270,13 +1271,18 @@ async function saveProperty(){
   const{error}=editingId
     ?await sb.from('properties').update(payload).eq('id',editingId)
     :await sb.from('properties').insert([payload]);
-  btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">save</span>Guardar propiedad';
-  if(error){showToast('Error: '+error.message,true);return;}
-  closeModal();await loadProperties();
-  showToast(editingId?'Propiedad actualizada.':'Propiedad guardada: '+payload.code);
+  if(error){showToast('Error al guardar: '+error.message,true);return;}
+  await loadProperties();
+  showToast(editingId?'✓ Propiedad actualizada.':'✓ Propiedad guardada: '+payload.code);
 }
 
-function confirmDelete(id){
+function closeModal(){
+  document.getElementById('propModal').classList.remove('open');
+}
+
+function toggleFeature(btn){btn.classList.toggle('selected');}
+
+
   document.getElementById('editingId').value=id;
   if(confirm('¿Eliminar esta propiedad? Esta acción no se puede deshacer.')) deleteProperty();
 }
