@@ -1282,7 +1282,7 @@ function closeModal(){
 
 function toggleFeature(btn){btn.classList.toggle('selected');}
 
-
+function confirmDelete(id){
   document.getElementById('editingId').value=id;
   if(confirm('¿Eliminar esta propiedad? Esta acción no se puede deshacer.')) deleteProperty();
 }
