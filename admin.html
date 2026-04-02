@@ -192,18 +192,44 @@
   .features-grid{display:flex;flex-wrap:wrap;gap:8px;}
   .feature-toggle{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:none;font-size:13px;font-family:inherit;cursor:pointer;transition:var(--transition);color:var(--text2);}
   .feature-toggle.selected{background:var(--primary);color:white;border-color:var(--primary);}
-  .upload-area{border:2px dashed var(--border);border-radius:10px;padding:32px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;}
-  .upload-area:hover{border-color:var(--primary);background:var(--surface2);}
+  /* UPLOAD AREA */
+  .upload-area{border:2px dashed var(--border);border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;}
+  .upload-area:hover,.upload-area.drag-active{border-color:var(--accent);background:rgba(201,168,76,0.04);}
   .upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
   .upload-area .material-icons{font-size:36px;color:var(--text3);display:block;margin-bottom:8px;}
-  .upload-preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
-  .upload-preview .thumb-wrap{position:relative;}
-  .upload-preview img{width:90px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block;}
-  .thumb-remove{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#E53935;color:white;border:none;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-  .thumb-remove .material-icons{font-size:13px;}
   .modal-prog{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;display:none;}
   .modal-prog.visible{display:block;}
   .modal-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s;}
+
+  /* FOTO DRAG HINT */
+  .foto-drag-hint{font-size:12px;color:var(--text3);display:none;align-items:center;gap:5px;margin:12px 0 8px;}
+  .foto-drag-hint.visible{display:flex;}
+  .foto-drag-hint .material-icons{font-size:15px;color:var(--accent);}
+
+  /* FOTO GRID */
+  #uploadPreview{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:4px;}
+
+  /* FOTO CARD */
+  .img-card{position:relative;border:2px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:grab;transition:box-shadow .2s,border-color .2s,transform .15s;user-select:none;}
+  .img-card:active{cursor:grabbing;}
+  .img-card:first-child{border-color:var(--accent);}
+  .img-card.dragging{opacity:.35;border-color:var(--accent);transform:scale(.96);}
+  .img-card.drag-over{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,.18);transform:scale(1.03);}
+  .img-card img{width:100%;height:100px;object-fit:cover;display:block;pointer-events:none;}
+  .img-portada-badge{display:none;position:absolute;bottom:42px;left:0;right:0;background:var(--accent);color:var(--primary);font-size:10px;font-weight:700;letter-spacing:.05em;text-align:center;padding:2px 0;}
+  .img-card:first-child .img-portada-badge{display:block;}
+  .img-drag-handle{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.5);border-radius:4px;color:#fff;display:flex;align-items:center;padding:2px 3px;cursor:grab;z-index:2;}
+  .img-drag-handle .material-icons{font-size:16px;}
+  .img-order-num{position:absolute;top:4px;right:28px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;z-index:2;}
+  .img-delete-btn{position:absolute;top:4px;right:4px;background:rgba(229,57,53,.8);border:none;border-radius:4px;color:#fff;cursor:pointer;display:flex;align-items:center;padding:2px 3px;z-index:2;transition:background .15s;}
+  .img-delete-btn:hover{background:#E53935;}
+  .img-delete-btn .material-icons{font-size:14px;}
+  .img-caption-wrap{padding:5px 7px 6px;background:#FAFAFA;border-top:1px solid var(--border);}
+  .img-caption-input{width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:11.5px;color:var(--text);outline:none;resize:none;line-height:1.35;}
+  .img-caption-input::placeholder{color:#C0C5D0;}
+  .img-caption-input:focus{background:rgba(201,168,76,0.06);border-radius:3px;}
+  .img-caption-char{font-size:10px;color:#C0C5D0;text-align:right;margin-top:1px;}
+  .img-caption-char.warn{color:var(--accent);}
   .map-container{height:320px;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px;position:relative;z-index:0;}
   .map-search-bar{display:flex;gap:8px;margin-bottom:10px;}
   .map-search-bar input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);}
@@ -539,14 +565,18 @@
         <div class="modal-section-title">Multimedia</div>
         <div class="form-group" style="margin-bottom:16px;"><label>URL de video (YouTube / Vimeo)</label><input type="url" id="fVideo" placeholder="https://youtube.com/watch?v=..."></div>
         <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:8px;">Fotos</label>
-        <div class="upload-area">
-          <input type="file" id="photoInput" multiple accept="image/*" onchange="previewPhotos(this)">
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="photoInput" multiple accept="image/*" onchange="handlePhotoSelect(this.files)">
           <span class="material-icons">add_photo_alternate</span>
-          <p>Haz clic para agregar fotos</p>
-          <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG · Máx. 10 fotos</p>
+          <p>Haz clic o arrastra fotos aquí</p>
+          <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG, WEBP · La 1ª foto es la portada</p>
         </div>
         <div class="modal-prog" id="modalProg"><div class="modal-prog-fill" id="modalProgFill" style="width:0%"></div></div>
-        <div class="upload-preview" id="uploadPreview"></div>
+        <div class="foto-drag-hint" id="fotoDragHint">
+          <span class="material-icons">swap_vert</span>
+          <span>Arrastra las fotos para cambiar el orden · Escribe un pie de foto para SEO</span>
+        </div>
+        <div id="uploadPreview"></div>
       </div>
       <div class="modal-section">
         <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
@@ -611,7 +641,10 @@ const ADMIN_PASSWORD='estela2025';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let allProperties=[];
-let selectedFiles=[];
+let uploadedImages=[];   // URLs finales en Supabase (o blob para preview)
+let imageCaptions=[];    // Pie de foto — mismo índice que uploadedImages
+let newFiles=[];         // Archivos File nuevos pendientes de subir
+let dragSrcIndex=null;
 let codeCounter=1;
 let heroImages=[];
 let zoneData=[];
@@ -988,8 +1021,8 @@ function updatePriceLabel(){
 }
 
 function openModal(id=null){
-  selectedFiles=[];
-  document.getElementById('uploadPreview').innerHTML='';
+  // Reset estado de fotos
+  uploadedImages=[];imageCaptions=[];newFiles=[];dragSrcIndex=null;
   document.getElementById('modalProgFill').style.width='0%';
   document.querySelectorAll('.feature-toggle').forEach(b=>b.classList.remove('selected'));
   if(id){
@@ -1020,7 +1053,11 @@ function openModal(id=null){
     const lng=p.longitude||(-79.519);
     initAdminMap(parseFloat(lat),parseFloat(lng));
     if(p.features) p.features.forEach(f=>document.querySelectorAll('.feature-toggle').forEach(b=>{if(b.textContent===f)b.classList.add('selected');}));
-    if(p.images?.length) document.getElementById('uploadPreview').innerHTML=p.images.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('');
+    // Cargar fotos y captions existentes
+    uploadedImages=p.images?[...p.images]:[];
+    imageCaptions=p.image_captions?[...p.image_captions]:new Array(uploadedImages.length).fill('');
+    newFiles=new Array(uploadedImages.length).fill(null); // placeholders para fotos ya subidas
+    renderPhotoGrid();
     document.getElementById('deleteBtn').style.display='flex';
   }else{
     document.getElementById('modalTitle').textContent='Agregar propiedad';
@@ -1036,22 +1073,142 @@ function openModal(id=null){
     document.getElementById('deleteBtn').style.display='none';
   }
   document.getElementById('propModal').classList.add('open');
+  initUploadZone();
   setTimeout(()=>initAdminMap(
     parseFloat(document.getElementById('fLatitude').value)||8.994,
     parseFloat(document.getElementById('fLongitude').value)||(-79.519)
   ),300);
 }
 
-function closeModal(){document.getElementById('propModal').classList.remove('open');}
-function toggleFeature(btn){btn.classList.toggle('selected');}
+// ════════════════════════════════════════════════════════════════════
+// GESTIÓN DE FOTOS — Drag & Drop + Captions SEO
+// ════════════════════════════════════════════════════════════════════
 
-function previewPhotos(input){
-  selectedFiles=[...input.files];
-  const preview=document.getElementById('uploadPreview');
-  const id=document.getElementById('editingId').value;
-  const existing=id?(allProperties.find(p=>p.id===id)?.images||[]):[];
-  preview.innerHTML=existing.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('')+
-    selectedFiles.map(f=>`<div class="thumb-wrap"><img src="${URL.createObjectURL(f)}" alt=""></div>`).join('');
+function initUploadZone(){
+  const zone=document.getElementById('uploadArea');
+  if(!zone)return;
+  zone.addEventListener('dragenter',e=>{e.preventDefault();zone.classList.add('drag-active');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-active'));
+  zone.addEventListener('dragover',e=>e.preventDefault());
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('drag-active');
+    handlePhotoSelect(e.dataTransfer.files);
+  });
+}
+
+function handlePhotoSelect(files){
+  const arr=Array.from(files).filter(f=>f.type.startsWith('image/'));
+  arr.forEach(f=>{
+    uploadedImages.push(URL.createObjectURL(f));
+    imageCaptions.push('');
+    newFiles.push(f);
+  });
+  renderPhotoGrid();
+  document.getElementById('photoInput').value='';
+}
+
+function renderPhotoGrid(){
+  const container=document.getElementById('uploadPreview');
+  const hint=document.getElementById('fotoDragHint');
+  container.innerHTML='';
+  const has=uploadedImages.length>0;
+  hint.classList.toggle('visible',has);
+
+  uploadedImages.forEach((url,index)=>{
+    const caption=imageCaptions[index]||'';
+    const len=caption.length;
+    const card=document.createElement('div');
+    card.className='img-card';
+    card.draggable=true;
+    card.dataset.index=index;
+    card.innerHTML=`
+      <div class="img-drag-handle" title="Arrastra para reordenar"><span class="material-icons">drag_indicator</span></div>
+      <div class="img-order-num">${index+1}</div>
+      <button type="button" class="img-delete-btn" data-idx="${index}" title="Eliminar foto"><span class="material-icons">close</span></button>
+      <img src="${url}" alt="${caption||'Foto '+(index+1)}" loading="lazy">
+      <div class="img-portada-badge">✦ PORTADA</div>
+      <div class="img-caption-wrap">
+        <textarea class="img-caption-input" placeholder="Pie de foto SEO (ej: Sala amplia en apto Bella Vista)" maxlength="125" rows="2" data-idx="${index}">${caption}</textarea>
+        <div class="img-caption-char${len>100?' warn':''}" data-char="${index}">${len}/125</div>
+      </div>`;
+
+    // Caption listeners
+    const ta=card.querySelector('.img-caption-input');
+    ta.addEventListener('input',function(){
+      const i=parseInt(this.dataset.idx);
+      imageCaptions[i]=this.value;
+      const l=this.value.length;
+      const ch=card.querySelector('.img-caption-char');
+      ch.textContent=`${l}/125`;
+      ch.classList.toggle('warn',l>100);
+      card.querySelector('img').alt=this.value||`Foto ${i+1}`;
+    });
+
+    // Delete listener
+    card.querySelector('.img-delete-btn').addEventListener('click',function(){
+      removePhoto(parseInt(this.dataset.idx));
+    });
+
+    // Drag & Drop listeners
+    card.addEventListener('dragstart',onPhotoDragStart);
+    card.addEventListener('dragover',onPhotoDragOver);
+    card.addEventListener('drop',onPhotoDrop);
+    card.addEventListener('dragend',onPhotoDragEnd);
+
+    container.appendChild(card);
+  });
+}
+
+function removePhoto(index){
+  const url=uploadedImages[index];
+  const isStorageUrl=url&&!url.startsWith('blob:')&&url.includes(STORAGE_BUCKET);
+
+  if(isStorageUrl){
+    // Extraer nombre del archivo de la URL de Supabase
+    const filename=url.split('/').pop().split('?')[0];
+    if(!confirm(`¿Eliminar esta foto?\n\nEsto la borrará también del servidor (${filename}).\nEsta acción no se puede deshacer.`)) return;
+    // Borrar del Storage en segundo plano (no bloquea la UI)
+    sb.storage.from(STORAGE_BUCKET).remove([filename]).then(({error})=>{
+      if(error) console.warn('No se pudo borrar del Storage:', error.message);
+    });
+  } else {
+    if(!confirm('¿Eliminar esta foto?')) return;
+  }
+
+  uploadedImages.splice(index,1);
+  imageCaptions.splice(index,1);
+  newFiles.splice(index,1);
+  renderPhotoGrid();
+  showToast(isStorageUrl?'Foto eliminada del servidor.':'Foto eliminada.');
+}
+
+// ── Drag & Drop entre tarjetas ───────────────────────────────────────
+function onPhotoDragStart(e){
+  dragSrcIndex=parseInt(this.dataset.index);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+}
+function onPhotoDragOver(e){
+  e.preventDefault();e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.img-card').forEach(c=>c.classList.remove('drag-over'));
+  this.classList.add('drag-over');
+}
+function onPhotoDrop(e){
+  e.stopPropagation();
+  const target=parseInt(this.dataset.index);
+  if(dragSrcIndex===null||dragSrcIndex===target)return;
+  const[mu]=uploadedImages.splice(dragSrcIndex,1);
+  const[mc]=imageCaptions.splice(dragSrcIndex,1);
+  const[mf]=newFiles.splice(dragSrcIndex,1);
+  uploadedImages.splice(target,0,mu);
+  imageCaptions.splice(target,0,mc);
+  newFiles.splice(target,0,mf);
+  dragSrcIndex=null;
+  renderPhotoGrid();
+  showToast('Orden de fotos actualizado');
+}
+function onPhotoDragEnd(){
+  document.querySelectorAll('.img-card').forEach(c=>c.classList.remove('dragging','drag-over'));
 }
 
 async function saveProperty(){
@@ -1060,17 +1217,32 @@ async function saveProperty(){
   const btn=document.getElementById('saveBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Guardando...';
   const editingId=document.getElementById('editingId').value;
-  let imageUrls=editingId?(allProperties.find(p=>p.id===editingId)?.images||[]):[];
-  if(selectedFiles.length>0){
+
+  // Subir SOLO los archivos nuevos (File object), mantener URLs ya subidas
+  const filesToUpload=newFiles.filter(f=>f instanceof File);
+  const totalNew=filesToUpload.length;
+  if(totalNew>0){
     document.getElementById('modalProg').classList.add('visible');
-    for(let i=0;i<selectedFiles.length;i++){
-      const path=`${Date.now()}_${i}.${selectedFiles[i].name.split('.').pop()}`;
-      const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,selectedFiles[i],{upsert:true});
-      if(!error){const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);imageUrls.push(u.publicUrl);}
-      document.getElementById('modalProgFill').style.width=`${Math.round(((i+1)/selectedFiles.length)*100)}%`;
+    let uploadIdx=0;
+    for(let i=0;i<newFiles.length;i++){
+      if(!(newFiles[i] instanceof File)) continue;
+      const f=newFiles[i];
+      const path=`${Date.now()}_${uploadIdx}.${f.name.split('.').pop()}`;
+      const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,f,{upsert:true});
+      if(!error){
+        const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+        uploadedImages[i]=u.publicUrl; // reemplaza el blob URL por la URL final
+      }
+      uploadIdx++;
+      document.getElementById('modalProgFill').style.width=`${Math.round((uploadIdx/totalNew)*100)}%`;
     }
     document.getElementById('modalProg').classList.remove('visible');
   }
+
+  // Limpiar blob URLs que no se pudieron subir
+  const finalImages=uploadedImages.filter(u=>u&&!u.startsWith('blob:'));
+  const finalCaptions=finalImages.map((_,i)=>imageCaptions[i]||'');
+
   const payload={
     code:document.getElementById('modalCode').textContent,
     operation:document.getElementById('fOperation').value,
@@ -1085,7 +1257,8 @@ async function saveProperty(){
     floor:document.getElementById('fFloor').value||'',
     description:document.getElementById('fDesc').value,
     features:[...document.querySelectorAll('.feature-toggle.selected')].map(b=>b.textContent),
-    images:imageUrls,
+    images:finalImages,
+    image_captions:finalCaptions,
     video_url:document.getElementById('fVideo').value||'',
     featured:document.getElementById('fFeatured').checked,
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
@@ -1115,7 +1288,6 @@ async function deleteProperty(){
   closeModal();await loadProperties();showToast('Propiedad eliminada.');
 }
 
-// ---- SOCIAL LINKS ----
 function loadSocialInputs(social){
   const map={instagram:'sInstagram',facebook:'sFacebook',youtube:'sYoutube',twitter:'sTwitter',linkedin:'sLinkedin',whatsapp:'sWhatsapp'};
   Object.entries(map).forEach(([key,id])=>{
