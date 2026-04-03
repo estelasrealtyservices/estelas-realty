@@ -12,7 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-:root{--primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;--bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;--text:#1A1A1A;--text2:#555;--text3:#888;--border:#E0E0E0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.08);--shadow-hover:0 8px 32px rgba(0,0,0,0.14);--transition:all 0.25s cubic-bezier(0.4,0,0.2,1);}
+:root{--primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;--bg:#FAFAFA;--surface:#FFF;--surface2:#F4F4F2;--text:#1A1A1A;--text2:#555;--text3:#888;--border:#E0E0E0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.08);--shadow-hover:0 8px 32px rgba(0,0,0,0.14);--transition:all 0.25s cubic-bezier(0.4,0,0.2,1);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
 a{color:inherit;text-decoration:none;}
@@ -33,8 +33,8 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .hero-slides{position:absolute;inset:0;z-index:0;}
 .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
 .hero-slide.active{opacity:1;}
-.hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.82) 0%,rgba(45,45,82,0.75) 100%);}
-.hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary) 0%,#2d2d52 100%);z-index:-1;}
+.hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.82),rgba(45,45,82,0.75));}
+.hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary),#2d2d52);z-index:-1;}
 .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
 .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
 .hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
@@ -120,32 +120,104 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
 .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
 
-/* ===== MODAL ===== */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(10,10,20,0.72);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:20px;width:100%;max-width:1080px;margin:auto;box-shadow:0 32px 100px rgba(0,0,0,0.35);overflow:hidden;}
-.modal-header{position:sticky;top:0;background:var(--surface);padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10;}
+/* ==============================
+   MODAL — Airbnb/Proty style
+   ============================== */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);overflow-y:auto;}
+.modal-overlay.open{display:block;}
+.modal{background:var(--surface);width:100%;max-width:1080px;margin:32px auto;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.3);overflow:hidden;}
+.modal-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
 .modal-code{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;}
 .modal-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--primary);}
 .modal-close{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);flex-shrink:0;}
 .modal-close:hover{background:var(--surface2);}
 .modal-close .material-icons{font-size:20px;color:var(--text2);}
 
-/* ===== BENTO GALLERY ===== */
-.bento-gallery{display:grid;grid-template-columns:3fr 2fr;height:400px;gap:3px;background:var(--border);}
-.bento-main{position:relative;overflow:hidden;background:var(--surface2);cursor:pointer;}
-.bento-main img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;display:block;}
-.bento-main:hover img{transform:scale(1.04);}
-.bento-right{display:grid;grid-template-rows:1fr 1fr;gap:3px;}
-.bento-thumb{position:relative;overflow:hidden;background:var(--surface2);cursor:pointer;}
-.bento-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s;}
-.bento-thumb:hover img{transform:scale(1.06);}
-.bento-more-overlay{position:absolute;inset:0;background:rgba(26,26,46,0.72);display:flex;align-items:center;justify-content:center;color:white;font-size:22px;font-weight:700;font-family:'Playfair Display',serif;}
-.bento-all-btn{position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.92);color:var(--primary);border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.18);transition:var(--transition);}
-.bento-all-btn:hover{background:white;}
-.bento-all-btn .material-icons{font-size:14px;}
+/* ---- Compact gallery (Airbnb style) ---- */
+.airbnb-gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:160px 160px;gap:4px;height:324px;background:var(--border);}
+.ag-main{grid-row:1/3;overflow:hidden;position:relative;cursor:pointer;background:var(--surface2);}
+.ag-main img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.ag-main:hover img{transform:scale(1.03);}
+.ag-thumb{overflow:hidden;position:relative;cursor:pointer;background:var(--surface2);}
+.ag-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;display:block;}
+.ag-thumb:hover img{transform:scale(1.05);}
+.ag-thumb.ag-last .ag-more{position:absolute;inset:0;background:rgba(26,26,46,0.65);display:flex;align-items:center;justify-content:center;color:white;font-size:15px;font-weight:700;font-family:'Playfair Display',serif;}
+.ag-view-btn{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.92);color:var(--primary);border:none;border-radius:7px;padding:5px 11px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer;box-shadow:0 1px 8px rgba(0,0,0,0.15);transition:var(--transition);}
+.ag-view-btn:hover{background:white;}
+.ag-view-btn .material-icons{font-size:13px;}
 
-/* ===== LIGHTBOX ===== */
+/* ---- Detail layout 2-col ---- */
+.detail-layout{display:grid;grid-template-columns:1fr 320px;gap:0;}
+.detail-left{padding:24px 28px;border-right:1px solid var(--border);}
+.detail-right{padding:20px 18px;background:var(--bg);}
+
+/* Price + meta row */
+.detail-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.detail-price-block{}
+.detail-price{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--primary);}
+.detail-price-period{font-size:13px;color:var(--text3);}
+.detail-location{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);margin-top:4px;}
+.detail-location .material-icons{font-size:14px;color:var(--accent);}
+.detail-badge-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+
+/* Specs pills row */
+.specs-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.spec-pill{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--surface2);border-radius:20px;font-size:13px;color:var(--text2);border:1px solid var(--border);}
+.spec-pill .material-icons{font-size:15px;color:var(--accent);}
+.spec-pill strong{color:var(--text);font-weight:600;}
+
+/* Description */
+.detail-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.detail-desc{font-size:14px;color:var(--text2);line-height:1.75;margin-bottom:20px;}
+.feature-pill{padding:5px 11px;background:var(--surface2);border-radius:20px;font-size:12px;color:var(--text2);border:1px solid var(--border);}
+
+/* Map */
+.property-map{height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;z-index:0;margin-top:4px;}
+
+/* Related */
+.related-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+.related-section h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--primary);margin-bottom:12px;}
+.related-carousel{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
+.related-carousel::-webkit-scrollbar{height:4px;}
+.related-carousel::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.related-card{flex:0 0 180px;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:var(--transition);}
+.related-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:transparent;}
+.related-img{aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
+.related-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;display:block;}
+.related-card:hover .related-img img{transform:scale(1.05);}
+.related-body{padding:8px 10px 10px;}
+.related-price{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--primary);}
+.related-title{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.related-zone{font-size:10px;color:var(--text3);margin-top:1px;}
+
+/* ---- Contact card (right column) — Proty style ---- */
+.agent-card{background:white;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;}
+.agent-card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.agent-avatar{width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+.agent-avatar img{width:100%;height:100%;object-fit:cover;}
+.agent-avatar-placeholder{color:var(--accent);font-size:22px;font-weight:700;font-family:'Playfair Display',serif;}
+.agent-name{font-size:15px;font-weight:700;color:var(--primary);}
+.agent-title{font-size:12px;color:var(--text3);margin-top:1px;}
+.agent-contacts{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+.agent-contact-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.agent-contact-item .material-icons{font-size:15px;color:var(--accent);}
+.contact-form-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+.contact-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;transition:var(--transition);margin-bottom:8px;}
+.contact-input:focus{border-color:var(--primary);}
+.contact-textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;resize:none;transition:var(--transition);margin-bottom:10px;}
+.contact-textarea:focus{border-color:var(--primary);}
+.btn-send-msg{width:100%;padding:11px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);margin-bottom:8px;}
+.btn-send-msg:hover{background:#2d2d52;}
+.btn-whatsapp{width:100%;padding:11px;background:#25D366;color:white;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);margin-bottom:8px;}
+.btn-whatsapp:hover{background:#20ba59;}
+.btn-call{width:100%;padding:11px;background:var(--surface2);color:var(--primary);border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);}
+.btn-call:hover{background:var(--border);}
+.ref-share-row{display:flex;gap:6px;margin-top:10px;}
+.ref-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:white;font-size:11px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:3px;transition:var(--transition);font-weight:500;}
+.ref-btn:hover{border-color:var(--primary);color:var(--primary);}
+.send-status{font-size:12px;text-align:center;padding:8px;border-radius:6px;display:none;margin-top:6px;}
+
+/* ======= LIGHTBOX ======= */
 .lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.97);align-items:center;justify-content:center;}
 .lightbox.open{display:flex;}
 .lb-inner{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -162,47 +234,6 @@ nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1p
 .lb-thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px;}
 .lb-tn{width:60px;height:44px;object-fit:cover;border-radius:5px;cursor:pointer;opacity:0.4;border:2px solid transparent;transition:var(--transition);flex-shrink:0;}
 .lb-tn.active,.lb-tn:hover{opacity:1;border-color:var(--accent);}
-
-/* ===== DETAIL BODY ===== */
-.detail-body-inner{display:grid;grid-template-columns:1fr 276px;}
-.detail-main-col{padding:24px 28px;border-right:1px solid var(--border);overflow-y:auto;max-height:calc(90vh - 196px);}
-.detail-side-col{padding:18px 16px;background:var(--bg);overflow-y:auto;max-height:calc(90vh - 196px);}
-.detail-price{font-family:'Playfair Display',serif;font-size:30px;font-weight:600;color:var(--primary);}
-.detail-specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin:16px 0;}
-.detail-spec-box{background:var(--surface);padding:12px 6px;text-align:center;}
-.detail-spec-box strong{display:block;font-size:17px;font-weight:700;color:var(--primary);font-family:'Playfair Display',serif;}
-.detail-spec-box span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
-.detail-spec-box .material-icons{font-size:14px;color:var(--accent);display:block;margin-bottom:3px;}
-.section-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;margin-top:18px;}
-.feature-pill{padding:5px 11px;background:var(--surface2);border-radius:20px;font-size:12px;color:var(--text2);border:1px solid var(--border);}
-.property-map{height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;z-index:0;}
-.contact-box{background:white;border-radius:14px;padding:16px;border:1px solid var(--border);margin-bottom:10px;}
-.contact-box h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--primary);}
-.contact-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;margin-bottom:8px;border:none;cursor:pointer;transition:var(--transition);}
-.contact-whatsapp{background:#25D366;color:white;}
-.contact-whatsapp:hover{background:#20ba59;}
-.contact-call{background:var(--primary);color:white;}
-.contact-call:hover{background:#2d2d52;}
-.share-row{display:flex;gap:6px;margin-top:4px;}
-.share-btn{flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:white;font-size:11px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:3px;transition:var(--transition);font-weight:500;}
-.share-btn:hover{border-color:var(--primary);color:var(--primary);}
-.ref-badge{margin-top:8px;padding:9px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--text3);text-align:center;border:1px solid var(--border);}
-
-/* ===== RELATED ===== */
-.related-section{margin-top:28px;padding-top:24px;border-top:1px solid var(--border);}
-.related-section h4{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--primary);margin-bottom:14px;}
-.related-carousel{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
-.related-carousel::-webkit-scrollbar{height:4px;}
-.related-carousel::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-.related-card{flex:0 0 190px;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:var(--transition);}
-.related-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:transparent;}
-.related-img{aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
-.related-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;display:block;}
-.related-card:hover .related-img img{transform:scale(1.05);}
-.related-body{padding:9px 11px 11px;}
-.related-price{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--primary);}
-.related-title{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.related-zone{font-size:10px;color:var(--text3);margin-top:2px;}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;z-index:600;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
@@ -248,13 +279,10 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
   .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
   .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
   .zones-grid{grid-template-columns:1fr 1fr;}
-  .bento-gallery{grid-template-columns:1fr;height:auto;}
-  .bento-main img{aspect-ratio:16/9;height:auto;}
-  .bento-right{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
-  .bento-thumb img{aspect-ratio:4/3;height:auto;}
-  .detail-body-inner{grid-template-columns:1fr;}
-  .detail-side-col{border-top:1px solid var(--border);background:var(--surface);}
-  .detail-main-col,.detail-side-col{max-height:none;overflow-y:visible;}
+  .airbnb-gallery{grid-template-columns:1fr;height:auto;grid-template-rows:220px 110px 110px;}
+  .ag-main{grid-row:auto;}
+  .detail-layout{grid-template-columns:1fr;}
+  .detail-right{border-top:1px solid var(--border);}
 }
 @media(max-width:768px){
   nav{height:70px;padding:0 16px;}
@@ -281,9 +309,8 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
   #contacto>div{grid-template-columns:1fr!important;gap:32px;}
   .footer-grid{grid-template-columns:1fr;gap:28px;}
   .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
-  .modal{border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;margin:0;}
-  .modal-overlay{align-items:flex-end;padding:0;overflow-y:auto;}
-  .bento-gallery{border-radius:0;}
+  .modal{margin:0;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
+  .modal-overlay{overflow-y:auto;}
   .lb-img-wrap{padding:50px 14px 12px;}
   .lb-nav{width:42px;height:42px;}
   .lb-prev{left:6px;}.lb-next{right:6px;}
@@ -370,8 +397,8 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
       </div>
       <select class="filter-select" id="priceFilter" onchange="filterProperties()">
         <option value="">Precio</option><option value="0-500">Hasta $500</option>
-        <option value="500-1000">$500 – $1,000</option><option value="1000-2000">$1,000 – $2,000</option>
-        <option value="2000-5000">$2,000 – $5,000</option><option value="5000+">$5,000+</option>
+        <option value="500-1000">$500–$1,000</option><option value="1000-2000">$1,000–$2,000</option>
+        <option value="2000-5000">$2,000–$5,000</option><option value="5000+">$5,000+</option>
       </select>
       <select class="filter-select" id="roomsFilter" onchange="filterProperties()">
         <option value="">Habitaciones</option><option value="1">1 hab.</option>
@@ -493,7 +520,6 @@ var SURL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 var sb=supabase.createClient(SURL,SKEY);
 emailjs.init({publicKey:'Eiaoykzzg3X2ZpYGm'});
-
 var allProperties=[];
 var activeTab='';
 var slideTimer=null;
@@ -501,7 +527,6 @@ var curSlide=0;
 var lbImages=[];
 var lbIdx=0;
 var PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
-
 var DEFAULT_ZONES=[
   {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80'},
   {name:'Punta Pacífica',subtitle:'Vista al mar',img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80'},
@@ -514,27 +539,20 @@ var DEFAULT_ZONES=[
   {name:'San Carlos',subtitle:'Playa tranquila',img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=600&q=80'}
 ];
 
-function init(){
-  loadProperties();
-  loadSiteConfig();
-}
+function init(){loadProperties();loadSiteConfig();}
 
 function loadSiteConfig(){
-  sb.from('site_config').select('*').then(function(res){
-    var cfg={};
-    var rows=res.data||[];
+  sb.from('site_config').select('*').then(function(r){
+    var cfg={};var rows=r.data||[];
     for(var i=0;i<rows.length;i++) cfg[rows[i].id]=rows[i].value;
     renderHero(cfg.hero_images||[]);
     renderZones(cfg.zone_images||DEFAULT_ZONES);
     renderSocial(cfg.social_links||{});
-  }).catch(function(){
-    renderHero([]);renderZones(DEFAULT_ZONES);
-  });
+  }).catch(function(){renderHero([]);renderZones(DEFAULT_ZONES);});
 }
 
 function renderHero(imgs){
-  var c=document.getElementById('heroSlides');
-  var d=document.getElementById('heroDots');
+  var c=document.getElementById('heroSlides'),d=document.getElementById('heroDots');
   if(!imgs.length){c.innerHTML='';d.innerHTML='';return;}
   var sh='',dh='';
   for(var i=0;i<imgs.length;i++){
@@ -542,15 +560,10 @@ function renderHero(imgs){
     dh+='<button class="hero-dot'+(i===0?' active':'')+'" onclick="goSlide('+i+')"></button>';
   }
   c.innerHTML=sh;d.innerHTML=dh;
-  if(imgs.length>1){
-    clearInterval(slideTimer);
-    slideTimer=setInterval(function(){goSlide((curSlide+1)%imgs.length);},5000);
-  }
+  if(imgs.length>1){clearInterval(slideTimer);slideTimer=setInterval(function(){goSlide((curSlide+1)%imgs.length);},5000);}
 }
-
 function goSlide(n){
-  var s=document.querySelectorAll('.hero-slide');
-  var d=document.querySelectorAll('.hero-dot');
+  var s=document.querySelectorAll('.hero-slide'),d=document.querySelectorAll('.hero-dot');
   if(!s.length) return;
   if(s[curSlide]) s[curSlide].classList.remove('active');
   if(d[curSlide]) d[curSlide].classList.remove('active');
@@ -558,7 +571,6 @@ function goSlide(n){
   if(s[curSlide]) s[curSlide].classList.add('active');
   if(d[curSlide]) d[curSlide].classList.add('active');
 }
-
 function renderZones(zones){
   var h='';
   for(var i=0;i<zones.length;i++){
@@ -567,38 +579,23 @@ function renderZones(zones){
   }
   document.getElementById('zonesGrid').innerHTML=h;
 }
-
-var SVGS={
-  instagram:'<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
-  facebook:'<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-  youtube:'<svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>',
-  twitter:'<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-  linkedin:'<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
-  whatsapp:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
-};
+var SVGS={instagram:'<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',facebook:'<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',youtube:'<svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>',twitter:'<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',linkedin:'<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',whatsapp:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'};
 
 function renderSocial(social){
   var c=document.getElementById('socialIconsFooter');if(!c) return;
-  var h='';
-  var keys=Object.keys(social);
-  for(var i=0;i<keys.length;i++){
-    var n=keys[i],u=social[n];
-    if(u&&u.trim()) h+='<a href="'+u+'" target="_blank" rel="noopener" class="social-icon si-'+n+'">'+(SVGS[n]||'')+'</a>';
-  }
+  var h='',keys=Object.keys(social);
+  for(var i=0;i<keys.length;i++){var n=keys[i],u=social[n];if(u&&u.trim()) h+='<a href="'+u+'" target="_blank" rel="noopener" class="social-icon si-'+n+'">'+(SVGS[n]||'')+'</a>';}
   c.innerHTML=h;
 }
 
 function loadProperties(){
-  sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false}).then(function(res){
-    if(res.error) throw res.error;
-    allProperties=res.data||[];
-    updateStats();
-    renderProperties(applyFilters());
+  sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false}).then(function(r){
+    if(r.error) throw r.error;
+    allProperties=r.data||[];updateStats();renderProperties(applyFilters());
   }).catch(function(){
     document.getElementById('propertyGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)"><span class="material-icons" style="font-size:48px;display:block;margin-bottom:12px">cloud_off</span><p>No se pudo conectar con la base de datos.</p></div>';
   });
 }
-
 function updateStats(){
   document.getElementById('totalCount').textContent=allProperties.length;
   var rent=0,sale=0;
@@ -609,7 +606,6 @@ function updateStats(){
   document.getElementById('rentCount').textContent=rent;
   document.getElementById('saleCount').textContent=sale;
 }
-
 function applyFilters(){
   var list=allProperties.slice();
   var s=document.getElementById('searchInput').value.toLowerCase().trim();
@@ -620,22 +616,16 @@ function applyFilters(){
   var order=document.getElementById('orderFilter').value;
   if(activeTab==='Alquiler') list=list.filter(function(p){return p.operation==='Alquiler'||p.operation==='Alquiler vacacional';});
   else if(activeTab) list=list.filter(function(p){return p.operation===activeTab;});
-  if(s) list=list.filter(function(p){
-    return (p.title&&p.title.toLowerCase().indexOf(s)>-1)||(p.zone&&p.zone.toLowerCase().indexOf(s)>-1)||(p.code&&p.code.toLowerCase().indexOf(s)>-1)||(p.description&&p.description.toLowerCase().indexOf(s)>-1)||(p.type&&p.type.toLowerCase().indexOf(s)>-1)||(p.encuentra24_code&&p.encuentra24_code.toLowerCase().indexOf(s)>-1);
-  });
+  if(s) list=list.filter(function(p){return (p.title&&p.title.toLowerCase().indexOf(s)>-1)||(p.zone&&p.zone.toLowerCase().indexOf(s)>-1)||(p.code&&p.code.toLowerCase().indexOf(s)>-1)||(p.description&&p.description.toLowerCase().indexOf(s)>-1)||(p.type&&p.type.toLowerCase().indexOf(s)>-1)||(p.encuentra24_code&&p.encuentra24_code.toLowerCase().indexOf(s)>-1);});
   if(type) list=list.filter(function(p){return p.type===type;});
   if(zone) list=list.filter(function(p){return p.zone===zone;});
   if(rooms){var r=parseInt(rooms);list=list.filter(function(p){return rooms==='4'?p.rooms>=4:p.rooms===r;});}
-  if(price){
-    if(price==='5000+') list=list.filter(function(p){return p.price>=5000;});
-    else{var parts=price.split('-');var mn=Number(parts[0]),mx=Number(parts[1]);list=list.filter(function(p){return p.price>=mn&&p.price<=mx;});}
-  }
+  if(price){if(price==='5000+') list=list.filter(function(p){return p.price>=5000;});else{var pts=price.split('-');var mn=Number(pts[0]),mx=Number(pts[1]);list=list.filter(function(p){return p.price>=mn&&p.price<=mx;});}}
   if(order==='price-asc') list.sort(function(a,b){return a.price-b.price;});
   else if(order==='price-desc') list.sort(function(a,b){return b.price-a.price;});
   else if(order==='newest') list.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
   return list;
 }
-
 function filterProperties(){renderProperties(applyFilters());}
 function doSearch(){document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});filterProperties();}
 function resetFilters(){
@@ -647,57 +637,25 @@ function resetFilters(){
   document.querySelector('.tab').classList.add('active');
   filterProperties();
 }
-function setTab(btn,val){
-  var tabs=document.querySelectorAll('.tab');
-  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
-  btn.classList.add('active');activeTab=val;filterProperties();
-}
-function setZone(z){
-  document.getElementById('zoneFilter').value=z;
-  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
-  filterProperties();
-}
-
-function pricePeriod(op){return op==='Alquiler vacacional'?' /noche':op==='Alquiler'?' /mes':'';}
-function opClass(op){return op==='Alquiler'?'badge-rent':op==='Alquiler vacacional'?'badge-vacation':'badge-sale';}
-function firstImg(p){return (p.images&&p.images[0])||PH;}
+function setTab(btn,val){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');btn.classList.add('active');activeTab=val;filterProperties();}
+function setZone(z){document.getElementById('zoneFilter').value=z;document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});filterProperties();}
+function pp(op){return op==='Alquiler vacacional'?' /noche':op==='Alquiler'?' /mes':'';}
+function oc(op){return op==='Alquiler'?'badge-rent':op==='Alquiler vacacional'?'badge-vacation':'badge-sale';}
+function fi(p){return (p.images&&p.images[0])||PH;}
 
 function renderProperties(list){
-  var grid=document.getElementById('propertyGrid');
-  var empty=document.getElementById('emptyState');
+  var grid=document.getElementById('propertyGrid'),empty=document.getElementById('emptyState');
   if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';return;}
   empty.style.display='none';
   var h='';
   for(var i=0;i<list.length;i++){
     var p=list[i];
-    h+='<div class="property-card" onclick="openDetail(\''+p.id+'\')">'+
-      '<div class="card-image">'+
-        '<img src="'+firstImg(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'">'+
-        '<div class="card-badge '+opClass(p.operation)+'">'+p.operation+'</div>'+
-        (p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':'')+
-        '<div class="card-code">'+p.code+'</div>'+
-        '<div class="card-actions" onclick="event.stopPropagation()">'+
-          '<button class="card-action-btn" onclick="shareProperty(\''+p.id+'\')" title="Copiar URL"><span class="material-icons">link</span></button>'+
-          '<button class="card-action-btn" onclick="generateBrochure(\''+p.id+'\')" title="PDF"><span class="material-icons">picture_as_pdf</span></button>'+
-        '</div>'+
-      '</div>'+
-      '<div class="card-body">'+
-        '<div class="card-price">$'+(p.price||0).toLocaleString()+'<span>'+pricePeriod(p.operation)+'</span></div>'+
-        '<div class="card-title">'+p.title+'</div>'+
-        '<div class="card-location"><span class="material-icons">location_on</span>'+p.zone+'</div>'+
-        '<div class="card-specs">'+
-          (p.rooms>0?'<div class="spec"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong>Hab.</div>':'')+
-          '<div class="spec"><span class="material-icons">shower</span><strong>'+(p.baths||1)+'</strong>Baños</div>'+
-          '<div class="spec"><span class="material-icons">square_foot</span><strong>'+(p.size||0)+'</strong>m²</div>'+
-          '<div class="spec"><span class="material-icons">directions_car</span><strong>'+(p.parking||0)+'</strong>Park.</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
+    h+='<div class="property-card" onclick="openDetail(\''+p.id+'\')"><div class="card-image"><img src="'+fi(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'"><div class="card-badge '+oc(p.operation)+'">'+p.operation+'</div>'+(p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':'')+'<div class="card-code">'+p.code+'</div><div class="card-actions" onclick="event.stopPropagation()"><button class="card-action-btn" onclick="shareProperty(\''+p.id+'\')" title="Copiar URL"><span class="material-icons">link</span></button><button class="card-action-btn" onclick="generateBrochure(\''+p.id+'\')" title="PDF"><span class="material-icons">picture_as_pdf</span></button></div></div><div class="card-body"><div class="card-price">$'+(p.price||0).toLocaleString()+'<span>'+pp(p.operation)+'</span></div><div class="card-title">'+p.title+'</div><div class="card-location"><span class="material-icons">location_on</span>'+p.zone+'</div><div class="card-specs">'+(p.rooms>0?'<div class="spec"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong>Hab.</div>':'')+'<div class="spec"><span class="material-icons">shower</span><strong>'+(p.baths||1)+'</strong>Baños</div><div class="spec"><span class="material-icons">square_foot</span><strong>'+(p.size||0)+'</strong>m²</div><div class="spec"><span class="material-icons">directions_car</span><strong>'+(p.parking||0)+'</strong>Park.</div></div></div></div>';
   }
   grid.innerHTML=h;
 }
 
-/* ========= OPEN DETAIL ========= */
+/* =========== OPEN DETAIL =========== */
 function openDetail(id){
   var p=null;
   for(var i=0;i<allProperties.length;i++){if(allProperties[i].id===id){p=allProperties[i];break;}}
@@ -709,81 +667,95 @@ function openDetail(id){
   var imgs=[];
   if(p.images&&p.images.length){for(var i=0;i<p.images.length;i++){if(p.images[i]) imgs.push(p.images[i]);}}
   if(!imgs.length) imgs=[PH];
-
-  var pl=pricePeriod(p.operation);
-  var oc=opClass(p.operation);
-
-  // Store images on window for lightbox access
   window._lbImgs=imgs;
 
-  // Build bento right column (up to 4 thumbs)
+  /* Airbnb gallery — main + 4 thumbs */
   var thumbsH='';
-  for(var i=1;i<5&&i<imgs.length;i++){
+  for(var i=1;i<5;i++){
+    if(i>=imgs.length) break;
     var isLast=(i===4&&imgs.length>5);
-    thumbsH+='<div class="bento-thumb" onclick="openLightbox('+i+')">'
+    thumbsH+='<div class="ag-thumb'+(isLast?' ag-last':'')+'" onclick="openLightbox('+i+')">'
       +'<img src="'+imgs[i]+'" alt="" loading="lazy" onerror="this.src=\''+PH+'\'">'
-      +(isLast?'<div class="bento-more-overlay">+'+(imgs.length-4)+'</div>':'')
+      +(isLast?'<div class="ag-more">+'+(imgs.length-4)+' fotos</div>':'')
       +'</div>';
   }
 
-  // Specs boxes
+  /* Spec pills */
   var specsH='';
-  if(p.rooms>0) specsH+='<div class="detail-spec-box"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong><span>Hab.</span></div>';
-  if(p.baths) specsH+='<div class="detail-spec-box"><span class="material-icons">shower</span><strong>'+p.baths+'</strong><span>Baños</span></div>';
-  if(p.size) specsH+='<div class="detail-spec-box"><span class="material-icons">square_foot</span><strong>'+p.size+'</strong><span>m²</span></div>';
-  if(p.parking) specsH+='<div class="detail-spec-box"><span class="material-icons">directions_car</span><strong>'+p.parking+'</strong><span>Park.</span></div>';
-  if(p.floor) specsH+='<div class="detail-spec-box"><span class="material-icons">apartment</span><strong>'+p.floor+'</strong><span>Piso</span></div>';
+  if(p.rooms>0) specsH+='<div class="spec-pill"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong> hab.</div>';
+  if(p.baths) specsH+='<div class="spec-pill"><span class="material-icons">shower</span><strong>'+p.baths+'</strong> baños</div>';
+  if(p.size) specsH+='<div class="spec-pill"><span class="material-icons">square_foot</span><strong>'+p.size+'</strong> m²</div>';
+  if(p.parking) specsH+='<div class="spec-pill"><span class="material-icons">directions_car</span><strong>'+p.parking+'</strong> park.</div>';
+  if(p.floor) specsH+='<div class="spec-pill"><span class="material-icons">apartment</span>Piso <strong>'+p.floor+'</strong></div>';
 
-  // Features
+  /* Features */
   var featsH='';
   if(p.features&&p.features.length){
-    featsH='<div class="section-label">Características</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+    featsH='<div class="detail-section-title" style="margin-top:20px">Características</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">';
     for(var i=0;i<p.features.length;i++) featsH+='<span class="feature-pill">'+p.features[i]+'</span>';
     featsH+='</div>';
   }
 
   var waLink='https://wa.me/50766740090?text='+encodeURIComponent('Hola, me interesa la propiedad '+p.code+': '+p.title);
+  var priceStr='$'+(p.price||0).toLocaleString();
+  var periodStr=pp(p.operation);
 
   document.getElementById('detailBody').innerHTML=
-    // Bento gallery
-    '<div class="bento-gallery">'
-      +'<div class="bento-main" onclick="openLightbox(0)">'
+    /* Gallery */
+    '<div class="airbnb-gallery">'
+      +'<div class="ag-main" onclick="openLightbox(0)">'
         +'<img src="'+imgs[0]+'" alt="'+p.title+'" onerror="this.src=\''+PH+'\'">'
-        +'<button class="bento-all-btn" onclick="event.stopPropagation();openLightbox(0)"><span class="material-icons">photo_library</span>Ver '+imgs.length+' foto'+(imgs.length!==1?'s':'')+'</button>'
+        +(imgs.length>1?'<button class="ag-view-btn" onclick="event.stopPropagation();openLightbox(0)"><span class="material-icons">photo_library</span>Ver '+imgs.length+' fotos</button>':'')
       +'</div>'
-      +(imgs.length>1?'<div class="bento-right">'+thumbsH+'</div>':'')
+      +(imgs.length>1?thumbsH:'')
     +'</div>'
-    // Body
-    +'<div class="detail-body-inner">'
-      // Main col
-      +'<div class="detail-main-col">'
-        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
-          +'<span class="card-badge '+oc+'" style="position:static">'+p.operation+'</span>'
-          +'<span style="font-size:13px;color:var(--text3)">'+p.type+' · '+p.zone+'</span>'
+    /* 2-col layout */
+    +'<div class="detail-layout">'
+      /* LEFT */
+      +'<div class="detail-left">'
+        +'<div class="detail-top">'
+          +'<div class="detail-price-block">'
+            +'<div><span class="detail-price">'+priceStr+'</span><span class="detail-price-period">'+periodStr+'</span></div>'
+            +'<div class="detail-location"><span class="material-icons">location_on</span>'+p.zone+' · '+p.type+'</div>'
+          +'</div>'
+          +'<div class="detail-badge-row">'
+            +'<span class="card-badge '+oc(p.operation)+'" style="position:static">'+p.operation+'</span>'
+            +(p.featured?'<span class="card-badge badge-featured" style="position:static">Destacado</span>':'')
+          +'</div>'
         +'</div>'
-        +'<div style="margin-bottom:4px"><span class="detail-price">$'+(p.price||0).toLocaleString()+'</span><span style="font-size:13px;color:var(--text3);font-family:\'DM Sans\',sans-serif">'+pl+'</span></div>'
-        +(specsH?'<div class="detail-specs-grid">'+specsH+'</div>':'')
-        +'<div class="section-label">Descripción</div>'
-        +'<p style="font-size:14px;color:var(--text2);line-height:1.75;margin-bottom:16px">'+(p.description||'')+'</p>'
+        +(specsH?'<div class="specs-pills">'+specsH+'</div>':'')
+        +'<div class="detail-section-title">Descripción</div>'
+        +'<div class="detail-desc">'+(p.description||'Sin descripción disponible.')+'</div>'
         +featsH
-        +(p.video_url?'<div style="margin-top:16px"><a href="'+p.video_url+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video</a></div>':'')
-        +(p.latitude&&p.longitude?'<div class="section-label" style="margin-top:18px">Ubicación</div><div class="property-map" id="clientMap"></div>':'')
+        +(p.video_url?'<div style="margin-bottom:20px"><a href="'+p.video_url+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video de la propiedad</a></div>':'')
+        +(p.latitude&&p.longitude?'<div class="detail-section-title">Ubicación</div><div class="property-map" id="clientMap"></div>':'')
         +'<div id="relatedSection"></div>'
       +'</div>'
-      // Side col
-      +'<div class="detail-side-col">'
-        +'<div class="contact-box">'
-          +'<h4>¿Te interesa esta propiedad?</h4>'
-          +'<button class="contact-btn contact-whatsapp" onclick="window.open(\''+waLink+'\')"><span class="material-icons">chat</span>WhatsApp</button>'
-          +'<button class="contact-btn contact-call" onclick="window.location.href=\'tel:+50766740090\'"><span class="material-icons">phone</span>Llamar ahora</button>'
-          +'<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">'
-            +'<div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Compartir / Descargar</div>'
-            +'<div class="share-row">'
-              +'<button class="share-btn" onclick="shareProperty(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">link</span>Copiar URL</button>'
-              +'<button class="share-btn" onclick="generateBrochure(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">picture_as_pdf</span>Brochure</button>'
-            +'</div>'
+      /* RIGHT — Agent contact card */
+      +'<div class="detail-right">'
+        +'<div class="agent-card">'
+          +'<div class="agent-card-top">'
+            +'<div class="agent-avatar"><span class="agent-avatar-placeholder">E</span></div>'
+            +'<div><div class="agent-name">Estela\'s Realty</div><div class="agent-title">Agente inmobiliario · Panamá</div></div>'
           +'</div>'
-          +'<div class="ref-badge">Ref: <strong style="color:var(--text)">'+p.code+'</strong></div>'
+          +'<div class="agent-contacts">'
+            +'<div class="agent-contact-item"><span class="material-icons">phone</span>+507 6674-0090</div>'
+            +'<div class="agent-contact-item"><span class="material-icons">email</span>erealtylegal@gmail.com</div>'
+          +'</div>'
+          +'<div class="contact-form-title">Enviar mensaje</div>'
+          +'<input class="contact-input" id="agentName" type="text" placeholder="Tu nombre">'
+          +'<input class="contact-input" id="agentEmail" type="email" placeholder="Tu correo">'
+          +'<input class="contact-input" id="agentPhone" type="tel" placeholder="Tu teléfono (opcional)">'
+          +'<textarea class="contact-textarea" id="agentMsg" rows="3" placeholder="Hola, me interesa esta propiedad..."></textarea>'
+          +'<button class="btn-send-msg" onclick="sendAgentMsg(\''+p.code+'\',\''+p.title.replace(/'/g,"\\'")+'\')" id="agentSendBtn"><span class="material-icons" style="font-size:16px">send</span>Enviar mensaje</button>'
+          +'<button class="btn-whatsapp" onclick="window.open(\''+waLink+'\')"><span class="material-icons" style="font-size:16px">chat</span>Contactar por WhatsApp</button>'
+          +'<button class="btn-call" onclick="window.location.href=\'tel:+50766740090\'"><span class="material-icons" style="font-size:16px">phone</span>Llamar ahora</button>'
+          +'<div class="send-status" id="agentStatus"></div>'
+          +'<div class="ref-share-row">'
+            +'<button class="ref-btn" onclick="shareProperty(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">link</span>Copiar URL</button>'
+            +'<button class="ref-btn" onclick="generateBrochure(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">picture_as_pdf</span>Brochure PDF</button>'
+          +'</div>'
+          +'<div style="margin-top:10px;text-align:center;font-size:11px;color:var(--text3)">Ref: <strong style="color:var(--text)">'+p.code+'</strong></div>'
         +'</div>'
       +'</div>'
     +'</div>';
@@ -793,8 +765,7 @@ function openDetail(id){
 
   if(p.latitude&&p.longitude){
     setTimeout(function(){
-      var el=document.getElementById('clientMap');
-      if(!el||el._leaflet_id) return;
+      var el=document.getElementById('clientMap');if(!el||el._leaflet_id) return;
       var map=L.map('clientMap',{zoomControl:true,scrollWheelZoom:false,attributionControl:false}).setView([p.latitude,p.longitude],15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
       var icon=L.divIcon({html:'<div style="background:#1A1A2E;width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>',iconSize:[22,22],iconAnchor:[11,22],className:''});
@@ -804,140 +775,104 @@ function openDetail(id){
   renderRelated(p);
 }
 
-function closeModal(){
-  document.getElementById('detailModal').classList.remove('open');
-  document.body.style.overflow='';
+function closeModal(){document.getElementById('detailModal').classList.remove('open');document.body.style.overflow='';}
+
+/* Agent message from modal */
+function sendAgentMsg(code,title){
+  var name=document.getElementById('agentName').value.trim();
+  var email=document.getElementById('agentEmail').value.trim();
+  var phone=document.getElementById('agentPhone').value.trim();
+  var msg=document.getElementById('agentMsg').value.trim();
+  var status=document.getElementById('agentStatus');
+  var btn=document.getElementById('agentSendBtn');
+  if(!name||!email){
+    status.style.display='block';status.style.background='rgba(229,57,53,0.1)';status.style.color='#c62828';
+    status.textContent='Por favor ingresa tu nombre y correo.';return;
+  }
+  btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:16px;animation:spin 1s linear infinite">sync</span>Enviando...';
+  var message=(msg||'Me interesa esta propiedad')+'\n\nPropiedad: '+code+' - '+title;
+  emailjs.send('service_za713ch','template_ciropen',{from_name:name,from_email:email,phone:phone||'No indicado',message:message,to_email:'erealtylegal@gmail.com'}).then(function(){
+    status.style.display='block';status.style.background='rgba(46,125,50,0.1)';status.style.color='#2e7d32';
+    status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
+    document.getElementById('agentName').value='';document.getElementById('agentEmail').value='';
+    document.getElementById('agentPhone').value='';document.getElementById('agentMsg').value='';
+  }).catch(function(){
+    status.style.display='block';status.style.background='rgba(229,57,53,0.1)';status.style.color='#c62828';
+    status.textContent='Error al enviar. Intenta por WhatsApp.';
+  }).finally(function(){
+    btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:16px">send</span>Enviar mensaje';
+  });
 }
 
-/* ========= RELATED ========= */
+/* Related */
 function renderRelated(current){
   var sec=document.getElementById('relatedSection');if(!sec) return;
-  var lo=current.price*0.85,hi=current.price*1.15;
-  var rel=[];
-  for(var i=0;i<allProperties.length;i++){
-    var p=allProperties[i];
-    if(p.id!==current.id&&p.zone===current.zone&&p.price>=lo&&p.price<=hi) rel.push(p);
-  }
+  var lo=current.price*0.85,hi=current.price*1.15,rel=[];
+  for(var i=0;i<allProperties.length;i++){var p=allProperties[i];if(p.id!==current.id&&p.zone===current.zone&&p.price>=lo&&p.price<=hi) rel.push(p);}
   if(rel.length<4){
     for(var i=0;i<allProperties.length;i++){
-      var p=allProperties[i];
-      var already=false;for(var j=0;j<rel.length;j++){if(rel[j].id===p.id){already=true;break;}}
+      var p=allProperties[i],already=false;
+      for(var j=0;j<rel.length;j++){if(rel[j].id===p.id){already=true;break;}}
       if(p.id!==current.id&&!already&&p.operation===current.operation&&p.price>=lo&&p.price<=hi) rel.push(p);
-      if(rel.length>=8) break;
+      if(rel.length>=6) break;
     }
   }
   if(!rel.length) return;
-  var h='<div class="related-section"><h4>Propiedades relacionadas</h4><div class="related-carousel">';
+  var h='<div class="related-section"><h4>Propiedades similares</h4><div class="related-carousel">';
   for(var i=0;i<rel.length;i++){
     var p=rel[i];
-    h+='<div class="related-card" onclick="closeModal();setTimeout(function(){openDetail(\''+p.id+'\');},120)">'
-      +'<div class="related-img"><img src="'+firstImg(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'"></div>'
-      +'<div class="related-body">'
-        +'<div class="related-price">$'+(p.price||0).toLocaleString()+'<span style="font-size:10px;color:var(--text3)">'+pricePeriod(p.operation)+'</span></div>'
-        +'<div class="related-title">'+p.title+'</div>'
-        +'<div class="related-zone">'+p.zone+'</div>'
-      +'</div>'
-    +'</div>';
+    h+='<div class="related-card" onclick="closeModal();setTimeout(function(){openDetail(\''+p.id+'\');},100)"><div class="related-img"><img src="'+fi(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'"></div><div class="related-body"><div class="related-price">$'+(p.price||0).toLocaleString()+'<span style="font-size:10px;color:var(--text3)">'+pp(p.operation)+'</span></div><div class="related-title">'+p.title+'</div><div class="related-zone">'+p.zone+'</div></div></div>';
   }
   h+='</div></div>';
   sec.innerHTML=h;
 }
 
-/* ========= SHARE ========= */
+/* Share */
 function shareProperty(id){
   var url=window.location.origin+window.location.pathname+'?p='+id;
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(function(){showToast('URL copiada al portapapeles.');}).catch(function(){fallbackCopy(url);});
-  }else{fallbackCopy(url);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){showToast('URL copiada al portapapeles.');}).catch(function(){fallbackCopy(url);});}
+  else{fallbackCopy(url);}
 }
-function fallbackCopy(text){
-  var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:-999px';
-  document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');showToast('URL copiada.');}catch(e){}
-  document.body.removeChild(ta);
-}
+function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:-999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('URL copiada.');}catch(e){}document.body.removeChild(ta);}
 
-/* ========= PDF BROCHURE — minimalista, fondo blanco ========= */
+/* PDF Brochure */
 function generateBrochure(id){
-  var p=null;
-  for(var i=0;i<allProperties.length;i++){if(allProperties[i].id===id){p=allProperties[i];break;}}
+  var p=null;for(var i=0;i<allProperties.length;i++){if(allProperties[i].id===id){p=allProperties[i];break;}}
   if(!p) return;
-  showToast('Generando brochure...');
-
-  var imgs=[];
-  if(p.images&&p.images.length){for(var i=0;i<p.images.length;i++){if(p.images[i]) imgs.push(p.images[i]);}}
-
-  var promises=[];
-  var maxImgs=Math.min(imgs.length,5);
-  for(var i=0;i<maxImgs;i++) promises.push(imgToBase64(imgs[i]));
-
-  Promise.all(promises).then(function(imgDatas){
-    buildPDF(p,imgDatas);
-  }).catch(function(){
-    buildPDF(p,[]);
-  });
+  showToast('Generando brochure PDF...');
+  var imgs=[];if(p.images&&p.images.length){for(var i=0;i<p.images.length;i++){if(p.images[i]) imgs.push(p.images[i]);}}
+  var maxI=Math.min(imgs.length,5),proms=[];
+  for(var i=0;i<maxI;i++) proms.push(imgToBase64(imgs[i]));
+  Promise.all(proms).then(function(ds){buildPDF(p,ds);}).catch(function(){buildPDF(p,[]);});
 }
-
-function buildPDF(p,imgDatas){
+function buildPDF(p,ds){
   var jsPDF=window.jspdf.jsPDF;
   var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  var W=210,H=297;
-  var navy=[26,26,46],gold=[201,168,76],dark=[30,30,30],mid=[100,100,100],light=[230,230,230];
-
-  /* ---- TOP ACCENT LINE ---- */
-  doc.setFillColor(gold[0],gold[1],gold[2]);
-  doc.rect(0,0,W,3,'F');
-
-  /* ---- HEADER ---- */
-  doc.setFontSize(16);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-  doc.text("ESTELA'S REALTY SERVICES",14,14);
+  var W=210,H=297,navy=[26,26,46],gold=[201,168,76],dark=[30,30,30],mid=[100,100,100];
+  doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(0,0,W,3,'F');
+  doc.setFontSize(15);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
+  doc.text("ESTELA'S REALTY SERVICES",14,13);
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
-  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ciudad de Panamá, Panamá',14,19);
-  // Code pill
-  doc.setFillColor(navy[0],navy[1],navy[2]);
-  doc.roundedRect(W-46,7,38,11,2,2,'F');
+  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ciudad de Panamá',14,18.5);
+  doc.setFillColor(navy[0],navy[1],navy[2]);doc.roundedRect(W-44,6,36,11,2,2,'F');
   doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
-  doc.text(p.code||'',W-27,14,{align:'center'});
-  // Divider
-  doc.setDrawColor(light[0],light[1],light[2]);doc.setLineWidth(0.3);
-  doc.line(14,23,W-14,23);
-
-  var y=28;
-
-  /* ---- MAIN PHOTO ---- */
-  if(imgDatas[0]){
-    try{doc.addImage(imgDatas[0],'JPEG',14,y,W-28,72,undefined,'FAST');}catch(e){}
-    y+=76;
-  }
-
-  /* ---- OP BADGE ---- */
+  doc.text(p.code||'',W-26,13,{align:'center'});
+  doc.setDrawColor(230,230,230);doc.setLineWidth(0.3);doc.line(14,22,W-14,22);
+  var y=27;
+  if(ds[0]){try{doc.addImage(ds[0],'JPEG',14,y,W-28,68,undefined,'FAST');}catch(e){}y+=72;}
   var opC=p.operation==='Venta'?gold:p.operation==='Alquiler vacacional'?[46,125,50]:navy;
-  doc.setFillColor(opC[0],opC[1],opC[2]);
-  doc.roundedRect(14,y,28,7,1.5,1.5,'F');
+  doc.setFillColor(opC[0],opC[1],opC[2]);doc.roundedRect(14,y,28,7,1.5,1.5,'F');
   doc.setFontSize(6.5);doc.setFont('helvetica','bold');
-  var textC=p.operation==='Venta'?navy:[255,255,255];
-  doc.setTextColor(textC[0],textC[1],textC[2]);
-  doc.text((p.operation||'').toUpperCase(),28,y+4.8,{align:'center'});
-  y+=11;
-
-  /* ---- TITLE ---- */
-  doc.setFontSize(18);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-  var tLines=doc.splitTextToSize(p.title||'',W-28);
-  doc.text(tLines,14,y);y+=tLines.length*6.5+2;
-
-  /* ---- LOCATION ---- */
-  doc.setFontSize(9.5);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
+  var tc=p.operation==='Venta'?navy:[255,255,255];
+  doc.setTextColor(tc[0],tc[1],tc[2]);doc.text((p.operation||'').toUpperCase(),28,y+4.8,{align:'center'});y+=11;
+  doc.setFontSize(17);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
+  var tl=doc.splitTextToSize(p.title||'',W-28);doc.text(tl,14,y);y+=tl.length*6.2+2;
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
   doc.text((p.zone||'')+' · '+(p.type||''),14,y);y+=7;
-
-  /* ---- PRICE ---- */
   var pl=p.operation==='Alquiler vacacional'?' / noche':p.operation==='Alquiler'?' / mes':'';
-  doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
+  doc.setFontSize(20);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
   doc.text('$'+(p.price||0).toLocaleString()+pl,14,y);y+=4;
-
-  /* ---- THIN DIVIDER ---- */
-  doc.setDrawColor(light[0],light[1],light[2]);doc.setLineWidth(0.3);doc.line(14,y+2,W-14,y+2);y+=7;
-
-  /* ---- SPECS ROW ---- */
+  doc.setDrawColor(230,230,230);doc.setLineWidth(0.3);doc.line(14,y+2,W-14,y+2);y+=7;
   var specs=[];
   if(p.rooms>0) specs.push({l:'Habitaciones',v:''+p.rooms});
   if(p.baths) specs.push({l:'Baños',v:''+p.baths});
@@ -949,157 +884,76 @@ function buildPDF(p,imgDatas){
     doc.setFillColor(248,248,248);doc.roundedRect(14,y,W-28,16,2,2,'F');
     for(var i=0;i<specs.length;i++){
       var sx=14+i*sw+sw/2;
-      doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-      doc.text(specs[i].v,sx,y+8,{align:'center'});
-      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
-      doc.text(specs[i].l,sx,y+13,{align:'center'});
+      doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text(specs[i].v,sx,y+8,{align:'center'});
+      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);doc.text(specs[i].l,sx,y+13,{align:'center'});
     }
     y+=21;
   }
-
-  /* ---- DESCRIPTION ---- */
-  if(p.description){
-    doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-    doc.text('DESCRIPCIÓN',14,y);y+=5;
-    doc.setFont('helvetica','normal');doc.setTextColor(dark[0],dark[1],dark[2]);
-    var dl=doc.splitTextToSize(p.description,W-28).slice(0,7);
-    doc.text(dl,14,y);y+=dl.length*4+4;
-  }
-
-  /* ---- FEATURES ---- */
-  if(p.features&&p.features.length){
-    doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-    doc.text('CARACTERÍSTICAS',14,y);y+=5;
-    doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
-    var fl=doc.splitTextToSize(p.features.join('  ·  '),W-28);
-    doc.text(fl,14,y);y+=fl.length*4+4;
-  }
-
-  /* ---- PHOTO GRID (up to 4 extra photos, 2x2) ---- */
+  if(p.description){doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('DESCRIPCIÓN',14,y);y+=5;doc.setFont('helvetica','normal');doc.setTextColor(dark[0],dark[1],dark[2]);var dl=doc.splitTextToSize(p.description,W-28).slice(0,7);doc.text(dl,14,y);y+=dl.length*4+4;}
+  if(p.features&&p.features.length){doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('CARACTERÍSTICAS',14,y);y+=5;doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);var fl=doc.splitTextToSize(p.features.join('  ·  '),W-28);doc.text(fl,14,y);y+=fl.length*4+4;}
   var remH=H-22-y;
-  if(imgDatas.length>1&&remH>40){
-    doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-    doc.text('GALERÍA',14,y);y+=5;
-    var extraImgs=imgDatas.slice(1,5);
-    var cols=extraImgs.length>=2?2:1;
-    var rows=Math.ceil(extraImgs.length/cols);
-    var pw=(W-28-(cols-1)*4)/cols;
-    var ph=Math.min((remH-14)/rows,38);
-    for(var i=0;i<extraImgs.length;i++){
-      if(!extraImgs[i]) continue;
-      var col=i%cols,row=Math.floor(i/cols);
-      try{doc.addImage(extraImgs[i],'JPEG',14+col*(pw+4),y+row*(ph+4),pw,ph,undefined,'FAST');}catch(e){}
-    }
-    y+=rows*(ph+4);
+  if(ds.length>1&&remH>38){
+    doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('GALERÍA',14,y);y+=5;
+    var ex=ds.slice(1,5),cols=ex.length>=2?2:1,rows=Math.ceil(ex.length/cols);
+    var pw=(W-28-(cols-1)*4)/cols,ph=Math.min((remH-14)/rows,36);
+    for(var i=0;i<ex.length;i++){if(!ex[i]) continue;var col=i%cols,row=Math.floor(i/cols);try{doc.addImage(ex[i],'JPEG',14+col*(pw+4),y+row*(ph+4),pw,ph,undefined,'FAST');}catch(e){}}
   }
-
-  /* ---- FOOTER BAR ---- */
-  doc.setFillColor(navy[0],navy[1],navy[2]);doc.rect(0,H-18,W,18,'F');
+  doc.setFillColor(navy[0],navy[1],navy[2]);doc.rect(0,H-16,W,16,'F');
   doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
-  doc.text("Estela's Realty Services  ·  Ciudad de Panamá, Panamá",W/2,H-11,{align:'center'});
-  doc.setFont('helvetica','normal');doc.setTextColor(160,160,160);
-  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ref: '+(p.code||''),W/2,H-5.5,{align:'center'});
-
-  doc.save('ERS-Brochure-'+(p.code||'propiedad')+'.pdf');
+  doc.text("Estela's Realty Services  ·  Ciudad de Panamá, Panamá",W/2,H-9.5,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setTextColor(150,150,150);
+  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ref: '+(p.code||''),W/2,H-4.5,{align:'center'});
+  doc.save('ERS-'+(p.code||'propiedad')+'.pdf');
   showToast('¡Brochure descargado!');
 }
-
 function imgToBase64(url){
   return new Promise(function(resolve,reject){
-    var img=new Image();
-    img.crossOrigin='anonymous';
-    img.onload=function(){
-      var c=document.createElement('canvas');
-      c.width=img.naturalWidth;c.height=img.naturalHeight;
-      c.getContext('2d').drawImage(img,0,0);
-      resolve(c.toDataURL('image/jpeg',0.82));
-    };
-    img.onerror=function(){reject(new Error('load fail'));};
+    var img=new Image();img.crossOrigin='anonymous';
+    img.onload=function(){var c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);resolve(c.toDataURL('image/jpeg',0.82));};
+    img.onerror=function(){reject(new Error('fail'));};
     img.src=url+(url.indexOf('?')>-1?'&':'?')+'_t='+Date.now();
   });
 }
 
-/* ========= LIGHTBOX ========= */
-function openLightbox(startIdx){
-  lbImages=window._lbImgs||[PH];
-  lbIdx=startIdx||0;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow='hidden';
-  renderLightbox();
-}
-function renderLightbox(){
+/* Lightbox */
+function openLightbox(idx){lbImages=window._lbImgs||[PH];lbIdx=idx||0;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';renderLB();}
+function renderLB(){
   var img=document.getElementById('lbImg');
   document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbImages.length;
-  img.src=lbImages[lbIdx]||PH;
-  img.onerror=function(){img.src=PH;};
-  var h='';
-  for(var i=0;i<lbImages.length;i++){
-    h+='<img class="lb-tn'+(i===lbIdx?' active':'')+'" src="'+lbImages[i]+'" alt="" onclick="lbGoto('+i+')" onerror="this.src=\''+PH+'\'">';
-  }
-  var thumbs=document.getElementById('lbThumbs');
-  thumbs.innerHTML=h;
-  setTimeout(function(){
-    var a=thumbs.querySelector('.lb-tn.active');
-    if(a) a.scrollIntoView({inline:'center',behavior:'smooth'});
-  },50);
+  img.src=lbImages[lbIdx]||PH;img.onerror=function(){img.src=PH;};
+  var h='';for(var i=0;i<lbImages.length;i++) h+='<img class="lb-tn'+(i===lbIdx?' active':'')+'" src="'+lbImages[i]+'" alt="" onclick="lbGoto('+i+')" onerror="this.src=\''+PH+'\'">';
+  var tb=document.getElementById('lbThumbs');tb.innerHTML=h;
+  setTimeout(function(){var a=tb.querySelector('.lb-tn.active');if(a) a.scrollIntoView({inline:'center',behavior:'smooth'});},50);
 }
-function lbNav(dir){lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;renderLightbox();}
-function lbGoto(i){lbIdx=i;renderLightbox();}
-function closeLightbox(){
-  document.getElementById('lightbox').classList.remove('open');
-  if(!document.getElementById('detailModal').classList.contains('open')) document.body.style.overflow='';
-}
+function lbNav(d){lbIdx=(lbIdx+d+lbImages.length)%lbImages.length;renderLB();}
+function lbGoto(i){lbIdx=i;renderLB();}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');if(!document.getElementById('detailModal').classList.contains('open')) document.body.style.overflow='';}
 
-/* ========= CONTACT FORM ========= */
+/* Contact form (footer section) */
 function sendContactForm(){
-  var name=document.getElementById('contactName').value.trim();
-  var email=document.getElementById('contactEmail').value.trim();
-  var phone=document.getElementById('contactPhone').value.trim();
-  var message=document.getElementById('contactMessage').value.trim();
-  var status=document.getElementById('contactStatus');
-  var btn=document.getElementById('contactBtn');
-  if(!name||!email||!message){
-    status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';
-    status.textContent='Por favor completa tu nombre, correo y mensaje.';return;
-  }
+  var name=document.getElementById('contactName').value.trim(),email=document.getElementById('contactEmail').value.trim(),phone=document.getElementById('contactPhone').value.trim(),message=document.getElementById('contactMessage').value.trim();
+  var status=document.getElementById('contactStatus'),btn=document.getElementById('contactBtn');
+  if(!name||!email||!message){status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';status.textContent='Por favor completa tu nombre, correo y mensaje.';return;}
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Enviando...';
   emailjs.send('service_za713ch','template_ciropen',{from_name:name,from_email:email,phone:phone||'No indicado',message:message,to_email:'erealtylegal@gmail.com'}).then(function(){
-    status.style.display='block';status.style.background='rgba(46,125,50,0.3)';status.style.color='#a5d6a7';
-    status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
-    var ids=['contactName','contactEmail','contactPhone','contactMessage'];
-    for(var i=0;i<ids.length;i++) document.getElementById(ids[i]).value='';
-  }).catch(function(){
-    status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';
-    status.textContent='Error al enviar. Escríbenos a erealtylegal@gmail.com';
-  }).finally(function(){
-    btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span>Enviar mensaje';
-  });
+    status.style.display='block';status.style.background='rgba(46,125,50,0.3)';status.style.color='#a5d6a7';status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
+    var ids=['contactName','contactEmail','contactPhone','contactMessage'];for(var i=0;i<ids.length;i++) document.getElementById(ids[i]).value='';
+  }).catch(function(){status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';status.textContent='Error al enviar. Escríbenos a erealtylegal@gmail.com';})
+  .finally(function(){btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span>Enviar mensaje';});
 }
 
-function showToast(msg){
-  var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
-  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
-}
+function showToast(msg){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);}
 function toggleMenu(){document.getElementById('hamburgerBtn').classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open');}
 function closeMenu(){document.getElementById('hamburgerBtn').classList.remove('open');document.getElementById('mobileMenu').classList.remove('open');}
 
-document.addEventListener('click',function(e){
-  var m=document.getElementById('mobileMenu'),b=document.getElementById('hamburgerBtn');
-  if(m&&m.classList.contains('open')&&!m.contains(e.target)&&!b.contains(e.target)) closeMenu();
-});
+document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),b=document.getElementById('hamburgerBtn');if(m&&m.classList.contains('open')&&!m.contains(e.target)&&!b.contains(e.target)) closeMenu();});
 document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this) closeModal();});
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this) closeLightbox();});
 document.addEventListener('keydown',function(e){
-  if(document.getElementById('lightbox').classList.contains('open')){
-    if(e.key==='ArrowRight') lbNav(1);
-    else if(e.key==='ArrowLeft') lbNav(-1);
-    else if(e.key==='Escape') closeLightbox();
-  } else if(document.getElementById('detailModal').classList.contains('open')){
-    if(e.key==='Escape') closeModal();
-  }
+  if(document.getElementById('lightbox').classList.contains('open')){if(e.key==='ArrowRight') lbNav(1);else if(e.key==='ArrowLeft') lbNav(-1);else if(e.key==='Escape') closeLightbox();}
+  else if(document.getElementById('detailModal').classList.contains('open')){if(e.key==='Escape') closeModal();}
 });
 document.getElementById('searchInput').addEventListener('keydown',function(e){if(e.key==='Enter') doSearch();});
-
 init();
 </script>
 </body>
