@@ -455,6 +455,9 @@
         <div class="info-section" id="descSection" style="display:none">
           <div class="info-section-title" id="labelDesc">Descripción</div>
           <p class="prop-description" id="propDescription"></p>
+          <p id="descFallbackNote" style="display:none;margin-top:10px;font-size:12px;color:var(--text3);background:var(--surface2);padding:8px 12px;border-radius:8px;border-left:3px solid var(--accent);">
+            📝 English description not available — showing original Spanish.
+          </p>
         </div>
 
         <!-- CARACTERÍSTICAS -->
@@ -540,12 +543,12 @@
     <a href="../#servicios" id="footerServices">Servicios</a>
     <a href="../#contacto" id="footerContact">Contacto</a>
     <a href="tel:+50766740090">+507 6674-0090</a>
-    <a href="mailto:erealtylegal@gmail.com">erealtylegal@gmail.com</a>
+    <a href="/cdn-cgi/l/email-protection#46233423272a323f2a2321272a06212b272f2a6825292b"><span class="__cf_email__" data-cfemail="395c4b5c58554d40555c5e5855795e54585055175a5654">[email&#160;protected]</span></a>
   </div>
   <p style="font-size:12px;margin-top:20px;opacity:0.5">© 2025 Estela's Realty Services. <span id="footerRights">Todos los derechos reservados.</span></p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = 'https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const PH = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80';
@@ -715,6 +718,20 @@ function setLang(lang) {
   // Re-render partes dinámicas si ya hay propiedad cargada
   if (currentProperty) {
     renderDynamic(currentProperty);
+    // Actualizar descripción según idioma
+    if (currentProperty.description) {
+      const descText = (lang === 'en' && currentProperty.description_en)
+        ? currentProperty.description_en
+        : currentProperty.description;
+      document.getElementById('propDescription').textContent = descText;
+      // Badge de fallback si no hay traducción en inglés
+      const fallbackNote = document.getElementById('descFallbackNote');
+      if (lang === 'en' && !currentProperty.description_en && fallbackNote) {
+        fallbackNote.style.display = 'block';
+      } else if (fallbackNote) {
+        fallbackNote.style.display = 'none';
+      }
+    }
   }
 }
 
@@ -732,7 +749,8 @@ function getOpLabel(operation) {
   return t.sale;
 }
 
-function renderDynamic(p) {
+function renderDynamic(p, lang) {
+  lang = lang || currentLang;
   const t = T[currentLang];
   const period = getPeriod(p.operation);
   const priceFormatted = '$' + (p.price || 0).toLocaleString() + period;
@@ -789,6 +807,15 @@ function renderDynamic(p) {
       <span class="feature-chip">
         <span class="material-icons">${FEATURE_ICONS[f] || 'check_circle'}</span>${amap[f] || f}
       </span>`).join('');
+  }
+
+  // ---- Description language switch ----
+  const descEl = document.getElementById('propDescription');
+  if (descEl) {
+    const descText = (lang === 'en' && p.description_en) ? p.description_en : (p.description || '');
+    descEl.textContent = descText;
+    const descSec = document.getElementById('descSection');
+    if (descSec) descSec.style.display = descText ? 'block' : 'none';
   }
 
   // WhatsApp button (inline card)
@@ -1001,9 +1028,9 @@ function renderProperty(p) {
   document.getElementById('waBtn').href = `https://wa.me/50766740090?text=${waMsg}`;
 
   // ---- Description ----
-  if (p.description) {
+  if (p.description || p.description_en) {
     document.getElementById('descSection').style.display = 'block';
-    document.getElementById('propDescription').textContent = p.description;
+    // renderDynamic sets actual text based on language
   }
 
   // ---- Features ----
@@ -1038,7 +1065,7 @@ function renderProperty(p) {
   }
 
   // ---- Render dinámico (specs + amenidades) ----
-  renderDynamic(p);
+  renderDynamic(p, currentLang);
 
   // ---- Show page ----
   document.getElementById('pageLoading').style.display = 'none';
@@ -1195,15 +1222,4 @@ function extractYouTubeId(url) {
   return match ? match[1] : null;
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-// ---- START ----
-init();
-</script>
-</body>
-</html>
+function showToas
