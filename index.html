@@ -8,313 +8,308 @@
 <link rel="shortcut icon" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-:root{--primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;--bg:#FAFAFA;--surface:#FFF;--surface2:#F4F4F2;--text:#1A1A1A;--text2:#555;--text3:#888;--border:#E0E0E0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.08);--shadow-hover:0 8px 32px rgba(0,0,0,0.14);--transition:all 0.25s cubic-bezier(0.4,0,0.2,1);}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
-a{color:inherit;text-decoration:none;}
-button{cursor:pointer;font-family:inherit;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  :root {
+    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
+    --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
+    --text:#1A1A1A;--text2:#555;--text3:#888;
+    --border:#E0E0E0;--radius:12px;
+    --shadow:0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover:0 8px 32px rgba(0,0,0,0.14);
+    --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans', sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+  a{color:inherit;text-decoration:none;}
+  button{cursor:pointer;font-family:inherit;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-/* NAV */
-nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:90px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
-.nav-links{display:flex;gap:4px;}
-.nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
-.nav-links a:hover{background:var(--surface2);color:var(--text);}
-.nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;}
-.nav-cta:hover{background:#b8973d;}
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:90px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  .nav-links{display:flex;gap:4px;}
+  .nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
+  .nav-links a:hover{background:var(--surface2);color:var(--text);}
+  .nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;}
+  .nav-cta:hover{background:#b8973d;}
 
-/* HERO */
-.hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:72px 32px 80px;}
-.hero-slides{position:absolute;inset:0;z-index:0;}
-.hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
-.hero-slide.active{opacity:1;}
-.hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.82),rgba(45,45,82,0.75));}
-.hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary),#2d2d52);z-index:-1;}
-.hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-.hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
-.hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:600;line-height:1.2;margin-bottom:16px;}
-.hero p{color:rgba(255,255,255,0.7);font-size:16px;max-width:520px;margin:0 auto 36px;}
-.hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:8px;}
-.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;transition:var(--transition);cursor:pointer;}
-.hero-dot.active{background:var(--accent);transform:scale(1.2);}
+  /* HERO SLIDESHOW */
+  .hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:72px 32px 80px;}
+  .hero-slides{position:absolute;inset:0;z-index:0;}
+  .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
+  .hero-slide.active{opacity:1;}
+  .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.82) 0%,rgba(45,45,82,0.75) 100%);}
+  .hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary) 0%,#2d2d52 100%);z-index:-1;}
+  .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+  .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
+  .hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+  .hero h1{font-family:'Playfair Display', serif;font-size:clamp(28px,5vw,48px);font-weight:600;line-height:1.2;margin-bottom:16px;}
+  .hero p{color:rgba(255,255,255,0.7);font-size:16px;max-width:520px;margin:0 auto 36px;}
+  .hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:8px;}
+  .hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;transition:var(--transition);cursor:pointer;}
+  .hero-dot.active{background:var(--accent);transform:scale(1.2);}
 
-/* SEARCH */
-.search-bar{background:white;border-radius:14px;padding:6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;max-width:820px;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,0.2);}
-.search-field{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-right:1px solid var(--border);}
-.search-field:last-of-type{border-right:none;}
-.search-field .material-icons{color:var(--text3);font-size:18px;}
-.search-field select,.search-field input{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;}
-.search-field label{display:block;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
-.search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
-.search-btn:hover{background:#b8973d;}
+  /* SEARCH */
+  .search-bar{background:white;border-radius:14px;padding:6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;max-width:820px;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,0.2);}
+  .search-field{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-right:1px solid var(--border);}
+  .search-field:last-of-type{border-right:none;}
+  .search-field .material-icons{color:var(--text3);font-size:18px;}
+  .search-field select,.search-field input{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;}
+  .search-field label{display:block;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+  .search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
+  .search-btn:hover{background:#b8973d;}
 
-/* STATS */
-.stats{display:flex;justify-content:center;gap:48px;padding:24px 32px;background:var(--primary);flex-wrap:wrap;}
-.stat{text-align:center;}
-.stat-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;color:var(--accent);}
-.stat-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;}
+  /* STATS */
+  .stats{display:flex;justify-content:center;gap:48px;padding:24px 32px;background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-family:'Playfair Display', serif;font-size:24px;font-weight:600;color:var(--accent);}
+  .stat-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;}
 
-/* LAYOUT */
-.container{max-width:1280px;margin:0 auto;padding:0 32px;}
-.section{padding:56px 0;}
-.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;}
-.section-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--primary);}
-.tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;width:fit-content;}
-.tab{padding:8px 20px;border-radius:8px;border:none;background:transparent;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
-.tab.active{background:white;color:var(--primary);box-shadow:var(--shadow);}
-.filter-select{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:white;font-size:13px;color:var(--text2);cursor:pointer;font-family:inherit;outline:none;transition:var(--transition);}
-.filter-select:hover{border-color:var(--primary);}
+  /* LAYOUT */
+  .container{max-width:1280px;margin:0 auto;padding:0 32px;}
+  .section{padding:56px 0;}
+  .section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;}
+  .section-title{font-family:'Playfair Display', serif;font-size:26px;font-weight:600;color:var(--primary);}
 
-/* PROPERTY CARDS */
-.property-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;}
-.property-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:var(--transition);cursor:pointer;animation:fadeSlide 0.3s ease;}
-.property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent;}
-.card-image{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
-.card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-.property-card:hover .card-image img{transform:scale(1.04);}
-.card-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
-.badge-rent{background:var(--primary);color:white;}
-.badge-sale{background:var(--accent);color:var(--primary);}
-.badge-vacation{background:#2E7D32;color:white;}
-.badge-featured{background:#E53935;color:white;}
-.card-code{position:absolute;bottom:10px;left:12px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.9);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:1px;}
-.card-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;}
-.card-action-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.9);border:none;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
-.card-action-btn:hover{background:white;transform:scale(1.1);}
-.card-action-btn .material-icons{font-size:16px;color:var(--text);}
-.card-body{padding:16px 18px 18px;}
-.card-price{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--primary);margin-bottom:4px;}
-.card-price span{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:var(--text3);}
-.card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4;}
-.card-location{display:flex;align-items:center;gap:4px;color:var(--text3);font-size:13px;margin-bottom:14px;}
-.card-location .material-icons{font-size:14px;color:var(--accent);}
-.card-specs{display:flex;border-top:1px solid var(--border);padding-top:12px;}
-.spec{flex:1;display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--text3);gap:3px;border-right:1px solid var(--border);padding:0 6px;}
-.spec:last-child{border-right:none;}
-.spec strong{font-size:14px;font-weight:600;color:var(--text);}
-.spec .material-icons{font-size:16px;}
+  /* TABS & FILTERS */
+  .tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;width:fit-content;}
+  .tab{padding:8px 20px;border-radius:8px;border:none;background:transparent;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
+  .tab.active{background:white;color:var(--primary);box-shadow:var(--shadow);}
+  .filter-select{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:white;font-size:13px;color:var(--text2);cursor:pointer;font-family:inherit;outline:none;transition:var(--transition);}
+  .filter-select:hover{border-color:var(--primary);}
 
-/* ZONES */
-.zones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.zone-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;cursor:pointer;transition:var(--transition);background:var(--surface2);}
-.zone-card:hover{transform:scale(1.01);box-shadow:var(--shadow-hover);}
-.zone-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-.zone-card:hover img{transform:scale(1.06);}
-.zone-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,46,0.75) 0%,transparent 55%);}
-.zone-info{position:absolute;bottom:16px;left:18px;color:white;}
-.zone-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
-.zone-count{font-size:12px;opacity:0.75;margin-top:2px;}
+  /* PROPERTY CARDS */
+  .property-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;}
+  .property-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:var(--transition);cursor:pointer;animation:fadeSlide 0.3s ease;}
+  .property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent;}
+  .card-image{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
+  .card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+  .property-card:hover .card-image img{transform:scale(1.04);}
+  .card-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+  .badge-rent{background:var(--primary);color:white;}
+  .badge-sale{background:var(--accent);color:var(--primary);}
+  .badge-vacation{background:#2E7D32;color:white;}
+  .badge-featured{background:#E53935;color:white;}
+  .card-code{position:absolute;bottom:10px;left:12px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.9);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:1px;}
+  .card-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;}
+  .card-action-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.9);border:none;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+  .card-action-btn:hover{background:white;transform:scale(1.1);}
+  .card-action-btn .material-icons{font-size:16px;color:var(--text);}
+  .card-body{padding:16px 18px 18px;}
+  .card-price{font-family:'Playfair Display', serif;font-size:20px;font-weight:600;color:var(--primary);margin-bottom:4px;}
+  .card-price span{font-family:'DM Sans', sans-serif;font-size:12px;font-weight:400;color:var(--text3);}
+  .card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4;}
+  .card-location{display:flex;align-items:center;gap:4px;color:var(--text3);font-size:13px;margin-bottom:14px;}
+  .card-location .material-icons{font-size:14px;color:var(--accent);}
+  .card-specs{display:flex;border-top:1px solid var(--border);padding-top:12px;}
+  .spec{flex:1;display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--text3);gap:3px;border-right:1px solid var(--border);padding:0 6px;}
+  .spec:last-child{border-right:none;}
+  .spec strong{font-size:14px;font-weight:600;color:var(--text);}
+  .spec .material-icons{font-size:16px;}
 
-/* SERVICES */
-.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
-.service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
-.service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
-.service-icon{width:48px;height:48px;border-radius:12px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-.service-icon .material-icons{color:var(--accent);font-size:24px;}
-.service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
-.service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+  /* ZONES */
+  .zones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .zone-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;cursor:pointer;transition:var(--transition);background:var(--surface2);}
+  .zone-card:hover{transform:scale(1.01);box-shadow:var(--shadow-hover);}
+  .zone-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+  .zone-card:hover img{transform:scale(1.06);}
+  .zone-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,46,0.75) 0%,transparent 55%);}
+  .zone-info{position:absolute;bottom:16px;left:18px;color:white;}
+  .zone-name{font-family:'Playfair Display', serif;font-size:18px;font-weight:600;}
+  .zone-count{font-size:12px;opacity:0.75;margin-top:2px;}
 
-/* ==============================
-   MODAL — Airbnb/Proty style
-   ============================== */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);overflow-y:auto;}
-.modal-overlay.open{display:block;}
-.modal{background:var(--surface);width:100%;max-width:1080px;margin:32px auto;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.3);overflow:hidden;}
-.modal-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
-.modal-code{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;}
-.modal-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--primary);}
-.modal-close{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);flex-shrink:0;}
-.modal-close:hover{background:var(--surface2);}
-.modal-close .material-icons{font-size:20px;color:var(--text2);}
+  /* SERVICES */
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+  .service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
+  .service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
+  .service-icon{width:48px;height:48px;border-radius:12px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .service-icon .material-icons{color:var(--accent);font-size:24px;}
+  .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
+  .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
 
-/* ---- Compact gallery (Airbnb style) ---- */
-.airbnb-gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:160px 160px;gap:4px;height:324px;background:var(--border);}
-.ag-main{grid-row:1/3;overflow:hidden;position:relative;cursor:pointer;background:var(--surface2);}
-.ag-main img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-.ag-main:hover img{transform:scale(1.03);}
-.ag-thumb{overflow:hidden;position:relative;cursor:pointer;background:var(--surface2);}
-.ag-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;display:block;}
-.ag-thumb:hover img{transform:scale(1.05);}
-.ag-thumb.ag-last .ag-more{position:absolute;inset:0;background:rgba(26,26,46,0.65);display:flex;align-items:center;justify-content:center;color:white;font-size:15px;font-weight:700;font-family:'Playfair Display',serif;}
-.ag-view-btn{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.92);color:var(--primary);border:none;border-radius:7px;padding:5px 11px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer;box-shadow:0 1px 8px rgba(0,0,0,0.15);transition:var(--transition);}
-.ag-view-btn:hover{background:white;}
-.ag-view-btn .material-icons{font-size:13px;}
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border-radius:16px;width:100%;max-width:960px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);}
+  .modal-header{position:sticky;top:0;background:var(--surface);padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:1;}
+  .modal-header h2{font-family:'Playfair Display', serif;font-size:22px;font-weight:600;color:var(--primary);}
+  .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .modal-close .material-icons{font-size:20px;color:var(--text2);}
+  .modal-body{padding:28px;}
+  .detail-gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;}
+  .detail-main{aspect-ratio:4/3;overflow:hidden;}
+  .detail-main img{width:100%;height:100%;object-fit:cover;}
+  .detail-thumbs{display:grid;gap:8px;}
+  .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-info{display:grid;grid-template-columns:1fr 300px;gap:28px;}
+  .detail-specs{display:flex;gap:20px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0;}
+  .detail-spec{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text2);}
+  .detail-spec strong{color:var(--text);}
+  .detail-spec .material-icons{font-size:18px;color:var(--accent);}
+  .feature-pill{padding:5px 12px;background:var(--surface2);border-radius:20px;font-size:12px;color:var(--text2);}
+  .contact-box{background:var(--surface2);border-radius:12px;padding:24px;height:fit-content;}
+  .contact-box h4{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--primary);}
+  .contact-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;margin-bottom:10px;border:none;cursor:pointer;transition:var(--transition);}
+  .contact-whatsapp{background:#25D366;color:white;}
+  .contact-call{background:var(--primary);color:white;}
+  .share-row{display:flex;gap:8px;margin-top:12px;}
+  .share-btn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:white;font-size:12px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:4px;transition:var(--transition);}
+  .share-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .property-map{height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:20px;position:relative;z-index:0;}
 
-/* ---- Detail layout 2-col ---- */
-.detail-layout{display:grid;grid-template-columns:1fr 320px;gap:0;}
-.detail-left{padding:24px 28px;border-right:1px solid var(--border);}
-.detail-right{padding:20px 18px;background:var(--bg);}
+  /* MODAL DRAG HANDLE (visible solo en móvil) */
+  .modal-drag-handle{display:none;width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
+  .toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
+  .toast.show{transform:translateY(0);opacity:1;}
+  .toast .material-icons{color:var(--accent);font-size:18px;}
 
-/* Price + meta row */
-.detail-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-.detail-price-block{}
-.detail-price{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--primary);}
-.detail-price-period{font-size:13px;color:var(--text3);}
-.detail-location{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);margin-top:4px;}
-.detail-location .material-icons{font-size:14px;color:var(--accent);}
-.detail-badge-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 28px;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1280px;margin:0 auto 40px;}
+  .footer-brand{font-family:'Playfair Display', serif;font-size:18px;color:white;margin-bottom:10px;}
+  .footer-tagline{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;}
+  .footer-contact{display:flex;flex-direction:column;gap:8px;}
+  .footer-contact a{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.6);transition:var(--transition);}
+  .footer-contact a:hover{color:var(--accent);}
+  .footer-contact .material-icons{font-size:16px;}
+  .footer-col h4{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:16px;}
+  .footer-col a{display:block;font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:10px;transition:var(--transition);}
+  .footer-col a:hover{color:var(--accent);}
+  .footer-bottom{max-width:1280px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.35);}
+  .social-icons{display:flex;gap:10px;align-items:center;}
+  .social-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;cursor:pointer;text-decoration:none;}
+  .social-icon svg{width:16px;height:16px;fill:rgba(255,255,255,0.5);transition:fill 0.25s ease;}
+  .social-icon:hover{transform:translateY(-2px);border-color:transparent;}
+  .social-icon.si-instagram:hover{background:#E1306C;}
+  .social-icon.si-instagram:hover svg{fill:white;}
+  .social-icon.si-facebook:hover{background:#1877F2;}
+  .social-icon.si-facebook:hover svg{fill:white;}
+  .social-icon.si-youtube:hover{background:#FF0000;}
+  .social-icon.si-youtube:hover svg{fill:white;}
+  .social-icon.si-twitter:hover{background:#000000;}
+  .social-icon.si-twitter:hover svg{fill:white;}
+  .social-icon.si-linkedin:hover{background:#0A66C2;}
+  .social-icon.si-linkedin:hover svg{fill:white;}
+  .social-icon.si-whatsapp:hover{background:#25D366;}
+  .social-icon.si-whatsapp:hover svg{fill:white;}
 
-/* Specs pills row */
-.specs-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.spec-pill{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--surface2);border-radius:20px;font-size:13px;color:var(--text2);border:1px solid var(--border);}
-.spec-pill .material-icons{font-size:15px;color:var(--accent);}
-.spec-pill strong{color:var(--text);font-weight:600;}
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;border-radius:8px;}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:16px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.1);flex-direction:column;gap:4px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{padding:12px 16px;border-radius:8px;font-size:15px;font-weight:500;color:var(--text2);display:block;}
+  .mobile-menu a:hover{background:var(--surface2);color:var(--text);}
+  .mobile-menu .mobile-cta{background:var(--accent);color:var(--primary);text-align:center;font-weight:600;margin-top:8px;border-radius:8px;padding:13px;}
+  @media(max-width:768px){.hamburger{display:flex;}}
+  @media(max-width:1024px){
+    .container{padding:0 20px;}
+    .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
+    .admin-stats{grid-template-columns:1fr 1fr;}
+    .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+    .zones-grid{grid-template-columns:1fr 1fr;}
+    .detail-gallery{grid-template-columns:1fr;gap:6px;}
+    .detail-main{aspect-ratio:4/3;overflow:hidden;}
+    .detail-thumbs{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+    .detail-thumb{aspect-ratio:4/3;overflow:hidden;border-radius:8px;}
+    .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+    .detail-info{grid-template-columns:1fr;}
+    .contact-box{margin-top:20px;}
+  }
 
-/* Description */
-.detail-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.detail-desc{font-size:14px;color:var(--text2);line-height:1.75;margin-bottom:20px;}
-.feature-pill{padding:5px 11px;background:var(--surface2);border-radius:20px;font-size:12px;color:var(--text2);border:1px solid var(--border);}
+  /* ===== MOBILE (max 768px) ===== */
+  @media(max-width:768px){
+    /* NAV */
+    nav{height:70px;padding:0 16px;}
+    nav img{height:52px!important;}
+    .nav-links{display:none;}
+    .nav-cta{padding:8px 14px;font-size:13px;}
+    .nav-cta span{display:none;}
 
-/* Map */
-.property-map{height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;z-index:0;margin-top:4px;}
+    /* HERO */
+    .hero{padding:36px 16px 48px;min-height:auto;}
+    .hero h1{font-size:26px;}
+    .hero p{font-size:14px;margin-bottom:24px;}
+    .hero-tag{font-size:11px;padding:5px 12px;}
 
-/* Related */
-.related-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
-.related-section h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--primary);margin-bottom:12px;}
-.related-carousel{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
-.related-carousel::-webkit-scrollbar{height:4px;}
-.related-carousel::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-.related-card{flex:0 0 180px;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:var(--transition);}
-.related-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:transparent;}
-.related-img{aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
-.related-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;display:block;}
-.related-card:hover .related-img img{transform:scale(1.05);}
-.related-body{padding:8px 10px 10px;}
-.related-price{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--primary);}
-.related-title{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.related-zone{font-size:10px;color:var(--text3);margin-top:1px;}
+    /* SEARCH BAR */
+    .search-bar{flex-direction:column;border-radius:12px;gap:0;}
+    .search-field{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px;min-width:unset;width:100%;}
+    .search-field:last-of-type{border-bottom:none;}
+    .search-btn{width:100%;border-radius:8px;justify-content:center;padding:13px;}
 
-/* ---- Contact card (right column) — Proty style ---- */
-.agent-card{background:white;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;}
-.agent-card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-.agent-avatar{width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
-.agent-avatar img{width:100%;height:100%;object-fit:cover;}
-.agent-avatar-placeholder{color:var(--accent);font-size:22px;font-weight:700;font-family:'Playfair Display',serif;}
-.agent-name{font-size:15px;font-weight:700;color:var(--primary);}
-.agent-title{font-size:12px;color:var(--text3);margin-top:1px;}
-.agent-contacts{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-.agent-contact-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
-.agent-contact-item .material-icons{font-size:15px;color:var(--accent);}
-.contact-form-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
-.contact-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;transition:var(--transition);margin-bottom:8px;}
-.contact-input:focus{border-color:var(--primary);}
-.contact-textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;resize:none;transition:var(--transition);margin-bottom:10px;}
-.contact-textarea:focus{border-color:var(--primary);}
-.btn-send-msg{width:100%;padding:11px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);margin-bottom:8px;}
-.btn-send-msg:hover{background:#2d2d52;}
-.btn-whatsapp{width:100%;padding:11px;background:#25D366;color:white;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);margin-bottom:8px;}
-.btn-whatsapp:hover{background:#20ba59;}
-.btn-call{width:100%;padding:11px;background:var(--surface2);color:var(--primary);border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:var(--transition);}
-.btn-call:hover{background:var(--border);}
-.ref-share-row{display:flex;gap:6px;margin-top:10px;}
-.ref-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:white;font-size:11px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:3px;transition:var(--transition);font-weight:500;}
-.ref-btn:hover{border-color:var(--primary);color:var(--primary);}
-.send-status{font-size:12px;text-align:center;padding:8px;border-radius:6px;display:none;margin-top:6px;}
+    /* STATS */
+    .stats{gap:16px;padding:16px;}
+    .stat-num{font-size:20px;}
+    .stat-label{font-size:10px;}
 
-/* ======= LIGHTBOX ======= */
-.lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.97);align-items:center;justify-content:center;}
-.lightbox.open{display:flex;}
-.lb-inner{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.lb-close{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
-.lb-close:hover{background:rgba(255,255,255,0.2);}
-.lb-counter{position:absolute;top:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.5);font-size:12px;letter-spacing:2px;}
-.lb-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 90px 16px;width:100%;}
-.lb-img-wrap img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:4px;}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
-.lb-nav:hover{background:rgba(255,255,255,0.18);}
-.lb-prev{left:16px;}.lb-next{right:16px;}
-.lb-thumbs{display:flex;gap:6px;padding:10px 20px 20px;overflow-x:auto;justify-content:center;max-width:100%;}
-.lb-thumbs::-webkit-scrollbar{height:3px;}
-.lb-thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px;}
-.lb-tn{width:60px;height:44px;object-fit:cover;border-radius:5px;cursor:pointer;opacity:0.4;border:2px solid transparent;transition:var(--transition);flex-shrink:0;}
-.lb-tn.active,.lb-tn:hover{opacity:1;border-color:var(--accent);}
+    /* PROPERTIES */
+    .container{padding:0 16px;}
+    .section{padding:36px 0;}
+    .section-title{font-size:22px;}
+    .property-grid{grid-template-columns:1fr;gap:16px;}
+    .tabs{width:100%;}
+    .tab{flex:1;text-align:center;padding:8px 12px;font-size:13px;}
+    .filter-select{font-size:12px;padding:6px 10px;}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;z-index:600;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast .material-icons{color:var(--accent);font-size:18px;}
+    /* ZONES */
+    .zones-grid{grid-template-columns:1fr;gap:12px;}
 
-footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 28px;}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1280px;margin:0 auto 40px;}
-.footer-brand{font-family:'Playfair Display',serif;font-size:18px;color:white;margin-bottom:10px;}
-.footer-tagline{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;}
-.footer-contact{display:flex;flex-direction:column;gap:8px;}
-.footer-contact a{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.6);transition:var(--transition);}
-.footer-contact a:hover{color:var(--accent);}
-.footer-contact .material-icons{font-size:16px;}
-.footer-col h4{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:16px;}
-.footer-col a{display:block;font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:10px;transition:var(--transition);}
-.footer-col a:hover{color:var(--accent);}
-.footer-bottom{max-width:1280px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,0.35);}
-.social-icons{display:flex;gap:10px;}
-.social-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;text-decoration:none;}
-.social-icon svg{width:16px;height:16px;fill:rgba(255,255,255,0.5);transition:fill 0.25s ease;}
-.social-icon:hover{transform:translateY(-2px);border-color:transparent;}
-.social-icon.si-instagram:hover{background:#E1306C;}.social-icon.si-instagram:hover svg{fill:white;}
-.social-icon.si-facebook:hover{background:#1877F2;}.social-icon.si-facebook:hover svg{fill:white;}
-.social-icon.si-youtube:hover{background:#FF0000;}.social-icon.si-youtube:hover svg{fill:white;}
-.social-icon.si-twitter:hover{background:#000;}.social-icon.si-twitter:hover svg{fill:white;}
-.social-icon.si-linkedin:hover{background:#0A66C2;}.social-icon.si-linkedin:hover svg{fill:white;}
-.social-icon.si-whatsapp:hover{background:#25D366;}.social-icon.si-whatsapp:hover svg{fill:white;}
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;border-radius:8px;}
-.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
-.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-.hamburger.open span:nth-child(2){opacity:0;}
-.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-.mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:16px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.1);flex-direction:column;gap:4px;}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{padding:12px 16px;border-radius:8px;font-size:15px;font-weight:500;color:var(--text2);display:block;}
-.mobile-menu a:hover{background:var(--surface2);}
-.mobile-menu .mobile-cta{background:var(--accent);color:var(--primary);text-align:center;font-weight:600;margin-top:8px;border-radius:8px;padding:13px;}
+    /* SERVICES */
+    .services-grid{grid-template-columns:1fr;gap:14px;}
+    .service-card{padding:20px 18px;}
 
-@media(max-width:768px){.hamburger{display:flex;}}
-@media(max-width:1024px){
-  .container{padding:0 20px;}
-  .footer-grid{grid-template-columns:1fr 1fr;gap:28px;}
-  .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
-  .zones-grid{grid-template-columns:1fr 1fr;}
-  .airbnb-gallery{grid-template-columns:1fr;height:auto;grid-template-rows:220px 110px 110px;}
-  .ag-main{grid-row:auto;}
-  .detail-layout{grid-template-columns:1fr;}
-  .detail-right{border-top:1px solid var(--border);}
-}
-@media(max-width:768px){
-  nav{height:70px;padding:0 16px;}
-  nav img{height:52px!important;}
-  .nav-links{display:none;}
-  .nav-cta{padding:8px 14px;font-size:13px;}
-  .nav-cta span{display:none;}
-  .hero{padding:36px 16px 48px;min-height:auto;}
-  .hero h1{font-size:26px;}
-  .hero p{font-size:14px;margin-bottom:24px;}
-  .search-bar{flex-direction:column;border-radius:12px;gap:0;}
-  .search-field{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px;min-width:unset;width:100%;}
-  .search-field:last-of-type{border-bottom:none;}
-  .search-btn{width:100%;border-radius:8px;justify-content:center;padding:13px;}
-  .stats{gap:16px;padding:16px;}
-  .container{padding:0 16px;}
-  .section{padding:36px 0;}
-  .section-title{font-size:22px;}
-  .property-grid{grid-template-columns:1fr;gap:16px;}
-  .tabs{width:100%;}
-  .tab{flex:1;text-align:center;padding:8px 10px;font-size:13px;}
-  .zones-grid{grid-template-columns:1fr;gap:12px;}
-  .services-grid{grid-template-columns:1fr;gap:14px;}
-  #contacto>div{grid-template-columns:1fr!important;gap:32px;}
-  .footer-grid{grid-template-columns:1fr;gap:28px;}
-  .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
-  .modal{margin:0;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
-  .modal-overlay{overflow-y:auto;}
-  .lb-img-wrap{padding:50px 14px 12px;}
-  .lb-nav{width:42px;height:42px;}
-  .lb-prev{left:6px;}.lb-next{right:6px;}
-}
+    /* CONTACT SECTION */
+    #contacto > div{grid-template-columns:1fr!important;gap:32px;}
+    #contacto h2{font-size:24px;}
+
+    /* FOOTER */
+    .footer-grid{grid-template-columns:1fr;gap:28px;}
+    .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+
+    /* MODAL */
+    .modal-overlay{align-items:flex-end;padding:0;}
+    .modal{border-radius:16px 16px 0 0;max-height:92dvh;max-height:92vh;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+    .modal-header{padding:14px 16px;position:sticky;top:0;z-index:2;}
+    .modal-header h2{font-size:17px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 48px);}
+    .modal-body{padding:16px;}
+    .modal-actions{padding:12px 16px;}
+
+    .modal-drag-handle{display:block;}
+
+    /* GALERÍA MÓVIL: apila foto principal + fila de miniaturas */
+    .detail-gallery{grid-template-columns:1fr;gap:6px;}
+    .detail-main{aspect-ratio:4/3;border-radius:10px;overflow:hidden;}
+    .detail-thumbs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+    .detail-thumb{aspect-ratio:4/3;overflow:hidden;border-radius:8px;}
+    .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+    /* INFO Y CONTACT */
+    .detail-info{grid-template-columns:1fr;gap:16px;}
+    .contact-box{padding:16px;}
+
+    /* SPECS */
+    .detail-specs{gap:10px;flex-wrap:wrap;}
+    .detail-spec{font-size:13px;}
+
+    .share-row{flex-wrap:wrap;}
+  }
+
+  /* ===== SMALL MOBILE (max 400px) ===== */
+  @media(max-width:400px){
+    .hero h1{font-size:22px;}
+    .stats{grid-template-columns:1fr 1fr;display:grid;gap:12px;}
+    .card-specs .spec{padding:0 4px;}
+    .spec .material-icons{font-size:14px;}
+    .spec strong{font-size:13px;}
+    .modal-header h2{font-size:15px;}
+    .detail-thumbs{grid-template-columns:repeat(2,1fr);}
+    .detail-spec{font-size:12px;}
+    .contact-btn{font-size:13px;padding:10px;}
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -324,21 +319,33 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
 <nav>
   <div><img src="logo.png" alt="Estela's Realty Services" style="height:70px;width:auto;object-fit:contain;display:block;"></div>
   <div class="nav-links">
-    <a href="#">Inicio</a><a href="#propiedades">Propiedades</a>
-    <a href="#zonas">Zonas</a><a href="#servicios">Servicios</a><a href="#contacto">Contacto</a>
+    <a href="#">Inicio</a>
+    <a href="#propiedades">Propiedades</a>
+    <a href="#zonas">Zonas</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#contacto">Contacto</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
-    <a href="https://wa.me/50766740090" target="_blank" class="nav-cta"><span class="material-icons" style="font-size:18px">chat</span>WhatsApp</a>
-    <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    <a href="https://wa.me/50766740090" target="_blank" class="nav-cta">
+      <span class="material-icons" style="font-size:18px">chat</span>WhatsApp
+    </a>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#" onclick="closeMenu()">Inicio</a><a href="#propiedades" onclick="closeMenu()">Propiedades</a>
-  <a href="#zonas" onclick="closeMenu()">Zonas</a><a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#" onclick="closeMenu()">Inicio</a>
+  <a href="#propiedades" onclick="closeMenu()">Propiedades</a>
+  <a href="#zonas" onclick="closeMenu()">Zonas</a>
+  <a href="#servicios" onclick="closeMenu()">Servicios</a>
   <a href="#contacto" onclick="closeMenu()">Contacto</a>
   <a href="https://wa.me/50766740090" target="_blank" class="mobile-cta" onclick="closeMenu()">WhatsApp +507 6674-0090</a>
 </div>
 
+<!-- HERO WITH SLIDESHOW -->
 <section class="hero">
   <div class="hero-fallback"></div>
   <div class="hero-slides" id="heroSlides"></div>
@@ -350,13 +357,13 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
     <div class="search-bar">
       <div class="search-field">
         <span class="material-icons">search</span>
-        <div style="flex:1"><label>Buscar</label><input type="text" placeholder="Zona, título, código..." id="searchInput"></div>
+        <div style="flex:1"><label>Buscar</label><input type="text" placeholder="Zona, título, código E24..." id="searchInput"></div>
       </div>
       <div class="search-field">
         <span class="material-icons">home</span>
         <div style="flex:1"><label>Tipo</label>
           <select id="typeFilter">
-            <option value="">Todos</option><option>Casa</option><option>Apartamento</option><option>Local</option><option>Oficina</option><option>Galera</option><option>Terreno</option><option>Lote</option><option>Bodega</option><option>Penthouse</option>
+            <option value="">Todos</option><option>Casa</option><option>Apartamento</option><option>Local</option><option>Oficina</option>
           </select>
         </div>
       </div>
@@ -364,50 +371,49 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
         <span class="material-icons">location_on</span>
         <div style="flex:1"><label>Zona</label>
           <select id="zoneFilter">
-            <option value="">Todas</option><option>San Francisco</option><option>Costa del Este</option>
-            <option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option>
-            <option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option>
+            <option value="">Todas</option>
+            <option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option>
+            <option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option>
+            <option>Buenaventura</option><option>Boquete</option><option>San Carlos</option>
           </select>
         </div>
       </div>
-      <button class="search-btn" onclick="doSearch()"><span class="material-icons" style="font-size:18px">search</span>Buscar</button>
+      <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span>Buscar</button>
     </div>
   </div>
   <div class="hero-dots" id="heroDots"></div>
 </section>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label">Propiedades</div></div>
+  <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label">Propiedades activas</div></div>
   <div class="stat"><div class="stat-num" id="rentCount">—</div><div class="stat-label">En alquiler</div></div>
   <div class="stat"><div class="stat-num" id="saleCount">—</div><div class="stat-label">En venta</div></div>
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Zonas disponibles</div></div>
 </div>
 
 <div class="container">
   <section class="section" id="propiedades">
-    <div class="section-header">
-      <div class="section-title">Propiedades disponibles</div>
-      <button onclick="resetFilters()" style="background:none;border:none;color:var(--text3);font-size:13px;display:flex;align-items:center;gap:4px;cursor:pointer;"><span class="material-icons" style="font-size:16px">refresh</span>Ver todas</button>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px;">
+    <div class="section-header"><div class="section-title">Propiedades disponibles</div></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
       <div class="tabs">
         <button class="tab active" onclick="setTab(this,'')">Todos</button>
         <button class="tab" onclick="setTab(this,'Alquiler')">Alquiler</button>
         <button class="tab" onclick="setTab(this,'Alquiler vacacional')">Vacacional</button>
         <button class="tab" onclick="setTab(this,'Venta')">Venta</button>
       </div>
-      <select class="filter-select" id="priceFilter" onchange="filterProperties()">
-        <option value="">Precio</option><option value="0-500">Hasta $500</option>
-        <option value="500-1000">$500–$1,000</option><option value="1000-2000">$1,000–$2,000</option>
-        <option value="2000-5000">$2,000–$5,000</option><option value="5000+">$5,000+</option>
-      </select>
-      <select class="filter-select" id="roomsFilter" onchange="filterProperties()">
-        <option value="">Habitaciones</option><option value="1">1 hab.</option>
-        <option value="2">2 hab.</option><option value="3">3 hab.</option><option value="4">4+ hab.</option>
-      </select>
-      <select class="filter-select" id="orderFilter" onchange="filterProperties()">
-        <option value="">Ordenar</option><option value="price-asc">Menor precio</option>
-        <option value="price-desc">Mayor precio</option><option value="newest">Más reciente</option>
-      </select>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <select class="filter-select" id="priceFilter" onchange="filterProperties()">
+          <option value="">Precio</option><option value="0-1000">Hasta $1,000</option>
+          <option value="1000-2000">$1,000–$2,000</option><option value="2000-5000">$2,000–$5,000</option><option value="5000+">+$5,000</option>
+        </select>
+        <select class="filter-select" id="roomsFilter" onchange="filterProperties()">
+          <option value="">Habitaciones</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
+        </select>
+        <select class="filter-select" id="orderFilter" onchange="filterProperties()">
+          <option value="">Ordenar</option><option value="price-asc">Menor precio</option>
+          <option value="price-desc">Mayor precio</option><option value="newest">Más reciente</option>
+        </select>
+      </div>
     </div>
     <div class="property-grid" id="propertyGrid">
       <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)">
@@ -424,7 +430,9 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
 
   <section class="section" id="zonas">
     <div class="section-header"><div class="section-title">Explorar por zona</div></div>
-    <div class="zones-grid" id="zonesGrid"></div>
+    <div class="zones-grid" id="zonesGrid">
+      <!-- rendered by JS from Supabase config -->
+    </div>
   </section>
 
   <section class="section" id="servicios">
@@ -444,11 +452,11 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
     <div>
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Contáctanos</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:32px;margin-bottom:16px;line-height:1.3;">¿Listo para encontrar<br>tu propiedad ideal?</h2>
+      <h2 style="font-family:'Playfair Display', serif;font-size:32px;margin-bottom:16px;line-height:1.3;">¿Listo para encontrar<br>tu propiedad ideal?</h2>
       <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <a href="tel:+50766740090" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">phone</span>+507 6674-0090</a>
-        <a href="mailto:erealtylegal@gmail.com" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span>erealtylegal@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#7a1f081f1b160e03161f1d1b163a1d171b131654191517" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span><span class="__cf_email__" data-cfemail="81e4f3e4e0edf5f8ede4e6e0edc1e6ece0e8edafe2eeec">[email&#160;protected]</span></a>
         <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">location_on</span>Ciudad de Panamá, Panamá</div>
       </div>
     </div>
@@ -459,7 +467,9 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
         <input type="email" id="contactEmail" placeholder="Tu correo electrónico" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
         <input type="tel" id="contactPhone" placeholder="Tu teléfono (opcional)" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
         <textarea id="contactMessage" placeholder="¿En qué podemos ayudarte?" rows="4" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;resize:none;"></textarea>
-        <button id="contactBtn" onclick="sendContactForm()" style="padding:13px;background:var(--accent);color:var(--primary);border:none;border-radius:8px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;"><span class="material-icons" style="font-size:18px">send</span>Enviar mensaje</button>
+        <button id="contactBtn" onclick="sendContactForm()" style="padding:13px;background:var(--accent);color:var(--primary);border:none;border-radius:8px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span class="material-icons" style="font-size:18px">send</span>Enviar mensaje
+        </button>
         <div id="contactStatus" style="display:none;text-align:center;font-size:13px;padding:10px;border-radius:8px;"></div>
       </div>
     </div>
@@ -473,7 +483,7 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
       <p class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
       <div class="footer-contact">
         <a href="tel:+50766740090"><span class="material-icons">phone</span>+507 6674-0090</a>
-        <a href="mailto:erealtylegal@gmail.com"><span class="material-icons">email</span>erealtylegal@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#056077606469717c6960626469456268646c692b666a68"><span class="material-icons">email</span><span class="__cf_email__" data-cfemail="c7a2b5a2a6abb3beaba2a0a6ab87a0aaa6aeabe9a4a8aa">[email&#160;protected]</span></a>
         <a href="#"><span class="material-icons">location_on</span>Ciudad de Panamá</a>
       </div>
     </div>
@@ -487,47 +497,36 @@ footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:56px 32px 2
   </div>
 </footer>
 
-<!-- MODAL -->
+<!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal">
+    <div class="modal-drag-handle"></div>
     <div class="modal-header">
       <div>
-        <div class="modal-code" id="detailCode"></div>
+        <div style="font-size:11px;color:var(--text3);letter-spacing:1px;" id="detailCode"></div>
         <h2 id="detailTitle"></h2>
       </div>
-      <button class="modal-close" onclick="closeModal()"><span class="material-icons">close</span></button>
+      <button class="modal-close" onclick="document.getElementById('detailModal').classList.remove('open')"><span class="material-icons">close</span></button>
     </div>
-    <div id="detailBody"></div>
-  </div>
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <div class="lb-inner">
-    <button class="lb-close" onclick="closeLightbox()"><span class="material-icons">close</span></button>
-    <div class="lb-counter" id="lbCounter"></div>
-    <div class="lb-img-wrap"><img id="lbImg" src="" alt=""></div>
-    <div class="lb-thumbs" id="lbThumbs"></div>
-    <button class="lb-nav lb-prev" onclick="lbNav(-1)"><span class="material-icons">chevron_left</span></button>
-    <button class="lb-nav lb-next" onclick="lbNav(1)"><span class="material-icons">chevron_right</span></button>
+    <div class="modal-body" id="detailBody"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
 <script>
-var SURL='https://uwifcvcnzeduovqrjhdf.supabase.co';
-var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
-var sb=supabase.createClient(SURL,SKEY);
+const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 emailjs.init({publicKey:'Eiaoykzzg3X2ZpYGm'});
-var allProperties=[];
-var activeTab='';
-var slideTimer=null;
-var curSlide=0;
-var lbImages=[];
-var lbIdx=0;
-var PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
-var DEFAULT_ZONES=[
+
+let allProperties=[];
+let activeTab='';
+let slideTimer=null;
+let currentSlide=0;
+const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
+
+const DEFAULT_ZONES=[
   {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80'},
   {name:'Punta Pacífica',subtitle:'Vista al mar',img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80'},
   {name:'San Francisco',subtitle:'Zona céntrica',img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'},
@@ -536,424 +535,361 @@ var DEFAULT_ZONES=[
   {name:'Coronado',subtitle:'Playa y descanso',img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80'},
   {name:'Buenaventura',subtitle:'Resort frente al mar',img:'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80'},
   {name:'Boquete',subtitle:'Montaña y naturaleza',img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80'},
-  {name:'San Carlos',subtitle:'Playa tranquila',img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=600&q=80'}
+  {name:'San Carlos',subtitle:'Playa tranquila',img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=600&q=80'},
 ];
 
-function init(){loadProperties();loadSiteConfig();}
-
-function loadSiteConfig(){
-  sb.from('site_config').select('*').then(function(r){
-    var cfg={};var rows=r.data||[];
-    for(var i=0;i<rows.length;i++) cfg[rows[i].id]=rows[i].value;
-    renderHero(cfg.hero_images||[]);
-    renderZones(cfg.zone_images||DEFAULT_ZONES);
-    renderSocial(cfg.social_links||{});
-  }).catch(function(){renderHero([]);renderZones(DEFAULT_ZONES);});
+// ---- INIT ----
+async function init() {
+  await Promise.all([loadProperties(), loadSiteConfig()]);
 }
 
-function renderHero(imgs){
-  var c=document.getElementById('heroSlides'),d=document.getElementById('heroDots');
-  if(!imgs.length){c.innerHTML='';d.innerHTML='';return;}
-  var sh='',dh='';
-  for(var i=0;i<imgs.length;i++){
-    sh+='<div class="hero-slide'+(i===0?' active':'')+'" style="background-image:url(\''+imgs[i]+'\')"></div>';
-    dh+='<button class="hero-dot'+(i===0?' active':'')+'" onclick="goSlide('+i+')"></button>';
+// ---- SITE CONFIG (hero + zones) ----
+async function loadSiteConfig() {
+  try {
+    const {data} = await sb.from('site_config').select('*');
+    const cfg = {};
+    (data||[]).forEach(row => cfg[row.id] = row.value);
+    renderHero(cfg.hero_images || []);
+    renderZones(cfg.zone_images || DEFAULT_ZONES);
+    renderSocialIcons(cfg.social_links || {});
+  } catch(e) {
+    renderHero([]);
+    renderZones(DEFAULT_ZONES);
   }
-  c.innerHTML=sh;d.innerHTML=dh;
-  if(imgs.length>1){clearInterval(slideTimer);slideTimer=setInterval(function(){goSlide((curSlide+1)%imgs.length);},5000);}
 }
-function goSlide(n){
-  var s=document.querySelectorAll('.hero-slide'),d=document.querySelectorAll('.hero-dot');
-  if(!s.length) return;
-  if(s[curSlide]) s[curSlide].classList.remove('active');
-  if(d[curSlide]) d[curSlide].classList.remove('active');
-  curSlide=n;
-  if(s[curSlide]) s[curSlide].classList.add('active');
-  if(d[curSlide]) d[curSlide].classList.add('active');
-}
-function renderZones(zones){
-  var h='';
-  for(var i=0;i<zones.length;i++){
-    var z=zones[i];
-    h+='<div class="zone-card" onclick="setZone(\''+z.name+'\')"><img src="'+z.img+'" alt="'+z.name+'" loading="lazy" onerror="this.src=\''+PH+'\'"><div class="zone-overlay"></div><div class="zone-info"><div class="zone-name">'+z.name+'</div><div class="zone-count">'+(z.subtitle||'')+'</div></div></div>';
+
+// ---- HERO SLIDESHOW ----
+function renderHero(images) {
+  const container = document.getElementById('heroSlides');
+  const dotsEl = document.getElementById('heroDots');
+  if (!images.length) { container.innerHTML=''; dotsEl.innerHTML=''; return; }
+  container.innerHTML = images.map((img,i)=>`<div class="hero-slide${i===0?' active':''}" style="background-image:url('${img}')"></div>`).join('');
+  dotsEl.innerHTML = images.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})"></button>`).join('');
+  if (images.length > 1) {
+    clearInterval(slideTimer);
+    slideTimer = setInterval(()=>goSlide((currentSlide+1)%images.length), 5000);
   }
-  document.getElementById('zonesGrid').innerHTML=h;
-}
-var SVGS={instagram:'<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',facebook:'<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',youtube:'<svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>',twitter:'<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',linkedin:'<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',whatsapp:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'};
-
-function renderSocial(social){
-  var c=document.getElementById('socialIconsFooter');if(!c) return;
-  var h='',keys=Object.keys(social);
-  for(var i=0;i<keys.length;i++){var n=keys[i],u=social[n];if(u&&u.trim()) h+='<a href="'+u+'" target="_blank" rel="noopener" class="social-icon si-'+n+'">'+(SVGS[n]||'')+'</a>';}
-  c.innerHTML=h;
 }
 
-function loadProperties(){
-  sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false}).then(function(r){
-    if(r.error) throw r.error;
-    allProperties=r.data||[];updateStats();renderProperties(applyFilters());
-  }).catch(function(){
-    document.getElementById('propertyGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)"><span class="material-icons" style="font-size:48px;display:block;margin-bottom:12px">cloud_off</span><p>No se pudo conectar con la base de datos.</p></div>';
-  });
+function goSlide(n) {
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+  if (!slides.length) return;
+  slides[currentSlide]?.classList.remove('active');
+  dots[currentSlide]?.classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide]?.classList.add('active');
+  dots[currentSlide]?.classList.add('active');
 }
-function updateStats(){
+
+// ---- ZONES ----
+function renderZones(zones) {
+  document.getElementById('zonesGrid').innerHTML = zones.map((z,i)=>`
+    <div class="zone-card" onclick="setZone('${z.name}')">
+      <img src="${z.img}" alt="${z.name}" loading="lazy" onerror="this.src='${PH}'">
+      <div class="zone-overlay"></div>
+      <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
+    </div>`).join('');
+}
+
+// ---- SOCIAL ICONS ----
+const SOCIAL_SVGS = {
+  instagram: '<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+  facebook: '<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>',
+  twitter: '<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  linkedin: '<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+  whatsapp: '<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
+};
+
+function renderSocialIcons(social) {
+  const container = document.getElementById('socialIconsFooter');
+  if (!container) return;
+  const icons = Object.entries(social)
+    .filter(([, url]) => url && url.trim())
+    .map(([network, url]) => `
+      <a href="${url}" target="_blank" rel="noopener" class="social-icon si-${network}" title="${network}">
+        ${SOCIAL_SVGS[network] || ''}
+      </a>`).join('');
+  container.innerHTML = icons || '';
+}
+
+// ---- PROPERTIES ----
+async function loadProperties() {
+  try {
+    const {data,error}=await sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false});
+    if(error) throw error;
+    allProperties=data||[];
+    updateStats();
+    renderProperties(applyFilters());
+  } catch(e) {
+    document.getElementById('propertyGrid').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)"><span class="material-icons" style="font-size:48px;display:block;margin-bottom:12px">cloud_off</span><p>No se pudo conectar. Verifica tu conexión.</p></div>`;
+  }
+}
+
+function updateStats() {
   document.getElementById('totalCount').textContent=allProperties.length;
-  var rent=0,sale=0;
-  for(var i=0;i<allProperties.length;i++){
-    if(allProperties[i].operation==='Alquiler'||allProperties[i].operation==='Alquiler vacacional') rent++;
-    else if(allProperties[i].operation==='Venta') sale++;
-  }
-  document.getElementById('rentCount').textContent=rent;
-  document.getElementById('saleCount').textContent=sale;
+  document.getElementById('rentCount').textContent=allProperties.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional').length;
+  document.getElementById('saleCount').textContent=allProperties.filter(p=>p.operation==='Venta').length;
 }
-function applyFilters(){
-  var list=allProperties.slice();
-  var s=document.getElementById('searchInput').value.toLowerCase().trim();
-  var type=document.getElementById('typeFilter').value;
-  var zone=document.getElementById('zoneFilter').value;
-  var price=document.getElementById('priceFilter').value;
-  var rooms=document.getElementById('roomsFilter').value;
-  var order=document.getElementById('orderFilter').value;
-  if(activeTab==='Alquiler') list=list.filter(function(p){return p.operation==='Alquiler'||p.operation==='Alquiler vacacional';});
-  else if(activeTab) list=list.filter(function(p){return p.operation===activeTab;});
-  if(s) list=list.filter(function(p){return (p.title&&p.title.toLowerCase().indexOf(s)>-1)||(p.zone&&p.zone.toLowerCase().indexOf(s)>-1)||(p.code&&p.code.toLowerCase().indexOf(s)>-1)||(p.description&&p.description.toLowerCase().indexOf(s)>-1)||(p.type&&p.type.toLowerCase().indexOf(s)>-1)||(p.encuentra24_code&&p.encuentra24_code.toLowerCase().indexOf(s)>-1);});
-  if(type) list=list.filter(function(p){return p.type===type;});
-  if(zone) list=list.filter(function(p){return p.zone===zone;});
-  if(rooms){var r=parseInt(rooms);list=list.filter(function(p){return rooms==='4'?p.rooms>=4:p.rooms===r;});}
-  if(price){if(price==='5000+') list=list.filter(function(p){return p.price>=5000;});else{var pts=price.split('-');var mn=Number(pts[0]),mx=Number(pts[1]);list=list.filter(function(p){return p.price>=mn&&p.price<=mx;});}}
-  if(order==='price-asc') list.sort(function(a,b){return a.price-b.price;});
-  else if(order==='price-desc') list.sort(function(a,b){return b.price-a.price;});
-  else if(order==='newest') list.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+
+function applyFilters() {
+  let list=[...allProperties];
+  const s=document.getElementById('searchInput').value.toLowerCase().trim();
+  const type=document.getElementById('typeFilter').value;
+  const zone=document.getElementById('zoneFilter').value;
+  const price=document.getElementById('priceFilter').value;
+  const rooms=document.getElementById('roomsFilter').value;
+  const order=document.getElementById('orderFilter').value;
+  if(activeTab==='Alquiler') list=list.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional');
+  else if(activeTab) list=list.filter(p=>p.operation===activeTab);
+  if(s) list=list.filter(p=>
+    p.title?.toLowerCase().includes(s)||
+    p.zone?.toLowerCase().includes(s)||
+    p.code?.toLowerCase().includes(s)||
+    p.description?.toLowerCase().includes(s)||
+    p.type?.toLowerCase().includes(s)||
+    p.encuentra24_code?.toLowerCase().includes(s)
+  );
+  if(type) list=list.filter(p=>p.type===type);
+  if(zone) list=list.filter(p=>p.zone===zone);
+  if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
+  if(price){
+    if(price==='5000+') list=list.filter(p=>p.price>=5000);
+    else{const[mn,mx]=price.split('-').map(Number);list=list.filter(p=>p.price>=mn&&p.price<=mx);}
+  }
+  if(order==='price-asc') list.sort((a,b)=>a.price-b.price);
+  else if(order==='price-desc') list.sort((a,b)=>b.price-a.price);
+  else if(order==='newest') list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   return list;
 }
+
 function filterProperties(){renderProperties(applyFilters());}
-function doSearch(){document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});filterProperties();}
+
+function doSearch(){
+  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
+  filterProperties();
+}
+
 function resetFilters(){
-  var ids=['searchInput','typeFilter','zoneFilter','priceFilter','roomsFilter','orderFilter'];
-  for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el) el.value='';}
+  document.getElementById('searchInput').value='';
+  document.getElementById('typeFilter').value='';
+  document.getElementById('zoneFilter').value='';
+  document.getElementById('priceFilter').value='';
+  document.getElementById('roomsFilter').value='';
+  document.getElementById('orderFilter').value='';
   activeTab='';
-  var tabs=document.querySelectorAll('.tab');
-  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelector('.tab').classList.add('active');
   filterProperties();
 }
-function setTab(btn,val){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');btn.classList.add('active');activeTab=val;filterProperties();}
-function setZone(z){document.getElementById('zoneFilter').value=z;document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});filterProperties();}
-function pp(op){return op==='Alquiler vacacional'?' /noche':op==='Alquiler'?' /mes':'';}
-function oc(op){return op==='Alquiler'?'badge-rent':op==='Alquiler vacacional'?'badge-vacation':'badge-sale';}
-function fi(p){return (p.images&&p.images[0])||PH;}
+
+function setTab(btn,val){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); activeTab=val; filterProperties();
+}
+
+function setZone(z){
+  document.getElementById('zoneFilter').value=z;
+  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
+  filterProperties();
+}
 
 function renderProperties(list){
-  var grid=document.getElementById('propertyGrid'),empty=document.getElementById('emptyState');
+  const grid=document.getElementById('propertyGrid');
+  const empty=document.getElementById('emptyState');
   if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';return;}
   empty.style.display='none';
-  var h='';
-  for(var i=0;i<list.length;i++){
-    var p=list[i];
-    h+='<div class="property-card" onclick="openDetail(\''+p.id+'\')"><div class="card-image"><img src="'+fi(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'"><div class="card-badge '+oc(p.operation)+'">'+p.operation+'</div>'+(p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':'')+'<div class="card-code">'+p.code+'</div><div class="card-actions" onclick="event.stopPropagation()"><button class="card-action-btn" onclick="shareProperty(\''+p.id+'\')" title="Copiar URL"><span class="material-icons">link</span></button><button class="card-action-btn" onclick="generateBrochure(\''+p.id+'\')" title="PDF"><span class="material-icons">picture_as_pdf</span></button></div></div><div class="card-body"><div class="card-price">$'+(p.price||0).toLocaleString()+'<span>'+pp(p.operation)+'</span></div><div class="card-title">'+p.title+'</div><div class="card-location"><span class="material-icons">location_on</span>'+p.zone+'</div><div class="card-specs">'+(p.rooms>0?'<div class="spec"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong>Hab.</div>':'')+'<div class="spec"><span class="material-icons">shower</span><strong>'+(p.baths||1)+'</strong>Baños</div><div class="spec"><span class="material-icons">square_foot</span><strong>'+(p.size||0)+'</strong>m²</div><div class="spec"><span class="material-icons">directions_car</span><strong>'+(p.parking||0)+'</strong>Park.</div></div></div></div>';
-  }
-  grid.innerHTML=h;
+  grid.innerHTML=list.map(p=>`
+    <div class="property-card" onclick="openDetail('${p.id}')">
+      <div class="card-image">
+        <img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
+        <div class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</div>
+        ${p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':''}
+        <div class="card-code">${p.code}</div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="card-action-btn" onclick="shareProperty('${p.id}')" title="Compartir"><span class="material-icons">share</span></button>
+          <button class="card-action-btn" onclick="generateListing('${p.id}')" title="Imprimir listado"><span class="material-icons">picture_as_pdf</span></button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$${(p.price||0).toLocaleString()}<span>${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span></div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-location"><span class="material-icons">location_on</span>${p.zone}</div>
+        <div class="card-specs">
+          ${p.rooms>0?`<div class="spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong>Hab.</div>`:''}
+          <div class="spec"><span class="material-icons">shower</span><strong>${p.baths||1}</strong>Baños</div>
+          <div class="spec"><span class="material-icons">square_foot</span><strong>${p.size||0}</strong>m²</div>
+          <div class="spec"><span class="material-icons">directions_car</span><strong>${p.parking||0}</strong>Park.</div>
+        </div>
+      </div>
+    </div>`).join('');
 }
 
-/* =========== OPEN DETAIL =========== */
 function openDetail(id){
-  var p=null;
-  for(var i=0;i<allProperties.length;i++){if(allProperties[i].id===id){p=allProperties[i];break;}}
+  const p=allProperties.find(x=>x.id===id);
   if(!p) return;
-
   document.getElementById('detailCode').textContent=p.code;
   document.getElementById('detailTitle').textContent=p.title;
-
-  var imgs=[];
-  if(p.images&&p.images.length){for(var i=0;i<p.images.length;i++){if(p.images[i]) imgs.push(p.images[i]);}}
-  if(!imgs.length) imgs=[PH];
-  window._lbImgs=imgs;
-
-  /* Airbnb gallery — main + 4 thumbs */
-  var thumbsH='';
-  for(var i=1;i<5;i++){
-    if(i>=imgs.length) break;
-    var isLast=(i===4&&imgs.length>5);
-    thumbsH+='<div class="ag-thumb'+(isLast?' ag-last':'')+'" onclick="openLightbox('+i+')">'
-      +'<img src="'+imgs[i]+'" alt="" loading="lazy" onerror="this.src=\''+PH+'\'">'
-      +(isLast?'<div class="ag-more">+'+(imgs.length-4)+' fotos</div>':'')
-      +'</div>';
-  }
-
-  /* Spec pills */
-  var specsH='';
-  if(p.rooms>0) specsH+='<div class="spec-pill"><span class="material-icons">bed</span><strong>'+p.rooms+'</strong> hab.</div>';
-  if(p.baths) specsH+='<div class="spec-pill"><span class="material-icons">shower</span><strong>'+p.baths+'</strong> baños</div>';
-  if(p.size) specsH+='<div class="spec-pill"><span class="material-icons">square_foot</span><strong>'+p.size+'</strong> m²</div>';
-  if(p.parking) specsH+='<div class="spec-pill"><span class="material-icons">directions_car</span><strong>'+p.parking+'</strong> park.</div>';
-  if(p.floor) specsH+='<div class="spec-pill"><span class="material-icons">apartment</span>Piso <strong>'+p.floor+'</strong></div>';
-
-  /* Features */
-  var featsH='';
-  if(p.features&&p.features.length){
-    featsH='<div class="detail-section-title" style="margin-top:20px">Características</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">';
-    for(var i=0;i<p.features.length;i++) featsH+='<span class="feature-pill">'+p.features[i]+'</span>';
-    featsH+='</div>';
-  }
-
-  var waLink='https://wa.me/50766740090?text='+encodeURIComponent('Hola, me interesa la propiedad '+p.code+': '+p.title);
-  var priceStr='$'+(p.price||0).toLocaleString();
-  var periodStr=pp(p.operation);
-
-  document.getElementById('detailBody').innerHTML=
-    /* Gallery */
-    '<div class="airbnb-gallery">'
-      +'<div class="ag-main" onclick="openLightbox(0)">'
-        +'<img src="'+imgs[0]+'" alt="'+p.title+'" onerror="this.src=\''+PH+'\'">'
-        +(imgs.length>1?'<button class="ag-view-btn" onclick="event.stopPropagation();openLightbox(0)"><span class="material-icons">photo_library</span>Ver '+imgs.length+' fotos</button>':'')
-      +'</div>'
-      +(imgs.length>1?thumbsH:'')
-    +'</div>'
-    /* 2-col layout */
-    +'<div class="detail-layout">'
-      /* LEFT */
-      +'<div class="detail-left">'
-        +'<div class="detail-top">'
-          +'<div class="detail-price-block">'
-            +'<div><span class="detail-price">'+priceStr+'</span><span class="detail-price-period">'+periodStr+'</span></div>'
-            +'<div class="detail-location"><span class="material-icons">location_on</span>'+p.zone+' · '+p.type+'</div>'
-          +'</div>'
-          +'<div class="detail-badge-row">'
-            +'<span class="card-badge '+oc(p.operation)+'" style="position:static">'+p.operation+'</span>'
-            +(p.featured?'<span class="card-badge badge-featured" style="position:static">Destacado</span>':'')
-          +'</div>'
-        +'</div>'
-        +(specsH?'<div class="specs-pills">'+specsH+'</div>':'')
-        +'<div class="detail-section-title">Descripción</div>'
-        +'<div class="detail-desc">'+(p.description||'Sin descripción disponible.')+'</div>'
-        +featsH
-        +(p.video_url?'<div style="margin-bottom:20px"><a href="'+p.video_url+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video de la propiedad</a></div>':'')
-        +(p.latitude&&p.longitude?'<div class="detail-section-title">Ubicación</div><div class="property-map" id="clientMap"></div>':'')
-        +'<div id="relatedSection"></div>'
-      +'</div>'
-      /* RIGHT — Agent contact card */
-      +'<div class="detail-right">'
-        +'<div class="agent-card">'
-          +'<div class="agent-card-top">'
-            +'<div class="agent-avatar"><span class="agent-avatar-placeholder">E</span></div>'
-            +'<div><div class="agent-name">Estela\'s Realty</div><div class="agent-title">Agente inmobiliario · Panamá</div></div>'
-          +'</div>'
-          +'<div class="agent-contacts">'
-            +'<div class="agent-contact-item"><span class="material-icons">phone</span>+507 6674-0090</div>'
-            +'<div class="agent-contact-item"><span class="material-icons">email</span>erealtylegal@gmail.com</div>'
-          +'</div>'
-          +'<div class="contact-form-title">Enviar mensaje</div>'
-          +'<input class="contact-input" id="agentName" type="text" placeholder="Tu nombre">'
-          +'<input class="contact-input" id="agentEmail" type="email" placeholder="Tu correo">'
-          +'<input class="contact-input" id="agentPhone" type="tel" placeholder="Tu teléfono (opcional)">'
-          +'<textarea class="contact-textarea" id="agentMsg" rows="3" placeholder="Hola, me interesa esta propiedad..."></textarea>'
-          +'<button class="btn-send-msg" onclick="sendAgentMsg(\''+p.code+'\',\''+p.title.replace(/'/g,"\\'")+'\')" id="agentSendBtn"><span class="material-icons" style="font-size:16px">send</span>Enviar mensaje</button>'
-          +'<button class="btn-whatsapp" onclick="window.open(\''+waLink+'\')"><span class="material-icons" style="font-size:16px">chat</span>Contactar por WhatsApp</button>'
-          +'<button class="btn-call" onclick="window.location.href=\'tel:+50766740090\'"><span class="material-icons" style="font-size:16px">phone</span>Llamar ahora</button>'
-          +'<div class="send-status" id="agentStatus"></div>'
-          +'<div class="ref-share-row">'
-            +'<button class="ref-btn" onclick="shareProperty(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">link</span>Copiar URL</button>'
-            +'<button class="ref-btn" onclick="generateBrochure(\''+p.id+'\')"><span class="material-icons" style="font-size:13px">picture_as_pdf</span>Brochure PDF</button>'
-          +'</div>'
-          +'<div style="margin-top:10px;text-align:center;font-size:11px;color:var(--text3)">Ref: <strong style="color:var(--text)">'+p.code+'</strong></div>'
-        +'</div>'
-      +'</div>'
-    +'</div>';
-
+  const imgs=p.images?.length?p.images:[PH];
+  document.getElementById('detailBody').innerHTML=`
+    <div class="detail-gallery">
+      <div class="detail-main"><img src="${imgs[0]}" alt="${p.title}"></div>
+      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb"><img src="${i}" alt=""></div>`).join('')}</div>
+    </div>
+    <div class="detail-info">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}" style="position:static">${p.operation}</span>
+          <span style="font-size:13px;color:var(--text3)">${p.type} · ${p.zone}</span>
+        </div>
+        <div style="font-family:'Playfair Display', serif;font-size:28px;font-weight:600;color:var(--primary)">
+          $${(p.price||0).toLocaleString()}<span style="font-family:'DM Sans', sans-serif;font-size:14px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span>
+        </div>
+        <div class="detail-specs">
+          ${p.rooms>0?`<div class="detail-spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong> hab.</div>`:''}
+          <div class="detail-spec"><span class="material-icons">shower</span><strong>${p.baths}</strong> baños</div>
+          <div class="detail-spec"><span class="material-icons">square_foot</span><strong>${p.size} m²</strong></div>
+          <div class="detail-spec"><span class="material-icons">directions_car</span><strong>${p.parking}</strong> parqueo(s)</div>
+          ${p.floor?`<div class="detail-spec"><span class="material-icons">apartment</span>Piso <strong>${p.floor}</strong></div>`:''}
+        </div>
+        <p style="font-size:14px;color:var(--text2);line-height:1.7">${p.description||''}</p>
+        ${p.features?.length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Características</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
+        ${p.video_url?`<div style="margin-top:20px"><a href="${p.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>Ver video</a></div>`:''}
+        ${p.latitude&&p.longitude?`<div style="margin-top:20px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span class="material-icons" style="font-size:15px;color:var(--accent)">location_on</span>Ubicación aproximada</div><div class="property-map" id="clientMap"></div></div>`:''}
+      </div>
+      <div>
+        <div class="contact-box">
+          <h4>¿Te interesa esta propiedad?</h4>
+          <button class="contact-btn contact-whatsapp" onclick="window.open('https://wa.me/50766740090?text=Hola, me interesa la propiedad ${p.code}: ${encodeURIComponent(p.title)}')"><span class="material-icons">chat</span>WhatsApp</button>
+          <button class="contact-btn contact-call" onclick="window.location.href='tel:+50766740090'"><span class="material-icons">phone</span>Llamar ahora</button>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Compartir propiedad</div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareProperty('${p.id}')"><span class="material-icons" style="font-size:14px">link</span>Copiar</button>
+              <button class="share-btn" onclick="generateListing('${p.id}')"><span class="material-icons" style="font-size:14px">picture_as_pdf</span>Listado</button>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:8px;font-size:12px;color:var(--text3);text-align:center">Ref: <strong style="color:var(--text);letter-spacing:1px">${p.code}</strong></div>
+        </div>
+      </div>
+    </div>`;
   document.getElementById('detailModal').classList.add('open');
-  document.body.style.overflow='hidden';
 
-  if(p.latitude&&p.longitude){
-    setTimeout(function(){
-      var el=document.getElementById('clientMap');if(!el||el._leaflet_id) return;
-      var map=L.map('clientMap',{zoomControl:true,scrollWheelZoom:false,attributionControl:false}).setView([p.latitude,p.longitude],15);
+  // Init map if property has coordinates
+  if(p.latitude && p.longitude){
+    setTimeout(()=>{
+      const existingMap = document.getElementById('clientMap')?._leaflet_id;
+      if(existingMap) return;
+      const map = L.map('clientMap', {
+        zoomControl:true,
+        scrollWheelZoom:false,
+        attributionControl:false
+      }).setView([p.latitude, p.longitude], 15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
-      var icon=L.divIcon({html:'<div style="background:#1A1A2E;width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>',iconSize:[22,22],iconAnchor:[11,22],className:''});
-      L.marker([p.latitude,p.longitude],{icon}).addTo(map).bindPopup('<strong>'+p.title+'</strong><br>'+p.zone).openPopup();
-    },300);
+      const icon = L.divIcon({
+        html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+        iconSize:[24,24], iconAnchor:[12,24], className:''
+      });
+      L.marker([p.latitude, p.longitude], {icon}).addTo(map)
+        .bindPopup(`<strong>${p.title}</strong><br>${p.zone}`)
+        .openPopup();
+    }, 300);
   }
-  renderRelated(p);
 }
 
-function closeModal(){document.getElementById('detailModal').classList.remove('open');document.body.style.overflow='';}
-
-/* Agent message from modal */
-function sendAgentMsg(code,title){
-  var name=document.getElementById('agentName').value.trim();
-  var email=document.getElementById('agentEmail').value.trim();
-  var phone=document.getElementById('agentPhone').value.trim();
-  var msg=document.getElementById('agentMsg').value.trim();
-  var status=document.getElementById('agentStatus');
-  var btn=document.getElementById('agentSendBtn');
-  if(!name||!email){
-    status.style.display='block';status.style.background='rgba(229,57,53,0.1)';status.style.color='#c62828';
-    status.textContent='Por favor ingresa tu nombre y correo.';return;
-  }
-  btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:16px;animation:spin 1s linear infinite">sync</span>Enviando...';
-  var message=(msg||'Me interesa esta propiedad')+'\n\nPropiedad: '+code+' - '+title;
-  emailjs.send('service_za713ch','template_ciropen',{from_name:name,from_email:email,phone:phone||'No indicado',message:message,to_email:'erealtylegal@gmail.com'}).then(function(){
-    status.style.display='block';status.style.background='rgba(46,125,50,0.1)';status.style.color='#2e7d32';
-    status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
-    document.getElementById('agentName').value='';document.getElementById('agentEmail').value='';
-    document.getElementById('agentPhone').value='';document.getElementById('agentMsg').value='';
-  }).catch(function(){
-    status.style.display='block';status.style.background='rgba(229,57,53,0.1)';status.style.color='#c62828';
-    status.textContent='Error al enviar. Intenta por WhatsApp.';
-  }).finally(function(){
-    btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:16px">send</span>Enviar mensaje';
-  });
-}
-
-/* Related */
-function renderRelated(current){
-  var sec=document.getElementById('relatedSection');if(!sec) return;
-  var lo=current.price*0.85,hi=current.price*1.15,rel=[];
-  for(var i=0;i<allProperties.length;i++){var p=allProperties[i];if(p.id!==current.id&&p.zone===current.zone&&p.price>=lo&&p.price<=hi) rel.push(p);}
-  if(rel.length<4){
-    for(var i=0;i<allProperties.length;i++){
-      var p=allProperties[i],already=false;
-      for(var j=0;j<rel.length;j++){if(rel[j].id===p.id){already=true;break;}}
-      if(p.id!==current.id&&!already&&p.operation===current.operation&&p.price>=lo&&p.price<=hi) rel.push(p);
-      if(rel.length>=6) break;
-    }
-  }
-  if(!rel.length) return;
-  var h='<div class="related-section"><h4>Propiedades similares</h4><div class="related-carousel">';
-  for(var i=0;i<rel.length;i++){
-    var p=rel[i];
-    h+='<div class="related-card" onclick="closeModal();setTimeout(function(){openDetail(\''+p.id+'\');},100)"><div class="related-img"><img src="'+fi(p)+'" alt="'+p.title+'" loading="lazy" onerror="this.src=\''+PH+'\'"></div><div class="related-body"><div class="related-price">$'+(p.price||0).toLocaleString()+'<span style="font-size:10px;color:var(--text3)">'+pp(p.operation)+'</span></div><div class="related-title">'+p.title+'</div><div class="related-zone">'+p.zone+'</div></div></div>';
-  }
-  h+='</div></div>';
-  sec.innerHTML=h;
-}
-
-/* Share */
 function shareProperty(id){
-  var url=window.location.origin+window.location.pathname+'?p='+id;
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){showToast('URL copiada al portapapeles.');}).catch(function(){fallbackCopy(url);});}
-  else{fallbackCopy(url);}
+  const p=allProperties.find(x=>x.id===id);if(!p) return;
+  navigator.clipboard?.writeText(`${p.title}\nCódigo: ${p.code}\nPrecio: $${(p.price||0).toLocaleString()}${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}\nZona: ${p.zone}\nContacto: +507 6674-0090`);
+  showToast('Información copiada al portapapeles.');
 }
-function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:-999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('URL copiada.');}catch(e){}document.body.removeChild(ta);}
 
-/* PDF Brochure */
-function generateBrochure(id){
-  var p=null;for(var i=0;i<allProperties.length;i++){if(allProperties[i].id===id){p=allProperties[i];break;}}
-  if(!p) return;
-  showToast('Generando brochure PDF...');
-  var imgs=[];if(p.images&&p.images.length){for(var i=0;i<p.images.length;i++){if(p.images[i]) imgs.push(p.images[i]);}}
-  var maxI=Math.min(imgs.length,5),proms=[];
-  for(var i=0;i<maxI;i++) proms.push(imgToBase64(imgs[i]));
-  Promise.all(proms).then(function(ds){buildPDF(p,ds);}).catch(function(){buildPDF(p,[]);});
+function generateListing(id){
+  const p=allProperties.find(x=>x.id===id);if(!p) return;
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Listado ${p.code}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>body{font-family:'DM Sans', sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#1a1a1a;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:2px solid #C9A84C;margin-bottom:28px;}
+  .brand{font-family:'Playfair Display', serif;font-size:22px;color:#1A1A2E;}
+  .code{font-size:12px;letter-spacing:2px;color:#888;background:#f4f4f2;padding:6px 14px;border-radius:20px;}
+  img{width:100%;border-radius:12px;margin-bottom:20px;aspect-ratio:16/9;object-fit:cover;}
+  h1{font-family:'Playfair Display', serif;font-size:26px;color:#1A1A2E;margin-bottom:8px;}
+  .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#C9A84C'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
+  .price{font-family:'Playfair Display', serif;font-size:30px;color:#C9A84C;margin:12px 0;}
+  .specs{display:flex;gap:20px;padding:16px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:16px 0;}
+  .spec{text-align:center;flex:1;font-size:13px;color:#666;}.spec strong{display:block;font-size:18px;color:#1a1a1a;}
+  .features{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}.feat{padding:5px 12px;background:#f4f4f2;border-radius:20px;font-size:12px;}
+  .contact{margin-top:32px;padding:24px;background:#1A1A2E;border-radius:12px;color:white;text-align:center;}
+  @media print{.contact{background:#1A1A2E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style>
+  </head><body>
+  <div class="header"><div class="brand">Estela's Realty Services</div><div class="code">${p.code}</div></div>
+  <img src="${p.images?.[0]||PH}" alt="${p.title}">
+  <span class="badge">${p.operation}</span><h1>${p.title}</h1>
+  <div style="color:#888;font-size:14px">📍 ${p.zone} · ${p.type}</div>
+  <div class="price">$${(p.price||0).toLocaleString()}<span style="font-size:16px;font-weight:400">${p.operation==='Alquiler vacacional'?' / noche':p.operation==='Alquiler'?' / mes':''}</span></div>
+  <div class="specs">
+    ${p.rooms>0?`<div class="spec"><strong>${p.rooms}</strong>Habitaciones</div>`:''}
+    <div class="spec"><strong>${p.baths}</strong>Baños</div>
+    <div class="spec"><strong>${p.size} m²</strong>Metraje</div>
+    <div class="spec"><strong>${p.parking}</strong>Parqueos</div>
+  </div>
+  <p style="font-size:14px;line-height:1.7;color:#444">${p.description||''}</p>
+  ${p.features?.length?`<div class="features">${p.features.map(f=>`<span class="feat">${f}</span>`).join('')}</div>`:''}
+  <div class="contact"><h3 style="font-family:'Playfair Display', serif;margin-bottom:8px;">Estela's Realty Services</h3>
+  <p style="font-size:14px;opacity:0.75">+507 6674-0090 · erealtylegal@gmail.com</p>
+  <p style="font-size:12px;opacity:0.5;margin-top:8px">Ref: ${p.code}</p></div>
+  <script>window.onload=()=>window.print()<\/script></body></html>`);
+  win.document.close();
 }
-function buildPDF(p,ds){
-  var jsPDF=window.jspdf.jsPDF;
-  var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  var W=210,H=297,navy=[26,26,46],gold=[201,168,76],dark=[30,30,30],mid=[100,100,100];
-  doc.setFillColor(gold[0],gold[1],gold[2]);doc.rect(0,0,W,3,'F');
-  doc.setFontSize(15);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-  doc.text("ESTELA'S REALTY SERVICES",14,13);
-  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
-  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ciudad de Panamá',14,18.5);
-  doc.setFillColor(navy[0],navy[1],navy[2]);doc.roundedRect(W-44,6,36,11,2,2,'F');
-  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
-  doc.text(p.code||'',W-26,13,{align:'center'});
-  doc.setDrawColor(230,230,230);doc.setLineWidth(0.3);doc.line(14,22,W-14,22);
-  var y=27;
-  if(ds[0]){try{doc.addImage(ds[0],'JPEG',14,y,W-28,68,undefined,'FAST');}catch(e){}y+=72;}
-  var opC=p.operation==='Venta'?gold:p.operation==='Alquiler vacacional'?[46,125,50]:navy;
-  doc.setFillColor(opC[0],opC[1],opC[2]);doc.roundedRect(14,y,28,7,1.5,1.5,'F');
-  doc.setFontSize(6.5);doc.setFont('helvetica','bold');
-  var tc=p.operation==='Venta'?navy:[255,255,255];
-  doc.setTextColor(tc[0],tc[1],tc[2]);doc.text((p.operation||'').toUpperCase(),28,y+4.8,{align:'center'});y+=11;
-  doc.setFontSize(17);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);
-  var tl=doc.splitTextToSize(p.title||'',W-28);doc.text(tl,14,y);y+=tl.length*6.2+2;
-  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);
-  doc.text((p.zone||'')+' · '+(p.type||''),14,y);y+=7;
-  var pl=p.operation==='Alquiler vacacional'?' / noche':p.operation==='Alquiler'?' / mes':'';
-  doc.setFontSize(20);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
-  doc.text('$'+(p.price||0).toLocaleString()+pl,14,y);y+=4;
-  doc.setDrawColor(230,230,230);doc.setLineWidth(0.3);doc.line(14,y+2,W-14,y+2);y+=7;
-  var specs=[];
-  if(p.rooms>0) specs.push({l:'Habitaciones',v:''+p.rooms});
-  if(p.baths) specs.push({l:'Baños',v:''+p.baths});
-  if(p.size) specs.push({l:'Metraje',v:p.size+' m²'});
-  if(p.parking) specs.push({l:'Parqueos',v:''+p.parking});
-  if(p.floor) specs.push({l:'Piso',v:''+p.floor});
-  if(specs.length){
-    var sw=(W-28)/specs.length;
-    doc.setFillColor(248,248,248);doc.roundedRect(14,y,W-28,16,2,2,'F');
-    for(var i=0;i<specs.length;i++){
-      var sx=14+i*sw+sw/2;
-      doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text(specs[i].v,sx,y+8,{align:'center'});
-      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);doc.text(specs[i].l,sx,y+13,{align:'center'});
-    }
-    y+=21;
+
+async function sendContactForm(){
+  const name=document.getElementById('contactName').value.trim();
+  const email=document.getElementById('contactEmail').value.trim();
+  const phone=document.getElementById('contactPhone').value.trim();
+  const message=document.getElementById('contactMessage').value.trim();
+  const status=document.getElementById('contactStatus');
+  const btn=document.getElementById('contactBtn');
+  if(!name||!email||!message){
+    status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';
+    status.textContent='Por favor completa tu nombre, correo y mensaje.';return;
   }
-  if(p.description){doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('DESCRIPCIÓN',14,y);y+=5;doc.setFont('helvetica','normal');doc.setTextColor(dark[0],dark[1],dark[2]);var dl=doc.splitTextToSize(p.description,W-28).slice(0,7);doc.text(dl,14,y);y+=dl.length*4+4;}
-  if(p.features&&p.features.length){doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('CARACTERÍSTICAS',14,y);y+=5;doc.setFont('helvetica','normal');doc.setTextColor(mid[0],mid[1],mid[2]);var fl=doc.splitTextToSize(p.features.join('  ·  '),W-28);doc.text(fl,14,y);y+=fl.length*4+4;}
-  var remH=H-22-y;
-  if(ds.length>1&&remH>38){
-    doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(navy[0],navy[1],navy[2]);doc.text('GALERÍA',14,y);y+=5;
-    var ex=ds.slice(1,5),cols=ex.length>=2?2:1,rows=Math.ceil(ex.length/cols);
-    var pw=(W-28-(cols-1)*4)/cols,ph=Math.min((remH-14)/rows,36);
-    for(var i=0;i<ex.length;i++){if(!ex[i]) continue;var col=i%cols,row=Math.floor(i/cols);try{doc.addImage(ex[i],'JPEG',14+col*(pw+4),y+row*(ph+4),pw,ph,undefined,'FAST');}catch(e){}}
-  }
-  doc.setFillColor(navy[0],navy[1],navy[2]);doc.rect(0,H-16,W,16,'F');
-  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(gold[0],gold[1],gold[2]);
-  doc.text("Estela's Realty Services  ·  Ciudad de Panamá, Panamá",W/2,H-9.5,{align:'center'});
-  doc.setFont('helvetica','normal');doc.setTextColor(150,150,150);
-  doc.text('+507 6674-0090  ·  erealtylegal@gmail.com  ·  Ref: '+(p.code||''),W/2,H-4.5,{align:'center'});
-  doc.save('ERS-'+(p.code||'propiedad')+'.pdf');
-  showToast('¡Brochure descargado!');
-}
-function imgToBase64(url){
-  return new Promise(function(resolve,reject){
-    var img=new Image();img.crossOrigin='anonymous';
-    img.onload=function(){var c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);resolve(c.toDataURL('image/jpeg',0.82));};
-    img.onerror=function(){reject(new Error('fail'));};
-    img.src=url+(url.indexOf('?')>-1?'&':'?')+'_t='+Date.now();
-  });
-}
-
-/* Lightbox */
-function openLightbox(idx){lbImages=window._lbImgs||[PH];lbIdx=idx||0;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';renderLB();}
-function renderLB(){
-  var img=document.getElementById('lbImg');
-  document.getElementById('lbCounter').textContent=(lbIdx+1)+' / '+lbImages.length;
-  img.src=lbImages[lbIdx]||PH;img.onerror=function(){img.src=PH;};
-  var h='';for(var i=0;i<lbImages.length;i++) h+='<img class="lb-tn'+(i===lbIdx?' active':'')+'" src="'+lbImages[i]+'" alt="" onclick="lbGoto('+i+')" onerror="this.src=\''+PH+'\'">';
-  var tb=document.getElementById('lbThumbs');tb.innerHTML=h;
-  setTimeout(function(){var a=tb.querySelector('.lb-tn.active');if(a) a.scrollIntoView({inline:'center',behavior:'smooth'});},50);
-}
-function lbNav(d){lbIdx=(lbIdx+d+lbImages.length)%lbImages.length;renderLB();}
-function lbGoto(i){lbIdx=i;renderLB();}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');if(!document.getElementById('detailModal').classList.contains('open')) document.body.style.overflow='';}
-
-/* Contact form (footer section) */
-function sendContactForm(){
-  var name=document.getElementById('contactName').value.trim(),email=document.getElementById('contactEmail').value.trim(),phone=document.getElementById('contactPhone').value.trim(),message=document.getElementById('contactMessage').value.trim();
-  var status=document.getElementById('contactStatus'),btn=document.getElementById('contactBtn');
-  if(!name||!email||!message){status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';status.textContent='Por favor completa tu nombre, correo y mensaje.';return;}
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Enviando...';
-  emailjs.send('service_za713ch','template_ciropen',{from_name:name,from_email:email,phone:phone||'No indicado',message:message,to_email:'erealtylegal@gmail.com'}).then(function(){
-    status.style.display='block';status.style.background='rgba(46,125,50,0.3)';status.style.color='#a5d6a7';status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
-    var ids=['contactName','contactEmail','contactPhone','contactMessage'];for(var i=0;i<ids.length;i++) document.getElementById(ids[i]).value='';
-  }).catch(function(){status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';status.textContent='Error al enviar. Escríbenos a erealtylegal@gmail.com';})
-  .finally(function(){btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span>Enviar mensaje';});
+  try{
+    await emailjs.send('service_za713ch','template_ciropen',{from_name:name,from_email:email,phone:phone||'No indicado',message,to_email:'erealtylegal@gmail.com'});
+    status.style.display='block';status.style.background='rgba(46,125,50,0.3)';status.style.color='#a5d6a7';
+    status.textContent='¡Mensaje enviado! Te contactaremos pronto.';
+    ['contactName','contactEmail','contactPhone','contactMessage'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){
+    status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';
+    status.textContent='Error al enviar. Escríbenos a erealtylegal@gmail.com';
+  }
+  btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span>Enviar mensaje';
 }
 
-function showToast(msg){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);}
-function toggleMenu(){document.getElementById('hamburgerBtn').classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open');}
-function closeMenu(){document.getElementById('hamburgerBtn').classList.remove('open');document.getElementById('mobileMenu').classList.remove('open');}
+function showToast(msg){
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);
+}
 
-document.addEventListener('click',function(e){var m=document.getElementById('mobileMenu'),b=document.getElementById('hamburgerBtn');if(m&&m.classList.contains('open')&&!m.contains(e.target)&&!b.contains(e.target)) closeMenu();});
-document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this) closeModal();});
-document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this) closeLightbox();});
-document.addEventListener('keydown',function(e){
-  if(document.getElementById('lightbox').classList.contains('open')){if(e.key==='ArrowRight') lbNav(1);else if(e.key==='ArrowLeft') lbNav(-1);else if(e.key==='Escape') closeLightbox();}
-  else if(document.getElementById('detailModal').classList.contains('open')){if(e.key==='Escape') closeModal();}
+function toggleMenu(){
+  const btn=document.getElementById('hamburgerBtn');
+  const menu=document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  const menu=document.getElementById('mobileMenu');
+  const btn=document.getElementById('hamburgerBtn');
+  if(menu&&menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();
 });
-document.getElementById('searchInput').addEventListener('keydown',function(e){if(e.key==='Enter') doSearch();});
+document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
 init();
 </script>
 </body>
