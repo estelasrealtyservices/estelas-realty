@@ -1,0 +1,22 @@
+{
+  "rewrites": [
+    {
+      "source": "/propiedad/:code",
+      "destination": "/propiedad.html?code=:code"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/propiedad/:code",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=60, stale-while-revalidate=300" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=86400" }
+      ]
+    }
+  ]
+}
