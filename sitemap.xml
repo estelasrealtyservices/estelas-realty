@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- PÁGINA PRINCIPAL -->
+  <url>
+    <loc>https://estelas-realty.vercel.app/</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://estelas-realty.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://estelas-realty.vercel.app/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://estelas-realty.vercel.app/"/>
+  </url>
+
+  <!--
+    PÁGINAS DE PROPIEDADES INDIVIDUALES
+    =====================================================
+    INSTRUCCIÓN: Agrega aquí una entrada <url> por cada
+    propiedad activa, usando su código ERS.
+
+    Ejemplo:
+    <url>
+      <loc>https://estelas-realty.vercel.app/propiedad/ERS-2025-001</loc>
+      <lastmod>2026-04-01</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.9</priority>
+      <xhtml:link rel="alternate" hreflang="es" href="https://estelas-realty.vercel.app/propiedad/ERS-2025-001"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://estelas-realty.vercel.app/propiedad/ERS-2025-001?lang=en"/>
+      <image:image>
+        <image:loc>URL_DE_LA_FOTO_PRINCIPAL</image:loc>
+        <image:caption>Título de la propiedad</image:caption>
+      </image:image>
+    </url>
+
+    RECOMENDACIÓN v2: Generar este sitemap dinámicamente
+    via un endpoint serverless (Vercel Edge Function) que
+    consulte Supabase y liste todas las propiedades activas.
+    Ejemplo de ruta: /api/sitemap → devuelve XML dinámico.
+    =====================================================
+  -->
+
+</urlset>

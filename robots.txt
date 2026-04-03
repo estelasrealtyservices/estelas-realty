@@ -1,0 +1,21 @@
+# robots.txt · Estela's Realty Services
+# https://estelas-realty.vercel.app/
+
+User-agent: *
+
+# Páginas públicas — permitidas
+Allow: /
+Allow: /propiedad/
+
+# Panel de administración — bloquear indexación
+Disallow: /admin.html
+Disallow: /admin
+
+# Archivos de configuración — bloquear
+Disallow: /vercel.json
+
+# Sitemap
+Sitemap: https://estelas-realty.vercel.app/sitemap.xml
+
+# Crawl-delay opcional (segundos entre solicitudes)
+# Crawl-delay: 1
