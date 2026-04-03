@@ -178,6 +178,46 @@
 
   /* Mapa */
   .property-map{height:200px;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-top:16px;position:relative;z-index:0;}
+
+  /* =============================================
+     LIGHTBOX
+  ============================================= */
+  .lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.97);flex-direction:column;align-items:center;justify-content:center;}
+  .lightbox.open{display:flex;}
+  .lb-header{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;z-index:2;}
+  .lb-counter{color:rgba(255,255,255,0.6);font-size:14px;font-weight:500;}
+  .lb-close{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+  .lb-close:hover{background:rgba(255,255,255,0.2);}
+  .lb-close .material-icons{color:white;font-size:22px;}
+  .lb-main{flex:1;display:flex;align-items:center;justify-content:center;width:100%;padding:70px 70px 100px;position:relative;}
+  .lb-main img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;user-select:none;display:block;}
+  .lb-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);z-index:2;}
+  .lb-arrow:hover{background:rgba(255,255,255,0.25);}
+  .lb-arrow .material-icons{color:white;font-size:22px;}
+  .lb-prev{left:14px;}
+  .lb-next{right:14px;}
+  .lb-arrow.hidden{opacity:0;pointer-events:none;}
+  .lb-thumbs{position:absolute;bottom:0;left:0;right:0;padding:10px 16px;display:flex;gap:6px;overflow-x:auto;justify-content:center;scrollbar-width:none;}
+  .lb-thumbs::-webkit-scrollbar{display:none;}
+  .lb-thumb{width:56px;height:42px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid transparent;transition:var(--transition);opacity:0.5;}
+  .lb-thumb.active{border-color:var(--accent);opacity:1;}
+  .lb-thumb:hover{opacity:0.85;}
+  .lb-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* Botón "Ver N fotos" sobre la galería */
+  .gallery-btn{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.65);color:white;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;transition:var(--transition);backdrop-filter:blur(4px);}
+  .gallery-btn:hover{background:rgba(0,0,0,0.85);}
+  .gallery-btn .material-icons{font-size:15px;}
+  .detail-gallery-wrap{position:relative;}
+
+  @media(max-width:768px){
+    .lb-main{padding:60px 52px 90px;}
+    .lb-arrow{width:36px;height:36px;}
+    .lb-arrow .material-icons{font-size:18px;}
+    .lb-prev{left:8px;}
+    .lb-next{right:8px;}
+    .lb-thumb{width:46px;height:34px;}
+  }
   .toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
   .toast.show{transform:translateY(0);opacity:1;}
   .toast .material-icons{color:var(--accent);font-size:18px;}
@@ -565,6 +605,20 @@
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-header">
+    <div class="lb-counter" id="lbCounter">1 / 1</div>
+    <button class="lb-close" onclick="closeLightbox()"><span class="material-icons">close</span></button>
+  </div>
+  <div class="lb-main">
+    <button class="lb-arrow lb-prev" id="lbPrev" onclick="lbMove(-1)"><span class="material-icons">chevron_left</span></button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-arrow lb-next" id="lbNext" onclick="lbMove(1)"><span class="material-icons">chevron_right</span></button>
+  </div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
+</div>
+
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
 <script>
@@ -779,16 +833,21 @@ function renderProperties(list){
     </div>`).join('');
 }
 
+var currentDetailId=null;
 function openDetail(id){
+  currentDetailId=id;
   const p=allProperties.find(x=>x.id===id);
   if(!p) return;
   document.getElementById('detailCode').textContent=p.code;
   document.getElementById('detailTitle').textContent=p.title;
   const imgs=p.images?.length?p.images:[PH];
   document.getElementById('detailBody').innerHTML=`
-    <div class="detail-gallery">
-      <div class="detail-main"><img src="${imgs[0]}" alt="${p.title}"></div>
-      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb"><img src="${i}" alt=""></div>`).join('')}</div>
+    <div class="detail-gallery-wrap">
+      <div class="detail-gallery">
+        <div class="detail-main" onclick="openLightbox(0)" style="cursor:pointer"><img src="${imgs[0]}" alt="${p.title}"></div>
+        <div class="detail-thumbs">${imgs.slice(1,3).map((im,i)=>`<div class="detail-thumb" onclick="openLightbox(${i+1})" style="cursor:pointer"><img src="${im}" alt=""></div>`).join('')}</div>
+      </div>
+      ${imgs.length>1?`<button class="gallery-btn" onclick="openLightbox(0)"><span class="material-icons">photo_library</span>Ver ${imgs.length} fotos</button>`:''}
     </div>
     <div class="detail-info">
       <div>
@@ -942,6 +1001,62 @@ document.addEventListener('click',function(e){
 });
 document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
+// ===== LIGHTBOX =====
+var lbImages=[];
+var lbIndex=0;
+
+function openLightbox(startIndex){
+  var p=allProperties.find(function(x){return x.id===currentDetailId;});
+  if(!p) return;
+  lbImages=p.images&&p.images.length?p.images:[PH];
+  lbIndex=startIndex||0;
+  lbRender();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function lbRender(){
+  var total=lbImages.length;
+  document.getElementById('lbImg').src=lbImages[lbIndex];
+  document.getElementById('lbCounter').textContent=(lbIndex+1)+' / '+total;
+  document.getElementById('lbPrev').classList.toggle('hidden', lbIndex===0);
+  document.getElementById('lbNext').classList.toggle('hidden', lbIndex===total-1);
+  // Thumbs
+  var thumbsEl=document.getElementById('lbThumbs');
+  thumbsEl.innerHTML=lbImages.map(function(src,i){
+    return '<div class="lb-thumb'+(i===lbIndex?' active':'')+'" onclick="lbGoTo('+i+')">'
+      +'<img src="'+src+'" alt=""></div>';
+  }).join('');
+  // Scroll active thumb into view
+  var active=thumbsEl.querySelector('.active');
+  if(active) active.scrollIntoView({block:'nearest',inline:'center'});
+}
+
+function lbMove(dir){
+  var next=lbIndex+dir;
+  if(next>=0&&next<lbImages.length){lbIndex=next;lbRender();}
+}
+
+function lbGoTo(i){lbIndex=i;lbRender();}
+
+// Teclado: flechas y Escape
+document.addEventListener('keydown',function(e){
+  var lb=document.getElementById('lightbox');
+  if(!lb.classList.contains('open')) return;
+  if(e.key==='ArrowLeft') lbMove(-1);
+  else if(e.key==='ArrowRight') lbMove(1);
+  else if(e.key==='Escape') closeLightbox();
+});
+// Clic en fondo oscuro cierra lightbox
+document.getElementById('lightbox').addEventListener('click',function(e){
+  if(e.target===this) closeLightbox();
+});
 
 init();
 </script>
