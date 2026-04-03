@@ -148,8 +148,8 @@
   .info-section-title{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:16px;font-weight:600;}
 
   /* PRICE */
-  .prop-price{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:40px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1px;}
-  .prop-price-period{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:15px;color:var(--text3);font-weight:400;margin-left:6px;letter-spacing:0;}
+  .prop-price{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:36px;font-weight:700;color:var(--accent);line-height:1;}
+  .prop-price-period{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:15px;color:var(--text3);font-weight:400;margin-left:4px;}
 
   /* SPECS */
   .specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:20px;}
@@ -217,31 +217,32 @@
   /* SOCIAL SVGS */
   .social-icon svg{fill:currentColor;width:18px;height:18px;}
 
-/* KEYFRAMES */
-@keyframes waPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,0.6);}70%{box-shadow:0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
-@keyframes waEntry{from{opacity:0;transform:scale(0.5) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
-@keyframes waBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+  /* PRICE - modern */
+  .prop-price{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif!important;font-size:40px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1px;}
+  .prop-price-period{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:15px;color:var(--text3);font-weight:400;margin-left:6px;}
 
-/* WHATSAPP FLOAT */
-.wa-float{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
-.wa-float-tooltip{background:#1A1A2E;color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.15);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
-.wa-float:hover .wa-float-tooltip{opacity:1;transform:translateX(0);}
-.wa-float-btn{width:58px;height:58px;background:#25D366!important;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.45);transition:transform 0.25s ease,box-shadow 0.25s ease;animation:waPulse 2.5s infinite 2s;text-decoration:none;flex-shrink:0;border:none;}
-.wa-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,0.6);}
-.wa-float-btn svg{width:30px;height:30px;fill:white;display:block;}
+  /* WA FLOAT */
+  @keyframes waPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,0.6);}70%{box-shadow:0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+  @keyframes waEntry{from{opacity:0;transform:scale(0.5) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+  .wa-float{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
+  .wa-float-tooltip{background:#1A1A2E;color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,0.15);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
+  .wa-float:hover .wa-float-tooltip{opacity:1;transform:translateX(0);}
+  .wa-float-btn{width:58px;height:58px;background:#25D366!important;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.45);transition:transform 0.25s ease;animation:waPulse 2.5s infinite 2s;text-decoration:none;flex-shrink:0;border:none;}
+  .wa-float-btn:hover{transform:scale(1.1);}
+  .wa-float-btn svg{width:30px;height:30px;fill:white;display:block;}
 
-/* LANG TOGGLE */
-.lang-toggle{display:flex;align-items:center;background:#F4F4F2;border:1px solid #E0E0E0;border-radius:20px;padding:3px;gap:2px;}
-.lang-btn{padding:5px 10px;border-radius:16px;border:none;background:none;font-size:12px;font-weight:600;color:#888;transition:all 0.25s ease;cursor:pointer;letter-spacing:0.5px;}
-.lang-btn.active{background:#1A1A2E;color:white;}
-.lang-btn:hover:not(.active){color:#1A1A1A;background:#E0E0E0;}
+  /* LANG TOGGLE */
+  .lang-toggle{display:flex;align-items:center;background:#F4F4F2;border:1px solid #E0E0E0;border-radius:20px;padding:3px;gap:2px;}
+  .lang-btn{padding:5px 10px;border-radius:16px;border:none;background:none;font-size:12px;font-weight:600;color:#888;transition:all 0.25s ease;cursor:pointer;}
+  .lang-btn.active{background:#1A1A2E;color:white;}
+  .lang-btn:hover:not(.active){background:#E0E0E0;color:#1A1A1A;}
 
 </style>
 </head>
 <body>
 
 <!-- WHATSAPP FLOTANTE -->
-<a class="wa-float" id="waFloatBtn" href="https://wa.me/50766740090" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+<a class="wa-float" id="waFloatBtn" href="https://wa.me/50766740090" target="_blank" rel="noopener" aria-label="WhatsApp">
   <span class="wa-float-tooltip" id="waFloatTooltip">¡Escríbenos al WhatsApp!</span>
   <div class="wa-float-btn">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -257,7 +258,7 @@
     </a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
-    <div class="lang-toggle" role="group" aria-label="Idioma">
+    <div class="lang-toggle">
       <button class="lang-btn active" id="btnEs" onclick="setLang('es')">🇵🇦 ES</button>
       <button class="lang-btn" id="btnEn" onclick="setLang('en')">🇺🇸 EN</button>
     </div>
@@ -421,12 +422,12 @@
     <a href="../#servicios">Servicios</a>
     <a href="../#contacto">Contacto</a>
     <a href="tel:+50766740090">+507 6674-0090</a>
-    <a href="/cdn-cgi/l/email-protection#f99c8b9c98958d80959c9e9895b99e94989095d79a9694"><span class="__cf_email__" data-cfemail="5e3b2c3b3f322a27323b393f321e39333f3732703d3133">[email&#160;protected]</span></a>
+    <a href="mailto:erealtylegal@gmail.com">erealtylegal@gmail.com</a>
   </div>
   <p style="font-size:12px;margin-top:20px;opacity:0.5">© 2025 Estela's Realty Services. Todos los derechos reservados.</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SUPABASE_URL = 'https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const PH = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80';
@@ -440,112 +441,71 @@ let relatedProperties = [];
 
 // ---- ROUTING: get code from URL ----
 
-// ============================================================
-// MULTI-IDIOMA propiedad.html
-// ============================================================
+// ── MULTI-IDIOMA ──────────────────────────────────────────
 const T = {
   es:{
-    loading:'Cargando propiedad...',
-    errorTitle:'Propiedad no encontrada',
-    errorDesc:'La propiedad que buscas no existe o ha sido removida.',
-    errorLink:'Ver todas las propiedades',
-    labelPrice:'Precio',labelDesc:'Descripción',labelAmenities:'Amenidades',
-    labelVideo:'Video',labelLocation:'Ubicación aproximada',
-    mapHint:'📍 La ubicación mostrada es referencial.',
-    btnWa:'Consultar por WhatsApp',btnCall:'Llamar ahora',btnCopy:'Copiar enlace',
-    labelRef:'Ref:',relatedTitle:'Propiedades similares',featBadge:'Destacado',
     waTooltip:'¡Escríbenos al WhatsApp!',
-    seePhotos:'Ver',photos:'foto',photosPlural:'fotos',
-    perMonth:'/ mes',perNight:'/ noche',
-    rent:'Alquiler',vacation:'Alquiler vacacional',sale:'Venta',
-    bedrooms:'Habitaciones',bathrooms:'Baños',area:'Metraje',parking:'Parqueos',floor:'Piso',
-    copiedMsg:'Enlace copiado al portapapeles',
-    waMsg:(title,code,price,url)=>`Hola! Me interesa la propiedad: ${title} (${code}) · Precio: ${price} · ${url}`,
+    perMonth:' / mes', perNight:' / noche',
+    rent:'Alquiler', vacation:'Alquiler vacacional', sale:'Venta',
+    bedrooms:'Habitaciones', bathrooms:'Baños', area:'Metraje', parking:'Parqueos', floor:'Piso',
+    copiedMsg:'Enlace copiado',
+    waMsg:(t,code,price,url)=>`Hola! Me interesa: ${t} (${code}) · ${price} · ${url}`,
+    amenities:{}
   },
   en:{
-    loading:'Loading property...',
-    errorTitle:'Property not found',
-    errorDesc:'The property you are looking for does not exist or has been removed.',
-    errorLink:'View all properties',
-    labelPrice:'Price',labelDesc:'Description',labelAmenities:'Amenities',
-    labelVideo:'Video',labelLocation:'Approximate location',
-    mapHint:'📍 Location shown is approximate.',
-    btnWa:'Contact via WhatsApp',btnCall:'Call now',btnCopy:'Copy link',
-    labelRef:'Ref:',relatedTitle:'Similar properties',featBadge:'Featured',
     waTooltip:'Chat with us on WhatsApp!',
-    seePhotos:'View',photos:'photo',photosPlural:'photos',
-    perMonth:'/ month',perNight:'/ night',
-    rent:'For Rent',vacation:'Vacation Rental',sale:'For Sale',
-    bedrooms:'Bedrooms',bathrooms:'Bathrooms',area:'Area',parking:'Parking',floor:'Floor',
-    copiedMsg:'Link copied to clipboard',
-    waMsg:(title,code,price,url)=>`Hello! I'm interested in: ${title} (${code}) · Price: ${price} · ${url}`,
+    perMonth:' / month', perNight:' / night',
+    rent:'For Rent', vacation:'Vacation Rental', sale:'For Sale',
+    bedrooms:'Bedrooms', bathrooms:'Bathrooms', area:'Area', parking:'Parking', floor:'Floor',
+    copiedMsg:'Link copied',
+    waMsg:(t,code,price,url)=>`Hello! Interested in: ${t} (${code}) · ${price} · ${url}`,
+    amenities:{
+      'Piscina':'Pool','Gimnasio':'Gym','Amoblado':'Furnished','Balcón':'Balcony',
+      'Vista al mar':'Ocean view','Seguridad 24h':'24h Security','A/C incluido':'A/C included',
+      'Pet friendly':'Pet friendly','Área de juegos':'Playground','Terraza':'Rooftop',
+      'Cuarto de servicio':"Maid's room",'Bodega':'Storage','Jardín':'Garden',
+      'BBQ':'BBQ','Portón eléctrico':'Electric gate'
+    }
   }
 };
 
-const AMENITIES_EN = {
-  'Piscina':'Pool','Gimnasio':'Gym','Amoblado':'Furnished','Balcón':'Balcony',
-  'Vista al mar':'Ocean view','Seguridad 24h':'24h Security','A/C incluido':'A/C included',
-  'Pet friendly':'Pet friendly','Área de juegos':'Playground','Terraza':'Rooftop terrace',
-  'Cuarto de servicio':"Maid's room",'Bodega':'Storage','Jardín':'Garden',
-  'BBQ':'BBQ area','Portón eléctrico':'Electric gate'
-};
-
-let currentLang = 'es';
+let currentLang = (localStorage.getItem('ers_lang') || (navigator.language?.startsWith('en') ? 'en' : 'es'));
 
 function setLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
   localStorage.setItem('ers_lang', lang);
-  const btnEs = document.getElementById('btnEs');
-  const btnEn = document.getElementById('btnEn');
-  if(btnEs) { btnEs.classList.toggle('active', lang==='es'); btnEs.setAttribute('aria-pressed', lang==='es'); }
-  if(btnEn) { btnEn.classList.toggle('active', lang==='en'); btnEn.setAttribute('aria-pressed', lang==='en'); }
-  const t = T[lang];
-  const map = {
-    loadingText:t.loading, errorTitle:t.errorTitle, errorDesc:t.errorDesc,
-    labelPrice:t.labelPrice, labelDesc:t.labelDesc, labelAmenities:t.labelAmenities,
-    labelVideo:t.labelVideo, labelLocation:t.labelLocation, mapHint:t.mapHint,
-    btnWaText:t.btnWa, btnCallText:t.btnCall, btnCopyText:t.btnCopy,
-    labelRef:t.labelRef, relatedTitle:t.relatedTitle, featBadgeText:t.featBadge,
-    waFloatTooltip:t.waTooltip,
-  };
-  Object.entries(map).forEach(([id,txt])=>{ const el=document.getElementById(id); if(el) el.textContent=txt; });
-  // breadcrumb links
-  const bcHome=document.getElementById('bcHome'); if(bcHome) bcHome.textContent = lang==='en'?'Home':'Inicio';
-  const bcProps=document.getElementById('bcProps'); if(bcProps) bcProps.textContent = lang==='en'?'Properties':'Propiedades';
-  if(currentProperty) renderDynamic(currentProperty);
+  document.getElementById('btnEs')?.classList.toggle('active', lang === 'es');
+  document.getElementById('btnEn')?.classList.toggle('active', lang === 'en');
+  const tt = document.getElementById('waFloatTooltip');
+  if (tt) tt.textContent = T[lang].waTooltip;
+  if (currentProperty) renderDynamic(currentProperty);
 }
 
 function getPeriod(op) {
-  const t=T[currentLang];
-  if(op==='Alquiler vacacional') return ' '+t.perNight;
-  if(op==='Alquiler') return ' '+t.perMonth;
-  return '';
+  const t = T[currentLang];
+  return op === 'Alquiler vacacional' ? t.perNight : op === 'Alquiler' ? t.perMonth : '';
 }
 function getOpLabel(op) {
-  const t=T[currentLang];
-  if(op==='Alquiler vacacional') return t.vacation;
-  if(op==='Alquiler') return t.rent;
-  return t.sale;
+  const t = T[currentLang];
+  return op === 'Alquiler vacacional' ? t.vacation : op === 'Alquiler' ? t.rent : t.sale;
 }
 
 function renderDynamic(p) {
   const t = T[currentLang];
   const period = getPeriod(p.operation);
-  const priceFormatted = '$'+(p.price||0).toLocaleString()+period;
-  const canonicalUrl = `https://estelas-realty.vercel.app/propiedad/${encodeURIComponent(p.code)}`;
+  const price = '$' + (p.price || 0).toLocaleString() + period;
+  const url = `https://estelas-realty.vercel.app/propiedad/${encodeURIComponent(p.code)}`;
 
-  // Operation badge
-  const opBadge = document.getElementById('opBadge');
-  if(opBadge) opBadge.textContent = getOpLabel(p.operation);
-
-  // Period
-  const periodEl = document.getElementById('propPeriod');
-  if(periodEl) periodEl.textContent = period;
-
-  // Gallery count
-  const countEl = document.getElementById('galleryCountText');
-  if(countEl) { const n=allImages.length; countEl.textContent=`${t.seePhotos} ${n} ${n===1?t.photos:t.photosPlural}`; }
+  // Badge
+  const badge = document.getElementById('opBadge');
+  if (badge) {
+    badge.textContent = getOpLabel(p.operation);
+    badge.className = 'badge ' + (p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale');
+  }
+  // Period label
+  const pel = document.getElementById('propPeriod');
+  if (pel) pel.textContent = period;
 
   // Specs
   const SVG = {
@@ -553,56 +513,38 @@ function renderDynamic(p) {
     bath:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 6c0-1.1.9-2 2-2s2 .9 2 2H7zm-4 5v2h18v-2c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 4v1c0 1.86 1.27 3.43 3 3.87V21h8v-2.13c1.73-.44 3-2.01 3-3.87v-1H5z"/></svg>`,
     size:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M21 6.5l-4-4-1.41 1.41 1.55 1.55-3.19 3.19-1.71-1.71L5 14.17V19h4.83l7.24-7.24-1.41-1.42 3.61-3.61 1.55 1.55L21 6.5zM8.83 17H7v-1.83l4.72-4.72 1.83 1.83L8.83 17z"/></svg>`,
     car:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`,
-    floor:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5v-2h2v2zm4 4H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>`
+    flr:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5v-2h2v2zm4 4H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>`
   };
-  const FEATURE_ICONS = {
-    'Piscina':'pool','Gimnasio':'fitness_center','Amoblado':'chair','Balcón':'balcony',
-    'Vista al mar':'beach_access','Seguridad 24h':'security','A/C incluido':'ac_unit',
-    'Pet friendly':'pets','Área de juegos':'sports_esports','Terraza':'deck',
-    'Cuarto de servicio':'cleaning_services','Bodega':'inventory','Jardín':'grass',
-    'BBQ':'outdoor_grill','Portón eléctrico':'garage'
-  };
-
-  const specs=[];
-  if(p.rooms>0)   specs.push({svg:SVG.bed,  val:p.rooms,       label:t.bedrooms});
-  if(p.baths>0)   specs.push({svg:SVG.bath, val:p.baths,       label:t.bathrooms});
-  if(p.size>0)    specs.push({svg:SVG.size, val:p.size+' m²',  label:t.area});
-  if(p.parking>0) specs.push({svg:SVG.car,  val:p.parking,     label:t.parking});
-  if(p.floor)     specs.push({svg:SVG.floor,val:p.floor,       label:t.floor});
-
+  const specs = [];
+  if (p.rooms > 0)   specs.push({svg:SVG.bed,  val:p.rooms,       lbl:t.bedrooms});
+  if (p.baths > 0)   specs.push({svg:SVG.bath, val:p.baths,       lbl:t.bathrooms});
+  if (p.size  > 0)   specs.push({svg:SVG.size, val:p.size+' m²',  lbl:t.area});
+  if (p.parking > 0) specs.push({svg:SVG.car,  val:p.parking,     lbl:t.parking});
+  if (p.floor)       specs.push({svg:SVG.flr,  val:p.floor,       lbl:t.floor});
   const sg = document.getElementById('specsGrid');
-  if(sg) sg.innerHTML=specs.map(s=>`<div class="spec-pill"><span class="spec-svg" style="color:#C9A84C">${s.svg}</span><strong>${s.val}</strong><span>${s.label}</span></div>`).join('');
+  if (sg) sg.innerHTML = specs.map(s => `<div class="spec-pill"><span class="spec-svg" style="color:#C9A84C">${s.svg}</span><strong>${s.val}</strong><span>${s.lbl}</span></div>`).join('');
+
+  // Description (with EN override)
+  const desc = (lang === 'en' || currentLang === 'en') && p.description_en ? p.description_en : (p.description || '');
+  const dSec = document.getElementById('descSection');
+  const dEl  = document.getElementById('propDescription');
+  if (dSec && dEl) { dEl.textContent = desc; dSec.style.display = desc ? 'block' : 'none'; }
 
   // Amenities
-  if(p.features?.length) {
-    const amap = currentLang==='en' ? AMENITIES_EN : {};
+  if (p.features?.length) {
+    const ICONS = {'Piscina':'pool','Gimnasio':'fitness_center','Amoblado':'chair','Balcón':'balcony','Vista al mar':'beach_access','Seguridad 24h':'security','A/C incluido':'ac_unit','Pet friendly':'pets','Área de juegos':'sports_esports','Terraza':'deck','Cuarto de servicio':'cleaning_services','Bodega':'inventory','Jardín':'grass','BBQ':'outdoor_grill','Portón eléctrico':'garage'};
+    const amap = t.amenities;
     const fg = document.getElementById('featuresGrid');
-    if(fg) fg.innerHTML = p.features.map(f=>`<span class="feature-chip"><span class="material-icons" style="font-size:14px;color:#C9A84C">${FEATURE_ICONS[f]||'check_circle'}</span>${amap[f]||f}</span>`).join('');
+    if (fg) fg.innerHTML = p.features.map(f => `<span class="feature-chip"><span class="material-icons" style="font-size:14px;color:#C9A84C">${ICONS[f]||'check_circle'}</span>${amap[f]||f}</span>`).join('');
   }
 
-  // Description - switch by lang
-  const descEl = document.getElementById('propDescription');
-  const descSec = document.getElementById('descSection');
-  if(descEl && descSec) {
-    const txt = (currentLang==='en' && p.description_en) ? p.description_en : (p.description||'');
-    descEl.textContent = txt;
-    descSec.style.display = txt ? 'block' : 'none';
-  }
-
-  // WhatsApp URLs
-  const waMsg = encodeURIComponent(t.waMsg(p.title, p.code, priceFormatted, canonicalUrl));
+  // WhatsApp links
+  const waMsg = encodeURIComponent(t.waMsg(p.title, p.code, price, url));
   const waHref = `https://wa.me/50766740090?text=${waMsg}`;
-  const waBtn = document.getElementById('waBtn'); if(waBtn) waBtn.href = waHref;
-  const waFloat = document.getElementById('waFloatBtn'); if(waFloat) waFloat.href = waHref;
+  const waBtn = document.getElementById('waBtn'); if (waBtn) waBtn.href = waHref;
+  const waFlt = document.getElementById('waFloatBtn'); if (waFlt) waFlt.href = waHref;
 }
-
-function copyLink() {
-  const url = window.location.href;
-  const msg = T[currentLang].copiedMsg;
-  navigator.clipboard?.writeText(url).then(()=>showToast(msg)).catch(()=>{
-    const el=document.createElement('input');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast(msg);
-  });
-}
+// ── END MULTI-IDIOMA ──────────────────────────────────────
 
 function getCodeFromURL() {
   // Supports /propiedad/ERS-001 via vercel.json rewrites → ?code=ERS-001
@@ -682,7 +624,7 @@ function renderProperty(p) {
 
   // Header
   const opBadge = document.getElementById('opBadge');
-  opBadge.textContent = getOpLabel(p.operation);
+  opBadge.textContent = p.operation;
   opBadge.className = 'badge ' + (p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale');
   if (p.featured) document.getElementById('featBadge').style.display = 'inline-flex';
   document.getElementById('propCode').textContent = p.code;
@@ -719,10 +661,53 @@ function renderProperty(p) {
   // Contact card ref
   document.getElementById('cardRef').textContent = p.code;
 
-  // Specs, description, features, whatsapp — all handled by renderDynamic below
-  // Features section visibility
+  // Specs — SVG inline para garantizar que se vean siempre
+  const SVG = {
+    bed: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>`,
+    bath: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 6c0-1.1.9-2 2-2s2 .9 2 2H7zm-4 5v2h18v-2c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 4v1c0 1.86 1.27 3.43 3 3.87V21h8v-2.13c1.73-.44 3-2.01 3-3.87v-1H5z"/></svg>`,
+    size: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M21 6.5l-4-4-1.41 1.41 1.55 1.55-3.19 3.19-1.71-1.71L5 14.17V19h4.83l7.24-7.24-1.41-1.42 3.61-3.61 1.55 1.55L21 6.5zM8.83 17H7v-1.83l4.72-4.72 1.83 1.83L8.83 17z"/></svg>`,
+    car:  `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`,
+    floor:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5v-2h2v2zm4 4H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>`
+  };
+  const specs = [];
+  if (p.rooms > 0) specs.push({ svg: SVG.bed,   val: p.rooms,         label: 'Habitaciones' });
+  if (p.baths > 0) specs.push({ svg: SVG.bath,   val: p.baths,         label: 'Baños' });
+  if (p.size  > 0) specs.push({ svg: SVG.size,   val: p.size + ' m²',  label: 'Metraje' });
+  if (p.parking>0) specs.push({ svg: SVG.car,    val: p.parking,       label: 'Parqueos' });
+  if (p.floor)     specs.push({ svg: SVG.floor,  val: p.floor,         label: 'Piso' });
+  document.getElementById('specsGrid').innerHTML = specs.map(s => `
+    <div class="spec-pill">
+      <span class="spec-svg">${s.svg}</span>
+      <strong>${s.val}</strong>
+      <span>${s.label}</span>
+    </div>`).join('');
+
+  // Contact card ref
+
+  // WhatsApp button
+  const waMsg = encodeURIComponent(`Hola! Me interesa la propiedad: ${p.title} (${p.code}) · Precio: ${priceFormatted} · ${canonicalUrl}`);
+  document.getElementById('waBtn').href = `https://wa.me/50766740090?text=${waMsg}`;
+
+  // Description
+  if (p.description) {
+    document.getElementById('descSection').style.display = 'block';
+    document.getElementById('propDescription').textContent = p.description;
+  }
+
+  // Features
   if (p.features?.length) {
     document.getElementById('featuresSection').style.display = 'block';
+    const FEATURE_ICONS = {
+      'Piscina': 'pool', 'Gimnasio': 'fitness_center', 'Amoblado': 'chair',
+      'Balcón': 'balcony', 'Vista al mar': 'beach_access', 'Seguridad 24h': 'security',
+      'A/C': 'ac_unit', 'Pet friendly': 'pets', 'Área de juegos': 'sports_esports',
+      'Terraza': 'deck', 'Cuarto de servicio': 'cleaning_services', 'Bodega': 'inventory',
+      'Jardín': 'grass', 'BBQ': 'outdoor_grill', 'Portón eléctrico': 'garage'
+    };
+    document.getElementById('featuresGrid').innerHTML = p.features.map(f => `
+      <span class="feature-chip">
+        <span class="material-icons">${FEATURE_ICONS[f] || 'check_circle'}</span>${f}
+      </span>`).join('');
   }
 
   // Video
@@ -750,7 +735,6 @@ function renderProperty(p) {
     }, 300);
   }
 
-  // Apply language + render dynamic parts
   renderDynamic(p);
 
   // Show page
@@ -849,7 +833,19 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeLightbox();
 });
 
-// ---- SHARE ---- (see copyLink above)
+// ---- SHARE ----
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard?.writeText(url).then(() => showToast('Enlace copiado al portapapeles')).catch(() => {
+    const el = document.createElement('input');
+    el.value = url;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('Enlace copiado al portapapeles');
+  });
+}
 
 // ---- PDF BROCHURE ----
 function generatePDF() {
@@ -921,7 +917,10 @@ function showToast(msg) {
 }
 
 // ---- START ----
-// Detect language
-(function(){
-  const saved = localStorage.getItem('ers_lang');
-  const browser = navigator.language?.startsWith('en') ? 'en' : 
+// Apply saved language
+setLang(currentLang);
+
+init();
+</script>
+</body>
+</html>
