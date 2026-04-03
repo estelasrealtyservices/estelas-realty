@@ -154,7 +154,8 @@
   /* SPECS */
   .specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:20px;}
   .spec-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--surface2);border-radius:10px;padding:12px 8px;text-align:center;overflow:hidden;}
-  .spec-pill .material-icons{font-size:18px;color:var(--accent);flex-shrink:0;}
+  .spec-pill .spec-svg{color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .spec-pill .spec-svg svg{fill:var(--accent);}
   .spec-pill strong{font-size:15px;color:var(--primary);font-weight:600;line-height:1.2;word-break:break-word;}
   .spec-pill span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;line-height:1.2;}
 
@@ -175,8 +176,7 @@
 
   /* RIGHT COLUMN — CONTACT CARD */
   .contact-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:28px;position:sticky;top:110px;box-shadow:var(--shadow);}
-  .contact-card-price{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:28px;font-weight:700;color:var(--accent);margin-bottom:4px;}
-  .contact-card-period{font-size:13px;color:var(--text3);margin-bottom:20px;}
+  .contact-card-period{font-size:13px;color:var(--text3);margin-bottom:20px;display:none;}
   .contact-btns{display:flex;flex-direction:column;gap:10px;}
   .btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;transition:var(--transition);}
   .btn-wa:hover{background:#1da855;transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,211,102,0.3);}
@@ -333,9 +333,6 @@
       <!-- RIGHT — CONTACT CARD -->
       <div>
         <div class="contact-card">
-          <div class="contact-card-price" id="cardPrice"></div>
-          <div class="contact-card-period" id="cardPeriod"></div>
-
           <div class="contact-btns">
             <a class="btn-wa" id="waBtn" href="#" target="_blank">
               <svg viewBox="0 0 24 24" style="fill:white;width:20px;height:20px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -523,28 +520,35 @@ function renderProperty(p) {
     countBtn.style.display = 'none';
   }
 
-  // Price
+  // Price (left section only)
   document.getElementById('propPrice').textContent = '$' + (p.price || 0).toLocaleString();
   document.getElementById('propPeriod').textContent = period;
-  document.getElementById('cardPrice').textContent = '$' + (p.price || 0).toLocaleString();
-  document.getElementById('cardPeriod').textContent = period || 'Precio único';
 
-  // Specs
+  // Contact card ref
+  document.getElementById('cardRef').textContent = p.code;
+
+  // Specs — SVG inline para garantizar que se vean siempre
+  const SVG = {
+    bed: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>`,
+    bath: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 6c0-1.1.9-2 2-2s2 .9 2 2H7zm-4 5v2h18v-2c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 4v1c0 1.86 1.27 3.43 3 3.87V21h8v-2.13c1.73-.44 3-2.01 3-3.87v-1H5z"/></svg>`,
+    size: `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M21 6.5l-4-4-1.41 1.41 1.55 1.55-3.19 3.19-1.71-1.71L5 14.17V19h4.83l7.24-7.24-1.41-1.42 3.61-3.61 1.55 1.55L21 6.5zM8.83 17H7v-1.83l4.72-4.72 1.83 1.83L8.83 17z"/></svg>`,
+    car:  `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`,
+    floor:`<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5v-2h2v2zm4 4H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>`
+  };
   const specs = [];
-  if (p.rooms > 0) specs.push({ icon: 'king_bed', val: p.rooms, label: 'Habitaciones' });
-  if (p.baths > 0) specs.push({ icon: 'bathtub', val: p.baths, label: 'Baños' });
-  if (p.size > 0) specs.push({ icon: 'straighten', val: p.size + ' m²', label: 'Metraje' });
-  if (p.parking > 0) specs.push({ icon: 'garage', val: p.parking, label: 'Parqueos' });
-  if (p.floor) specs.push({ icon: 'domain', val: p.floor, label: 'Piso' });
+  if (p.rooms > 0) specs.push({ svg: SVG.bed,   val: p.rooms,         label: 'Habitaciones' });
+  if (p.baths > 0) specs.push({ svg: SVG.bath,   val: p.baths,         label: 'Baños' });
+  if (p.size  > 0) specs.push({ svg: SVG.size,   val: p.size + ' m²',  label: 'Metraje' });
+  if (p.parking>0) specs.push({ svg: SVG.car,    val: p.parking,       label: 'Parqueos' });
+  if (p.floor)     specs.push({ svg: SVG.floor,  val: p.floor,         label: 'Piso' });
   document.getElementById('specsGrid').innerHTML = specs.map(s => `
     <div class="spec-pill">
-      <span class="material-icons">${s.icon}</span>
+      <span class="spec-svg">${s.svg}</span>
       <strong>${s.val}</strong>
       <span>${s.label}</span>
     </div>`).join('');
 
   // Contact card ref
-  document.getElementById('cardRef').textContent = p.code;
 
   // WhatsApp button
   const waMsg = encodeURIComponent(`Hola! Me interesa la propiedad: ${p.title} (${p.code}) · Precio: ${priceFormatted} · ${canonicalUrl}`);
