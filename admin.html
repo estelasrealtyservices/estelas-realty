@@ -231,6 +231,23 @@
   .toast .material-icons{color:var(--accent);font-size:18px;}
   .toast.error .material-icons{color:#ff8a80;}
 
+  /* BENTO EDITOR */
+  .bento-editor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
+  .bento-editor-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:var(--transition);}
+  .bento-editor-card:hover{box-shadow:var(--shadow-hover);}
+  .bento-editor-thumb{width:100%;height:140px;object-fit:cover;display:block;background:#e0e0e0;}
+  .bento-editor-thumb-placeholder{width:100%;height:140px;display:flex;align-items:center;justify-content:center;background:var(--surface2);color:var(--text3);flex-direction:column;gap:6px;}
+  .bento-editor-thumb-placeholder .material-icons{font-size:36px;opacity:0.4;}
+  .bento-editor-body{padding:14px;}
+  .bento-editor-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+  .bento-editor-input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;transition:var(--transition);margin-bottom:8px;}
+  .bento-editor-input:focus{border-color:var(--primary);}
+  .bento-editor-upload{display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px dashed var(--accent);border-radius:7px;background:rgba(201,168,76,0.06);cursor:pointer;font-size:12px;color:var(--accent);font-weight:600;transition:var(--transition);position:relative;overflow:hidden;}
+  .bento-editor-upload:hover{background:rgba(201,168,76,0.14);}
+  .bento-editor-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;}
+  .bento-editor-upload .material-icons{font-size:16px;}
+  .bento-editor-emoji{font-size:20px;margin-bottom:4px;}
+
   @media(max-width:900px){
     .admin-stats{grid-template-columns:1fr 1fr;}
     .site-editor{grid-template-columns:1fr;}
@@ -238,6 +255,7 @@
     .form-group.full{grid-column:span 1;}
     .admin-content{padding:16px;}
     .admin-tabs{padding:0 16px;}
+    .bento-editor-grid{grid-template-columns:1fr 1fr;}
   }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
@@ -390,6 +408,33 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- BENTO GRID EDITOR — full width below -->
+      <div class="editor-card" style="margin-top:24px;">
+        <div class="editor-card-header">
+          <div class="editor-card-icon"><span class="material-icons">auto_awesome_mosaic</span></div>
+          <div>
+            <div class="editor-card-title">Franja "Encuentra tu lugar"</div>
+            <div class="editor-card-subtitle">Edita el título, subtítulo, foto de fondo y descripción de cada categoría del Bento Grid</div>
+          </div>
+        </div>
+        <div class="editor-card-body">
+          <p style="font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.6;">
+            <span class="material-icons" style="font-size:14px;vertical-align:middle;color:var(--accent)">info</span>
+            Estas 5 tarjetas aparecen en la sección visual del index. El <strong>Tag</strong> es la etiqueta pequeña, el <strong>Título</strong> es el texto grande y el <strong>Subtítulo</strong> es la línea de zonas que aparece debajo.
+          </p>
+          <div class="progress-bar" id="bentoProgress"><div class="progress-fill" id="bentoProgressFill" style="width:0%"></div></div>
+          <div class="bento-editor-grid" id="bentoEditorGrid">
+            <div style="text-align:center;padding:20px;color:var(--text3);grid-column:1/-1;">
+              <span class="material-icons" style="animation:spin 1s linear infinite;display:block;margin-bottom:8px">sync</span>
+              Cargando categorías...
+            </div>
+          </div>
+          <button class="save-config-btn" id="saveBentoBtn" onclick="saveBentoConfig()">
+            <span class="material-icons">save</span>Guardar cambios del Bento Grid
+          </button>
+        </div>
       </div>
 
       <!-- SOCIAL MEDIA CARD - full width below -->
@@ -857,15 +902,24 @@ async function loadSiteConfig(){
     (data||[]).forEach(r=>cfg[r.id]=r.value);
     heroImages=cfg.hero_images||[];
     zoneData=cfg.zone_images||DEFAULT_ZONES.map(z=>({...z}));
+    // Bento: merge saved values with defaults (preserve val/emoji)
+    const savedBento=cfg.bento_config||[];
+    bentoData=DEFAULT_BENTO.map(def=>{
+      const saved=savedBento.find(s=>s.val===def.val);
+      return saved?{...def,...saved}:{...def};
+    });
     loadSocialInputs(cfg.social_links||{});
     renderHeroEditor();
     renderZonesEditor();
+    renderBentoEditor();
     syncZoneSelects();
   }catch(e){
     heroImages=[];
     zoneData=DEFAULT_ZONES.map(z=>({...z}));
+    bentoData=DEFAULT_BENTO.map(d=>({...d}));
     renderHeroEditor();
     renderZonesEditor();
+    renderBentoEditor();
     syncZoneSelects();
   }
 }
@@ -920,18 +974,10 @@ async function saveHeroImages(){
   const btn=document.getElementById('saveHeroBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
   try{
-    // Primero intenta actualizar, si no existe inserta
-    const{data:existing}=await sb.from('site_config').select('id').eq('id','hero_images').single();
-    let error;
-    if(existing){
-      ({error}=await sb.from('site_config').update({value:heroImages,updated_at:new Date().toISOString()}).eq('id','hero_images'));
-    } else {
-      ({error}=await sb.from('site_config').insert({id:'hero_images',value:heroImages,updated_at:new Date().toISOString()}));
-    }
+    const{error}=await sb.from('site_config').upsert({id:'hero_images',value:heroImages,updated_at:new Date().toISOString()},{onConflict:'id'});
     if(error) throw error;
     showToast('¡Banner guardado! Ya se ve en la página principal.');
   }catch(e){
-    console.error('Error guardando hero:', e);
     showToast('Error: '+e.message,true);
   }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar cambios del banner';
@@ -1579,6 +1625,117 @@ async function deleteProperty(){
   closeModal();await loadProperties();showToast('Propiedad eliminada.');
 }
 
+// ---- BENTO GRID EDITOR ----
+const DEFAULT_BENTO=[
+  {val:'Playa',        emoji:'🏖️', tag:'Playa',             title:'Vive\nfrente al mar',       sub:'Buenaventura · San Carlos · Coronado', img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80'},
+  {val:'Montaña / Campo', emoji:'⛰️', tag:'Montaña · Campo',  title:'Aire puro,\nvistas infinitas', sub:'Boquete · Altos del María · El Valle',   img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80'},
+  {val:'Ciudad',       emoji:'🏙️', tag:'Ciudad',            title:'Todo a tu\nalcance',          sub:'Costa del Este · Ave. Balboa · San Francisco', img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80'},
+  {val:'Naturaleza / Eco', emoji:'🌿', tag:'Naturaleza · Eco', title:'Conecta con\nla naturaleza', sub:'Fincas · Casas de campo · Entornos verdes',  img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80'},
+  {val:'Resort / Vacacional', emoji:'🏨', tag:'Resort · Vacacional', title:'Tu paraíso\nde descanso', sub:'Resorts · Alquileres vacacionales · Exclusivos', img:'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80'},
+];
+let bentoData=[];
+
+function renderBentoEditor(){
+  const grid=document.getElementById('bentoEditorGrid');
+  if(!bentoData.length){
+    grid.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);grid-column:1/-1;">Sin datos</div>';
+    return;
+  }
+  grid.innerHTML=bentoData.map((c,i)=>`
+    <div class="bento-editor-card" id="bentoCard${i}">
+      ${c.img
+        ? `<img class="bento-editor-thumb" src="${c.img}" alt="${c.tag}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="bento-editor-thumb-placeholder" style="display:none"><span class="material-icons">broken_image</span><span style="font-size:12px">Sin imagen</span></div>`
+        : `<div class="bento-editor-thumb-placeholder"><span class="material-icons">image</span><span style="font-size:12px">Sin imagen</span></div>`
+      }
+      <div class="bento-editor-body">
+        <div class="bento-editor-emoji">${c.emoji||'📍'}</div>
+        <div class="bento-editor-label">Categoría: <strong>${c.val}</strong></div>
+        <label class="bento-editor-label" style="display:block;margin-top:10px;">Etiqueta (tag)</label>
+        <input class="bento-editor-input" id="bTag${i}" value="${c.tag||''}" placeholder="Ej: Playa">
+        <label class="bento-editor-label" style="display:block;">Título (2 líneas con \\n)</label>
+        <input class="bento-editor-input" id="bTitle${i}" value="${(c.title||'').replace(/\n/g,'\\n')}" placeholder="Ej: Vive\\nfrente al mar">
+        <label class="bento-editor-label" style="display:block;">Subtítulo / Zonas</label>
+        <input class="bento-editor-input" id="bSub${i}" value="${c.sub||''}" placeholder="Ej: Coronado · San Carlos">
+        <label class="bento-editor-label" style="display:block;">URL de imagen de fondo</label>
+        <input class="bento-editor-input" id="bImg${i}" value="${c.img||''}" placeholder="https://..." oninput="previewBentoImg(${i})">
+        <div class="bento-editor-upload" style="margin-top:4px;">
+          <input type="file" accept="image/*" onchange="uploadBentoImg(this,${i})">
+          <span class="material-icons">upload</span>Subir foto propia
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function previewBentoImg(i){
+  const url=document.getElementById('bImg'+i)?.value.trim();
+  const card=document.getElementById('bentoCard'+i);
+  if(!card) return;
+  let img=card.querySelector('.bento-editor-thumb');
+  let ph=card.querySelector('.bento-editor-thumb-placeholder');
+  if(url){
+    if(!img){
+      // Crear img si no existía (card sin imagen inicial)
+      img=document.createElement('img');
+      img.className='bento-editor-thumb';
+      img.alt='Preview';
+      img.onerror=function(){this.style.display='none';if(ph)ph.style.display='flex';};
+      card.insertBefore(img,card.firstChild);
+    }
+    img.src=url;img.style.display='block';
+    if(ph) ph.style.display='none';
+  }else{
+    if(img){img.style.display='none';}
+    if(ph){ph.style.display='flex';}
+  }
+}
+
+async function uploadBentoImg(input,i){
+  const file=input.files[0];if(!file) return;
+  const bar=document.getElementById('bentoProgress');
+  const fill=document.getElementById('bentoProgressFill');
+  bar.classList.add('visible');fill.style.width='30%';
+  const ext=file.name.split('.').pop().toLowerCase();
+  const path=`bento/bento_${i}_${Date.now()}.${ext}`;
+  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
+  fill.style.width='80%';
+  if(!error){
+    const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+    document.getElementById('bImg'+i).value=u.publicUrl;
+    previewBentoImg(i);
+    showToast('Imagen subida. Recuerda guardar los cambios.');
+  }else{
+    showToast('Error al subir imagen: '+error.message,true);
+  }
+  fill.style.width='100%';
+  setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
+}
+
+function collectBentoData(){
+  return bentoData.map((c,i)=>({
+    ...c,
+    tag:   document.getElementById('bTag'+i)?.value.trim()   || c.tag,
+    title: (document.getElementById('bTitle'+i)?.value||'').replace(/\\n/g,'\n'),
+    sub:   document.getElementById('bSub'+i)?.value.trim()   || c.sub,
+    img:   document.getElementById('bImg'+i)?.value.trim()   || c.img,
+  }));
+}
+
+async function saveBentoConfig(){
+  const btn=document.getElementById('saveBentoBtn');
+  btn.disabled=true;btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
+  const newBento=collectBentoData();
+  try{
+    const{error}=await sb.from('site_config').upsert({id:'bento_config',value:newBento,updated_at:new Date().toISOString()},{onConflict:'id'});
+    if(error) throw error;
+    bentoData=newBento;
+    renderBentoEditor(); // Refresca las previews con los nuevos valores
+    showToast('¡Bento Grid guardado! Los cambios ya son visibles en el index.');
+  }catch(e){
+    showToast('Error: '+e.message,true);
+  }
+  btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar cambios del Bento Grid';
+}
+
 // ---- SOCIAL LINKS ----
 function loadSocialInputs(social){
   const map={instagram:'sInstagram',facebook:'sFacebook',youtube:'sYoutube',twitter:'sTwitter',linkedin:'sLinkedin',whatsapp:'sWhatsapp'};
@@ -1600,13 +1757,7 @@ async function saveSocialLinks(){
     whatsapp:document.getElementById('sWhatsapp').value.trim()
   };
   try{
-    const{data:existing}=await sb.from('site_config').select('id').eq('id','social_links').single();
-    let error;
-    if(existing){
-      ({error}=await sb.from('site_config').update({value:social,updated_at:new Date().toISOString()}).eq('id','social_links'));
-    }else{
-      ({error}=await sb.from('site_config').insert({id:'social_links',value:social,updated_at:new Date().toISOString()}));
-    }
+    const{error}=await sb.from('site_config').upsert({id:'social_links',value:social,updated_at:new Date().toISOString()},{onConflict:'id'});
     if(error) throw error;
     showToast('¡Redes sociales guardadas! Ya aparecen en el pie de página.');
   }catch(e){

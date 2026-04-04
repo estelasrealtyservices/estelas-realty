@@ -738,6 +738,7 @@ async function loadSiteConfig() {
     renderHero(cfg.hero_images || []);
     renderZones(cfg.zone_images || DEFAULT_ZONES);
     renderSocialIcons(cfg.social_links || {});
+    if (cfg.bento_config && cfg.bento_config.length) renderBento(cfg.bento_config);
   } catch(e) {
     renderHero([]);
     renderZones(DEFAULT_ZONES);
@@ -766,6 +767,27 @@ function goSlide(n) {
   currentSlide = n;
   slides[currentSlide]?.classList.add('active');
   dots[currentSlide]?.classList.add('active');
+}
+
+// ---- BENTO GRID DYNAMIC RENDER ----
+function renderBento(bentoConfig) {
+  const grid = document.querySelector('.bento-grid');
+  if (!grid || !bentoConfig || !bentoConfig.length) return;
+  grid.innerHTML = bentoConfig.map((c, i) => `
+    <div class="bento-card bc-${i}" onclick="setBento(this,'${c.val}')" data-val="${c.val}">
+      <div class="bento-bg" style="background-image:url('${c.img||''}')"></div>
+      <div class="bento-overlay"></div>
+      <div class="bento-count"></div>
+      <div class="bento-body">
+        <div class="bento-tag">${c.tag||c.val}</div>
+        <div class="bento-title">${(c.title||'').replace(/\n/g,'<br>')}</div>
+        <div class="bento-sub">${c.sub||''}</div>
+        <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+      </div>
+    </div>`).join('');
+  // Re-inicializar scroll animations y conteos
+  initBentoScroll();
+  updateCatCounts();
 }
 
 // ---- ZONES ----
@@ -886,21 +908,21 @@ function setBento(el, val){
 }
 
 function updateCatCounts(){
-  const map={
-    'Playa':'cnt-Playa',
-    'Montaña / Campo':'cnt-Montaña / Campo',
-    'Ciudad':'cnt-Ciudad',
-    'Naturaleza / Eco':'cnt-Naturaleza / Eco',
-    'Resort / Vacacional':'cnt-Resort / Vacacional'
-  };
-  Object.entries(map).forEach(([cat,id])=>{
-    const el=document.getElementById(id);
-    if(!el) return;
+  // Funciona con tarjetas estáticas Y dinámicas — usa data-val
+  document.querySelectorAll('.bento-card[data-val]').forEach(card=>{
+    const cat=card.dataset.val;
     const n=allProperties.filter(p=>(p.location_type||[]).includes(cat)).length;
-    el.textContent=n>0?n+' propiedades':'';
-    el.closest('.bento-card')?.classList.toggle('has-props',n>0);
+    // Buscar el elemento contador por ID generado con _ o el que exista dentro de la card
+    const el=card.querySelector('.bento-count');
+    if(el){
+      el.textContent=n>0?n+(n===1?' propiedad':' propiedades'):'';
+    }
+    card.classList.toggle('has-props',n>0);
   });
 }
+
+// Alias para compatibilidad con renderBento
+function updateBentoCounts(){ updateCatCounts(); }
 
 function renderExperiences(){ updateCatCounts(); }
 
@@ -913,7 +935,7 @@ function initBentoScroll(){
       }
     });
   },{threshold:0.12});
-  document.querySelectorAll('.bento-card,.bc-all').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.bento-card:not(.in-view),.bc-all:not(.in-view)').forEach(el=>obs.observe(el));
 }
 
 // Iniciar observer cuando el DOM está listo
