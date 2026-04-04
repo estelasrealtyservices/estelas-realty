@@ -413,6 +413,50 @@
   .wa-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,0.6);}
   .wa-float-btn svg{width:30px;height:30px;fill:white;}
 
+/* SECCIÓN ALIADOS - GRIS ELEGANTE */
+  .aliados-strip {
+    background: #D1D1D0; /* Gris suave que combina con tu paleta */
+    padding: 35px 0;
+    border-top: 1px solid #D1D1D0;
+    border-bottom: 1px solid #D1D1D0;
+  }
+  .aliados-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+  }
+  .aliados-title {
+    color: #1A1A2E; /* Azul oscuro de tu marca */
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+  .aliados-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+  .aliados-logos img {
+    height: 40px;
+    width: auto;
+    opacity: 0.7; /* Suaviza los logos para que no distraigan */
+    filter: grayscale(100%); /* Efecto blanco y negro opcional para máxima elegancia */
+    transition: all 0.3s ease;
+  }
+  .aliados-logos img:hover {
+    opacity: 1;
+    filter: grayscale(0%); /* Vuelven a su color original al pasar el ratón */
+    transform: scale(1.05);
+  }
+
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -634,6 +678,17 @@
     </div>
   </section>
 </div>
+
+<section class="aliados-strip">
+  <div class="aliados-container">
+    <h3 class="aliados-title" id="mAliadosTitle">Nuestros Aliados</h3>
+    <div class="aliados-logos">
+      <img src="https://www.acobir.com/images/logo.png" alt="ACOBIR">
+      <img src="https://capac.org/wp-content/uploads/2021/07/logo-capac.png" alt="CAPAC">
+      <img src="https://www.encuentra24.com/assets/images/e24-logo-white.svg" alt="Encuentra24">
+    </div>
+  </div>
+</section>
 
 <section style="background:var(--primary);color:white;padding:60px 32px;" id="contacto">
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
