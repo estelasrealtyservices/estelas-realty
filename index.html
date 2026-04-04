@@ -19,6 +19,7 @@
     --shadow:0 2px 12px rgba(0,0,0,0.08);
     --shadow-hover:0 8px 32px rgba(0,0,0,0.14);
     --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+    --wa-green:#25D366;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'DM Sans', sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
@@ -98,7 +99,7 @@
   .card-action-btn:hover{background:white;transform:scale(1.1);}
   .card-action-btn .material-icons{font-size:16px;color:var(--text);}
   .card-body{padding:16px 18px 18px;}
-  .card-price{font-family:'Playfair Display', serif;font-size:20px;font-weight:600;color:var(--primary);margin-bottom:4px;}
+  .card-price{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:22px;font-weight:800;color:var(--primary);letter-spacing:-0.3px;margin-bottom:4px;letter-spacing:-0.5px;}
   .card-price span{font-family:'DM Sans', sans-serif;font-size:12px;font-weight:400;color:var(--text3);}
   .card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4;}
   .card-location{display:flex;align-items:center;gap:4px;color:var(--text3);font-size:13px;margin-bottom:14px;}
@@ -288,63 +289,50 @@
     .spec strong{font-size:13px;}
   }
 
-  /* ===== EXPERIENCES SECTION ===== */
-  .experiences-section{background:var(--primary);padding:56px 0 48px;overflow:hidden;}
-  .experiences-header{text-align:center;padding:0 32px;margin-bottom:32px;}
-  .experiences-label{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-  .experiences-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);color:white;font-weight:600;}
+  /* LANGUAGE TOGGLE */
+  .lang-toggle{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px;}
+  .lang-btn{padding:5px 10px;border-radius:16px;border:none;background:none;font-size:12px;font-weight:600;color:var(--text3);transition:var(--transition);letter-spacing:0.5px;cursor:pointer;}
+  .lang-btn.active{background:var(--primary);color:white;}
+  .lang-btn:hover:not(.active){color:var(--text);background:var(--border);}
+  .lang-flag{font-size:13px;}
 
-  .experiences-track-wrap{position:relative;padding:0 56px;}
-  .experiences-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 4px 16px;scroll-behavior:smooth;}
-  .experiences-track::-webkit-scrollbar{display:none;}
+  /* WHATSAPP FLOAT BUTTON */
+  .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
+  .wa-float-tooltip{background:var(--primary);color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:var(--shadow);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
+  .wa-float:hover .wa-float-tooltip{opacity:1;transform:translateX(0);}
+  .wa-float-btn{width:58px;height:58px;background:#25D366!important;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.45);transition:transform 0.25s ease,box-shadow 0.25s ease;animation:waPulse 2.5s infinite 2s;text-decoration:none;flex-shrink:0;border:none;}
+  .wa-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,0.6);}
+  .wa-float-btn svg{width:30px;height:30px;fill:white;}
 
-  .exp-card{flex:0 0 300px;height:380px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;transition:transform 0.3s ease,box-shadow 0.3s ease;}
-  .exp-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
-  .exp-card-bg{position:absolute;inset:0;transition:transform 0.6s ease;}
-  .exp-card:hover .exp-card-bg{transform:scale(1.06);}
-  .exp-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 60%,transparent 100%);}
-  .exp-card-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
-  .exp-icon{font-size:32px;margin-bottom:10px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
-  .exp-card h3{font-family:'Playfair Display',serif;font-size:20px;color:white;font-weight:600;line-height:1.2;margin-bottom:6px;}
-  .exp-card p{font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:16px;line-height:1.5;}
-  .exp-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.2s ease;width:fit-content;}
-  .exp-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--primary);}
-
-  .exp-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);z-index:10;backdrop-filter:blur(4px);}
-  .exp-arrow:hover{background:var(--accent);border-color:var(--accent);color:var(--primary);}
-  .exp-arrow-left{left:8px;}
-  .exp-arrow-right{right:8px;}
-
-  .exp-dots{display:flex;justify-content:center;gap:6px;margin-top:16px;}
-  .exp-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s ease;cursor:pointer;}
-  .exp-dot.active{background:var(--accent);width:20px;border-radius:3px;}
-
-  .exp-card.active-filter{box-shadow:0 0 0 3px var(--accent),0 20px 60px rgba(0,0,0,0.4);}
-
-  @media(max-width:768px){
-    .experiences-track-wrap{padding:0 16px;}
-    .exp-arrow{display:none;}
-    .exp-card{flex:0 0 260px;height:340px;}
-  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 </head>
 <body>
 
+
+<!-- WHATSAPP FLOTANTE -->
+<a class="wa-float" id="waFloat" href="https://wa.me/50766740090" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+  <span class="wa-float-tooltip" id="waFloatTooltip">¡Escríbenos al WhatsApp!</span>
+  <div class="wa-float-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+</a>
+
 <nav>
   <div><img src="logo.png" alt="Estela's Realty Services" style="height:70px;width:auto;object-fit:contain;display:block;"></div>
   <div class="nav-links">
-    <a href="#">Inicio</a>
-    <a href="#propiedades">Propiedades</a>
-    <a href="#zonas">Zonas</a>
-    <a href="#servicios">Servicios</a>
-    <a href="#contacto">Contacto</a>
+    <a href="#" id="navLinkHome">Inicio</a>
+    <a href="#propiedades" id="navLinkProps">Propiedades</a>
+    <a href="#zonas" id="navLinkZones">Zonas</a>
+    <a href="#servicios" id="navLinkSvcs">Servicios</a>
+    <a href="#contacto" id="navLinkContact">Contacto</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
-    <a href="https://wa.me/50766740090" target="_blank" class="nav-cta">
-      <span class="material-icons" style="font-size:18px">chat</span>WhatsApp
-    </a>
+    <div class="lang-toggle" role="group" aria-label="Idioma">
+      <button class="lang-btn active" id="btnEs" onclick="setLang('es')"><span class="lang-flag">🇵🇦</span> ES</button>
+      <button class="lang-btn" id="btnEn" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span> EN</button>
+    </div>
     <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
@@ -353,12 +341,11 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#" onclick="closeMenu()">Inicio</a>
-  <a href="#propiedades" onclick="closeMenu()">Propiedades</a>
-  <a href="#zonas" onclick="closeMenu()">Zonas</a>
-  <a href="#servicios" onclick="closeMenu()">Servicios</a>
-  <a href="#contacto" onclick="closeMenu()">Contacto</a>
-  <a href="https://wa.me/50766740090" target="_blank" class="mobile-cta" onclick="closeMenu()">WhatsApp +507 6674-0090</a>
+  <a href="#" onclick="closeMenu()" id="mNavHome">Inicio</a>
+  <a href="#propiedades" onclick="closeMenu()" id="mNavProps">Propiedades</a>
+  <a href="#zonas" onclick="closeMenu()" id="mNavZones">Zonas</a>
+  <a href="#servicios" onclick="closeMenu()" id="mNavSvcs">Servicios</a>
+  <a href="#contacto" onclick="closeMenu()" id="mNavContact">Contacto</a>
 </div>
 
 <!-- HERO WITH SLIDESHOW -->
@@ -367,17 +354,17 @@
   <div class="hero-slides" id="heroSlides"></div>
   <div class="hero-pattern"></div>
   <div class="hero-content">
-    <div class="hero-tag">Bienvenido a Estela's Realty Services</div>
-    <h1>Encuentra tu propiedad<br>ideal en Panamá</h1>
-    <p>Propiedades en venta y alquiler en las mejores zonas de Panamá. Asesoría personalizada y servicios legales.</p>
+    <div class="hero-tag" id="heroTag">Bienvenido a Estela's Realty Services</div>
+    <h1 id="heroH1">Encuentra tu propiedad<br>ideal en Panamá</h1>
+    <p id="heroP">Propiedades en venta y alquiler en las mejores zonas de Panamá. Asesoría personalizada y servicios legales.</p>
     <div class="search-bar">
       <div class="search-field">
         <span class="material-icons">search</span>
-        <div style="flex:1"><label>Buscar</label><input type="text" placeholder="Zona, título, código E24..." id="searchInput"></div>
+        <div style="flex:1"><label id="searchLabel">Buscar</label><input type="text" placeholder="Zona, título, código E24..." id="searchInput"></div>
       </div>
       <div class="search-field">
         <span class="material-icons">home</span>
-        <div style="flex:1"><label>Tipo</label>
+        <div style="flex:1"><label id="typeLabel">Tipo</label>
           <select id="typeFilter">
             <option value="">Todos</option><option>Casa</option><option>Apartamento</option><option>Local</option><option>Oficina</option>
           </select>
@@ -385,7 +372,7 @@
       </div>
       <div class="search-field">
         <span class="material-icons">location_on</span>
-        <div style="flex:1"><label>Zona</label>
+        <div style="flex:1"><label id="zoneLabel">Zona</label>
           <select id="zoneFilter">
             <option value="">Todas</option>
             <option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option>
@@ -394,115 +381,22 @@
           </select>
         </div>
       </div>
-      <div class="search-field">
-        <span class="material-icons">terrain</span>
-        <div style="flex:1"><label>Categoría</label>
-          <select id="locTypeFilter" onchange="filterProperties()">
-            <option value="">Todas</option>
-            <option value="🌴 Playa">🌴 Playa</option>
-            <option value="🌄 Montaña / Campo">🌄 Montaña / Campo</option>
-            <option value="🌆 Ciudad">🌆 Ciudad</option>
-            <option value="🌿 Naturaleza / Eco">🌿 Naturaleza / Eco</option>
-            <option value="🏖️ Resort / Vacacional">🏖️ Resort / Vacacional</option>
-            <option value="🏙️ Urbano moderno">🏙️ Urbano moderno</option>
-          </select>
-        </div>
-      </div>
-      <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span>Buscar</button>
+      <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span><span id="searchBtnText">Buscar</span></button>
     </div>
   </div>
   <div class="hero-dots" id="heroDots"></div>
 </section>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label">Propiedades activas</div></div>
-  <div class="stat"><div class="stat-num" id="rentCount">—</div><div class="stat-label">En alquiler</div></div>
-  <div class="stat"><div class="stat-num" id="saleCount">—</div><div class="stat-label">En venta</div></div>
-  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Zonas disponibles</div></div>
+  <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label" id="statLabelTotal">Propiedades activas</div></div>
+  <div class="stat"><div class="stat-num" id="rentCount">—</div><div class="stat-label" id="statLabelRent">En alquiler</div></div>
+  <div class="stat"><div class="stat-num" id="saleCount">—</div><div class="stat-label" id="statLabelSale">En venta</div></div>
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label" id="statLabelZones">Zonas disponibles</div></div>
 </div>
-
-<!-- ===== FRANJA DE EXPERIENCIAS ===== -->
-<section class="experiences-section" id="experiencias">
-  <div class="experiences-header">
-    <div class="experiences-label">Encuentra tu lugar ideal</div>
-    <h2 class="experiences-title">¿Qué experiencia buscas?</h2>
-  </div>
-  <div class="experiences-track-wrap">
-    <button class="exp-arrow exp-arrow-left" id="expLeft" onclick="scrollExp(-1)" aria-label="Anterior">
-      <span class="material-icons">chevron_left</span>
-    </button>
-    <div class="experiences-track" id="experiencesTrack">
-      <div class="exp-card" onclick="setLocType('🌴 Playa')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#0077b6,#00b4d8,#90e0ef);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🌴</div>
-          <h3>Vive frente al mar</h3>
-          <p>Buenaventura, San Carlos, Coronado…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-      <div class="exp-card" onclick="setLocType('🌄 Montaña / Campo')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#2d6a4f,#52b788,#95d5b2);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🌄</div>
-          <h3>Paz en la montaña</h3>
-          <p>Boquete, Altos del María, El Valle…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-      <div class="exp-card" onclick="setLocType('🌆 Ciudad')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#1a1a2e,#16213e,#0f3460);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🌆</div>
-          <h3>En el corazón de la ciudad</h3>
-          <p>San Francisco, Costa del Este, Bella Vista…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-      <div class="exp-card" onclick="setLocType('🌿 Naturaleza / Eco')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#386641,#6a994e,#a7c957);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🌿</div>
-          <h3>Rodeado de naturaleza</h3>
-          <p>Eco-proyectos, fincas, entornos verdes…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-      <div class="exp-card" onclick="setLocType('🏖️ Resort / Vacacional')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#c9a84c,#e9c46a,#f4a261);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🏖️</div>
-          <h3>Vacaciones todo el año</h3>
-          <p>Resorts, alquileres vacacionales, AirBnB…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-      <div class="exp-card" onclick="setLocType('🏙️ Urbano moderno')">
-        <div class="exp-card-bg" style="background:linear-gradient(160deg,#370617,#6a040f,#9d0208);"></div>
-        <div class="exp-card-overlay"></div>
-        <div class="exp-card-content">
-          <div class="exp-icon">🏙️</div>
-          <h3>Diseño y vanguardia</h3>
-          <p>Punta Pacífica, Avenida Balboa, Ph…</p>
-          <button class="exp-btn">Ver propiedades</button>
-        </div>
-      </div>
-    </div>
-    <button class="exp-arrow exp-arrow-right" id="expRight" onclick="scrollExp(1)" aria-label="Siguiente">
-      <span class="material-icons">chevron_right</span>
-    </button>
-  </div>
-  <div class="exp-dots" id="expDots"></div>
-</section>
 
 <div class="container">
   <section class="section" id="propiedades">
-    <div class="section-header"><div class="section-title">Propiedades disponibles</div></div>
+    <div class="section-header"><div class="section-title" id="sectionPropsTitle">Propiedades disponibles</div></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
       <div class="tabs">
         <button class="tab active" onclick="setTab(this,'')">Todos</button>
@@ -532,21 +426,21 @@
     </div>
     <div id="emptyState" style="display:none;text-align:center;padding:60px 20px;color:var(--text3);">
       <span class="material-icons" style="font-size:48px;display:block;margin-bottom:12px">search_off</span>
-      <p style="font-size:16px">No se encontraron propiedades con esos criterios.</p>
+      <p style="font-size:16px" id="emptyMsg">No se encontraron propiedades con esos criterios.</p>
       <button onclick="resetFilters()" style="margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer;">Ver todas</button>
     </div>
   </section>
 
   <section class="section" id="zonas">
-    <div class="section-header"><div class="section-title">Explorar por zona</div></div>
+    <div class="section-header"><div class="section-title" id="sectionZonesTitle">Explorar por zona</div></div>
     <div class="zones-grid" id="zonesGrid">
       <!-- rendered by JS from Supabase config -->
     </div>
   </section>
 
   <section class="section" id="servicios">
-    <div class="section-header"><div class="section-title">Otros servicios</div></div>
-    <div class="services-grid">
+    <div class="section-header"><div class="section-title" id="sectionServicesTitle">Otros servicios</div></div>
+    <div class="services-grid" id="servicesGrid">
       <div class="service-card"><div class="service-icon"><span class="material-icons">gavel</span></div><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
       <div class="service-card"><div class="service-icon"><span class="material-icons">flight_land</span></div><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
       <div class="service-card"><div class="service-icon"><span class="material-icons">account_balance</span></div><h3>Servicios de abogados</h3><p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p></div>
@@ -560,9 +454,9 @@
 <section style="background:var(--primary);color:white;padding:60px 32px;" id="contacto">
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
     <div>
-      <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Contáctanos</div>
-      <h2 style="font-family:'Playfair Display', serif;font-size:32px;margin-bottom:16px;line-height:1.3;">¿Listo para encontrar<br>tu propiedad ideal?</h2>
-      <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
+      <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;" id="contactSectionTag">Contáctanos</div>
+      <h2 style="font-family:'Playfair Display', serif;font-size:32px;margin-bottom:16px;line-height:1.3;" id="contactSectionH2">¿Listo para encontrar<br>tu propiedad ideal?</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;" id="contactSectionP">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <a href="tel:+50766740090" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">phone</span>+507 6674-0090</a>
         <a href="/cdn-cgi/l/email-protection#7a1f081f1b160e03161f1d1b163a1d171b131654191517" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">email</span><span class="__cf_email__" data-cfemail="81e4f3e4e0edf5f8ede4e6e0edc1e6ece0e8edafe2eeec">[email&#160;protected]</span></a>
@@ -570,14 +464,14 @@
       </div>
     </div>
     <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;border:1px solid rgba(255,255,255,0.1);">
-      <h3 style="font-size:18px;margin-bottom:20px;">Envíanos un mensaje</h3>
+      <h3 style="font-size:18px;margin-bottom:20px;" id="contactFormTitle">Envíanos un mensaje</h3>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <input type="text" id="contactName" placeholder="Tu nombre" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
         <input type="email" id="contactEmail" placeholder="Tu correo electrónico" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
         <input type="tel" id="contactPhone" placeholder="Tu teléfono (opcional)" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
         <textarea id="contactMessage" placeholder="¿En qué podemos ayudarte?" rows="4" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;resize:none;"></textarea>
         <button id="contactBtn" onclick="sendContactForm()" style="padding:13px;background:var(--accent);color:var(--primary);border:none;border-radius:8px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-          <span class="material-icons" style="font-size:18px">send</span>Enviar mensaje
+          <span class="material-icons" style="font-size:18px">send</span><span id="contactBtnText">Enviar mensaje</span>
         </button>
         <div id="contactStatus" style="display:none;text-align:center;font-size:13px;padding:10px;border-radius:8px;"></div>
       </div>
@@ -589,7 +483,7 @@
   <div class="footer-grid">
     <div>
       <div class="footer-brand">Estela's Realty Services</div>
-      <p class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
+      <p class="footer-tagline" id="footerTagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</p>
       <div class="footer-contact">
         <a href="tel:+50766740090"><span class="material-icons">phone</span>+507 6674-0090</a>
         <a href="/cdn-cgi/l/email-protection#056077606469717c6960626469456268646c692b666a68"><span class="material-icons">email</span><span class="__cf_email__" data-cfemail="c7a2b5a2a6abb3beaba2a0a6ab87a0aaa6aeabe9a4a8aa">[email&#160;protected]</span></a>
@@ -601,7 +495,7 @@
     <div class="footer-col"><h4>Servicios</h4><a href="#">Trámites legales</a><a href="#">Migración</a><a href="#">Abogados</a></div>
   </div>
   <div class="footer-bottom">
-    <span>© 2025 Estela's Realty Services. Todos los derechos reservados.</span>
+    <span id="footerCopyright">© 2025 Estela's Realty Services. Todos los derechos reservados.</span>
     <div class="social-icons" id="socialIconsFooter"></div>
   </div>
 </footer>
@@ -746,7 +640,6 @@ function applyFilters() {
   const s=document.getElementById('searchInput').value.toLowerCase().trim();
   const type=document.getElementById('typeFilter').value;
   const zone=document.getElementById('zoneFilter').value;
-  const locType=document.getElementById('locTypeFilter').value;
   const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
@@ -762,7 +655,6 @@ function applyFilters() {
   );
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
-  if(locType) list=list.filter(p=>(p.location_type||[]).includes(locType));
   if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
   if(price){
     if(price==='5000+') list=list.filter(p=>p.price>=5000);
@@ -785,11 +677,9 @@ function resetFilters(){
   document.getElementById('searchInput').value='';
   document.getElementById('typeFilter').value='';
   document.getElementById('zoneFilter').value='';
-  document.getElementById('locTypeFilter').value='';
   document.getElementById('priceFilter').value='';
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
-  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('active-filter'));
   activeTab='';
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelector('.tab').classList.add('active');
@@ -807,84 +697,40 @@ function setZone(z){
   filterProperties();
 }
 
-function setLocType(val){
-  // Toggle: si ya está activo, lo limpia
-  const current=document.getElementById('locTypeFilter').value;
-  document.getElementById('locTypeFilter').value=(current===val)?'':val;
-  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('active-filter'));
-  if(document.getElementById('locTypeFilter').value){
-    const idx=['🌴 Playa','🌄 Montaña / Campo','🌆 Ciudad','🌿 Naturaleza / Eco','🏖️ Resort / Vacacional','🏙️ Urbano moderno'].indexOf(val);
-    if(idx>=0) document.querySelectorAll('.exp-card')[idx]?.classList.add('active-filter');
-  }
-  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
-  filterProperties();
-}
-
-// ---- EXPERIENCES CAROUSEL ----
-(function initExpCarousel(){
-  const track=document.getElementById('experiencesTrack');
-  const dotsEl=document.getElementById('expDots');
-  if(!track||!dotsEl) return;
-  const cards=track.querySelectorAll('.exp-card');
-  const total=cards.length;
-
-  // Build dots
-  for(let i=0;i<total;i++){
-    const d=document.createElement('button');
-    d.className='exp-dot'+(i===0?' active':'');
-    d.setAttribute('aria-label','Ir a '+i);
-    d.addEventListener('click',()=>scrollToCard(i));
-    dotsEl.appendChild(d);
-  }
-
-  function scrollToCard(i){
-    const card=cards[i];
-    if(!card) return;
-    track.scrollTo({left:card.offsetLeft-track.offsetLeft-4,behavior:'smooth'});
-  }
-
-  function updateDots(){
-    const idx=Math.round(track.scrollLeft/(cards[0]?.offsetWidth+20));
-    dotsEl.querySelectorAll('.exp-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-  }
-
-  track.addEventListener('scroll',updateDots,{passive:true});
-  window.scrollExp=function(dir){
-    const idx=Math.round(track.scrollLeft/(cards[0]?.offsetWidth+20));
-    scrollToCard(Math.max(0,Math.min(total-1,idx+dir)));
-  };
-})();
-
 function renderProperties(list){
   const grid=document.getElementById('propertyGrid');
   const empty=document.getElementById('emptyState');
   if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';return;}
   empty.style.display='none';
-  grid.innerHTML=list.map(p=>`
+  const t=TI[currentLang];
+  grid.innerHTML=list.map(p=>{
+    const opClass=p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale';
+    const period=getPeriodLabel(p.operation);
+    return `
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
         <img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
-        <div class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</div>
-        ${p.featured?'<div class="card-badge badge-featured" style="top:12px;left:92px">Destacado</div>':''}
+        <div class="card-badge ${opClass}">${getOpLabel(p.operation)}</div>
+        ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
         <div class="card-actions" onclick="event.stopPropagation()">
-          <button class="card-action-btn" onclick="openPropertyPage('${p.id}')" title="Ver página detalle"><span class="material-icons">open_in_new</span></button>
           <button class="card-action-btn" onclick="shareProperty('${p.id}')" title="Copiar enlace"><span class="material-icons">share</span></button>
-          <button class="card-action-btn" onclick="generateListing('${p.id}')" title="Imprimir listado"><span class="material-icons">picture_as_pdf</span></button>
+          <button class="card-action-btn" onclick="openPropertyPage('${p.id}')" title="Ver página"><span class="material-icons">open_in_new</span></button>
         </div>
       </div>
       <div class="card-body">
-        <div class="card-price">$${(p.price||0).toLocaleString()}<span>${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span></div>
+        <div class="card-price"><span style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:22px;font-weight:800;color:var(--primary);letter-spacing:-0.5px;">$${(p.price||0).toLocaleString()}</span><span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:3px;">${period}</span></div>
         <div class="card-title">${p.title}</div>
         <div class="card-location"><span class="material-icons">location_on</span>${p.zone}</div>
         <div class="card-specs">
-          ${p.rooms>0?`<div class="spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong>Hab.</div>`:''}
-          <div class="spec"><span class="material-icons">shower</span><strong>${p.baths||1}</strong>Baños</div>
+          ${p.rooms>0?`<div class="spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong>${t.hab}</div>`:''}
+          <div class="spec"><span class="material-icons">shower</span><strong>${p.baths||1}</strong>${t.banos}</div>
           <div class="spec"><span class="material-icons">square_foot</span><strong>${p.size||0}</strong>m²</div>
-          <div class="spec"><span class="material-icons">directions_car</span><strong>${p.parking||0}</strong>Park.</div>
+          <div class="spec"><span class="material-icons">directions_car</span><strong>${p.parking||0}</strong>${t.park}</div>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function openDetail(id){
@@ -904,7 +750,7 @@ function openDetail(id){
           <span class="card-badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}" style="position:static">${p.operation}</span>
           <span style="font-size:13px;color:var(--text3)">${p.type} · ${p.zone}</span>
         </div>
-        <div style="font-family:'Playfair Display', serif;font-size:28px;font-weight:600;color:var(--primary)">
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-0.5px">
           $${(p.price||0).toLocaleString()}<span style="font-family:'DM Sans', sans-serif;font-size:14px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span>
         </div>
         <div class="detail-specs">
@@ -1032,7 +878,7 @@ async function sendContactForm(){
     status.style.display='block';status.style.background='rgba(229,57,53,0.2)';status.style.color='#ffb3b3';
     status.textContent='Error al enviar. Escríbenos a erealtylegal@gmail.com';
   }
-  btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span>Enviar mensaje';
+  btn.disabled=false;btn.innerHTML='<span class="material-icons" style="font-size:18px">send</span><span id="contactBtnText">Enviar mensaje</span>';
 }
 
 function showToast(msg){
@@ -1058,7 +904,215 @@ document.addEventListener('click',function(e){
 document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
 
+
+// ============================================================
+// MULTI-IDIOMA index.html
+// ============================================================
+const TI = {
+  es:{
+    heroTag:"Bienvenido a Estela's Realty Services",
+    heroH1:'Encuentra tu propiedad<br>ideal en Panamá',
+    heroP:'Propiedades en venta y alquiler en las mejores zonas de Panamá. Asesoría personalizada y servicios legales.',
+    searchLabel:'Buscar',searchPh:'Zona, título, código E24...',
+    typeLabel:'Tipo',typeAll:'Todos',
+    zoneLabel:'Zona',zoneAll:'Todas',
+    searchBtn:'Buscar',
+    statTotal:'Propiedades activas',statRent:'En alquiler',statSale:'En venta',statZones:'Zonas disponibles',
+    tabAll:'Todos',tabRent:'Alquiler',tabVac:'Vacacional',tabSale:'Venta',
+    priceFilter:'Precio',roomsFilter:'Habitaciones',orderFilter:'Ordenar',
+    orderAsc:'Menor precio',orderDesc:'Mayor precio',orderNew:'Más reciente',
+    sectionProps:'Propiedades disponibles',sectionZones:'Explorar por zona',sectionServices:'Otros servicios',
+    emptyMsg:'No se encontraron propiedades con esos criterios.',emptyBtn:'Ver todas',
+    contactTitle:'Contáctanos',contactH2:'¿Listo para encontrar<br>tu propiedad ideal?',
+    contactP:'Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.',
+    contactFormTitle:'Envíanos un mensaje',
+    contactNamePh:'Tu nombre',contactEmailPh:'Tu correo electrónico',contactPhonePh:'Tu teléfono (opcional)',
+    contactMsgPh:'¿En qué podemos ayudarte?',contactBtn:'Enviar mensaje',
+    detailContact:'¿Te interesa esta propiedad?',detailWa:'WhatsApp',detailCall:'Llamar ahora',
+    detailShare:'Compartir propiedad',detailCopy:'Copiar',detailOpen:'Ver página',
+    detailAmenities:'Características',detailLocation:'Ubicación aproximada',
+    perMonth:'/mes',perNight:'/noche',
+    opRent:'Alquiler',opVac:'Alquiler vacacional',opSale:'Venta',
+    featured:'Destacado',
+    hab:'Hab.',banos:'Baños',park:'Park.',
+    waTooltip:'¡Escríbenos al WhatsApp!',
+    navHome:'Inicio',navProps:'Propiedades',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',
+    footerTagline:'Tu aliado de confianza en el mercado inmobiliario de Panamá.',
+    footerCol1:'Propiedades',footerCol2:'Zonas',footerCol3:'Servicios',
+    footerCopyright:"© 2025 Estela's Realty Services. Todos los derechos reservados.",
+    services:[
+      {icon:'gavel',title:'Trámites legales',desc:'Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.'},
+      {icon:'flight_land',title:'Trámites de migración',desc:'Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.'},
+      {icon:'account_balance',title:'Servicios de abogados',desc:'Consultas legales, representación notarial, poderes especiales, constitución de sociedades.'},
+      {icon:'manage_accounts',title:'Administración de propiedades',desc:'Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.'},
+      {icon:'request_quote',title:'Avalúos y tasaciones',desc:'Valuación profesional de propiedades residenciales y comerciales.'},
+      {icon:'support_agent',title:'Asesoría personalizada',desc:'Te acompañamos en todo el proceso. Atención en español e inglés.'},
+    ]
+  },
+  en:{
+    heroTag:"Welcome to Estela's Realty Services",
+    heroH1:'Find your ideal property<br>in Panama',
+    heroP:'Properties for sale and rent in the best areas of Panama. Personalized advice and legal services.',
+    searchLabel:'Search',searchPh:'Zone, title, code E24...',
+    typeLabel:'Type',typeAll:'All',
+    zoneLabel:'Zone',zoneAll:'All',
+    searchBtn:'Search',
+    statTotal:'Active listings',statRent:'For rent',statSale:'For sale',statZones:'Available zones',
+    tabAll:'All',tabRent:'Rent',tabVac:'Vacation',tabSale:'Sale',
+    priceFilter:'Price',roomsFilter:'Bedrooms',orderFilter:'Sort',
+    orderAsc:'Lowest price',orderDesc:'Highest price',orderNew:'Newest',
+    sectionProps:'Available properties',sectionZones:'Explore by zone',sectionServices:'Other services',
+    emptyMsg:'No properties found with those criteria.',emptyBtn:'View all',
+    contactTitle:'Contact us',contactH2:'Ready to find<br>your ideal property?',
+    contactP:'Our team is available to help you find the perfect property.',
+    contactFormTitle:'Send us a message',
+    contactNamePh:'Your name',contactEmailPh:'Your email',contactPhonePh:'Your phone (optional)',
+    contactMsgPh:'How can we help you?',contactBtn:'Send message',
+    detailContact:'Interested in this property?',detailWa:'WhatsApp',detailCall:'Call now',
+    detailShare:'Share property',detailCopy:'Copy',detailOpen:'View page',
+    detailAmenities:'Features',detailLocation:'Approximate location',
+    perMonth:'/month',perNight:'/night',
+    opRent:'For Rent',opVac:'Vacation Rental',opSale:'For Sale',
+    featured:'Featured',
+    hab:'Bed.',banos:'Baths',park:'Park.',
+    waTooltip:'Chat with us on WhatsApp!',
+    navHome:'Home',navProps:'Properties',navZones:'Zones',navSvcs:'Services',navContact:'Contact',
+    footerTagline:"Your trusted partner in Panama's real estate market.",
+    footerCol1:'Properties',footerCol2:'Zones',footerCol3:'Services',
+    footerCopyright:"© 2025 Estela's Realty Services. All rights reserved.",
+    services:[
+      {icon:'gavel',title:'Legal procedures',desc:'Full management of contracts, deeds, purchase agreements and real estate legal advice.'},
+      {icon:'flight_land',title:'Immigration services',desc:'Residency visas, work permits, retiree, investor and more. Fast and secure process.'},
+      {icon:'account_balance',title:'Attorney services',desc:'Legal consultations, notarial representation, special powers of attorney, company formation.'},
+      {icon:'manage_accounts',title:'Property management',desc:'Rental management, maintenance, rent collection and tenant coordination.'},
+      {icon:'request_quote',title:'Appraisals & valuations',desc:'Professional valuation of residential and commercial properties.'},
+      {icon:'support_agent',title:'Personalized advisory',desc:'We accompany you through the entire process. Service in Spanish and English.'},
+    ]
+  }
+};
+
+let currentLang = 'es';
+
+function setLang(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  localStorage.setItem('ers_lang', lang);
+  document.getElementById('btnEs').classList.toggle('active', lang==='es');
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  const t = TI[lang];
+
+  // WA tooltip
+  const tt = document.getElementById('waFloatTooltip');
+  if(tt) tt.textContent = t.waTooltip;
+
+  // Hero
+  setEl('heroTag', t.heroTag);
+  setInnerHTML('heroH1', t.heroH1);
+  setEl('heroP', t.heroP);
+
+  // Search bar labels
+  setEl('searchLabel', t.searchLabel);
+  setAttr('searchInput','placeholder', t.searchPh);
+  setEl('typeLabel', t.typeLabel);
+  setEl('zoneLabel', t.zoneLabel);
+  setEl('searchBtnText', t.searchBtn);
+  setOptionText('typeFilter', 0, t.typeAll);
+  setOptionText('zoneFilter', 0, t.zoneAll);
+
+  // Stats labels
+  setEl('statLabelTotal', t.statTotal);
+  setEl('statLabelRent', t.statRent);
+  setEl('statLabelSale', t.statSale);
+  setEl('statLabelZones', t.statZones);
+
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const tabTexts = [t.tabAll, t.tabRent, t.tabVac, t.tabSale];
+  tabs.forEach((tab, i) => { if(tabTexts[i]) tab.textContent = tabTexts[i]; });
+
+  // Filters
+  setOptionText('priceFilter', 0, t.priceFilter);
+  setOptionText('roomsFilter', 0, t.roomsFilter);
+  setOptionText('orderFilter', 0, t.orderFilter);
+  setOptionText('orderFilter', 1, t.orderAsc);
+  setOptionText('orderFilter', 2, t.orderDesc);
+  setOptionText('orderFilter', 3, t.orderNew);
+
+  // Sections
+  setEl('sectionPropsTitle', t.sectionProps);
+  setEl('sectionZonesTitle', t.sectionZones);
+  setEl('sectionServicesTitle', t.sectionServices);
+
+  // Empty state
+  setEl('emptyMsg', t.emptyMsg);
+  const emptyBtn = document.querySelector('#emptyState button');
+  if(emptyBtn) emptyBtn.textContent = t.emptyBtn;
+
+  // Contact section
+  setEl('contactSectionTag', t.contactTitle);
+  setInnerHTML('contactSectionH2', t.contactH2);
+  setEl('contactSectionP', t.contactP);
+  setEl('contactFormTitle', t.contactFormTitle);
+  setAttr('contactName','placeholder', t.contactNamePh);
+  setAttr('contactEmail','placeholder', t.contactEmailPh);
+  setAttr('contactPhone','placeholder', t.contactPhonePh);
+  setAttr('contactMessage','placeholder', t.contactMsgPh);
+  setEl('contactBtnText', t.contactBtn);
+
+  // Services
+  const svc = document.getElementById('servicesGrid');
+  if(svc) {
+    svc.innerHTML = t.services.map(s=>`
+      <div class="service-card"><div class="service-icon"><span class="material-icons">${s.icon}</span></div><h3>${s.title}</h3><p>${s.desc}</p></div>
+    `).join('');
+  }
+
+  // Nav links
+  setEl('navLinkHome', t.navHome);
+  setEl('navLinkProps', t.navProps);
+  setEl('navLinkZones', t.navZones);
+  setEl('navLinkSvcs', t.navSvcs);
+  setEl('navLinkContact', t.navContact);
+  setEl('mNavHome', t.navHome);
+  setEl('mNavProps', t.navProps);
+  setEl('mNavZones', t.navZones);
+  setEl('mNavSvcs', t.navSvcs);
+  setEl('mNavContact', t.navContact);
+
+  // Footer
+  setEl('footerTagline', t.footerTagline);
+  setEl('footerCopyright', t.footerCopyright);
+
+  // Re-render cards with translated labels
+  renderProperties(applyFilters());
+}
+
+function setEl(id, txt){ const el=document.getElementById(id); if(el) el.textContent=txt; }
+function setInnerHTML(id, html){ const el=document.getElementById(id); if(el) el.innerHTML=html; }
+function setAttr(id, attr, val){ const el=document.getElementById(id); if(el) el.setAttribute(attr, val); }
+function setOptionText(selId, idx, txt){ const sel=document.getElementById(selId); if(sel&&sel.options[idx]) sel.options[idx].text=txt; }
+
+function getOpLabel(op){
+  const t=TI[currentLang];
+  if(op==='Alquiler vacacional') return t.opVac;
+  if(op==='Alquiler') return t.opRent;
+  return t.opSale;
+}
+function getPeriodLabel(op){
+  const t=TI[currentLang];
+  if(op==='Alquiler vacacional') return t.perNight;
+  if(op==='Alquiler') return t.perMonth;
+  return '';
+}
+
+
+// detect lang
+(function(){const saved=localStorage.getItem('ers_lang');const browser=navigator.language?.startsWith('en')?'en':'es';const lang=saved||browser;currentLang=lang;})();
+
 init();
+
+// Apply lang AFTER init (data loaded)
+document.addEventListener('DOMContentLoaded',()=>{const saved=localStorage.getItem('ers_lang')||( navigator.language?.startsWith('en')?'en':'es');setLang(saved);});
 </script>
 </body>
 </html>
