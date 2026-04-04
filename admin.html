@@ -368,10 +368,13 @@
         <div class="editor-card">
           <div class="editor-card-header">
             <div class="editor-card-icon"><span class="material-icons">map</span></div>
-            <div>
-              <div class="editor-card-title">Fotos de las zonas</div>
-              <div class="editor-card-subtitle">Cambia la foto de cada zona del mosaico</div>
+            <div style="flex:1">
+              <div class="editor-card-title">Zonas</div>
+              <div class="editor-card-subtitle">Agrega, edita o elimina zonas y sus fotos</div>
             </div>
+            <button onclick="addNewZone()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);flex-shrink:0;" onmouseover="this.style.background='#2d2d4a'" onmouseout="this.style.background='var(--primary)'">
+              <span class="material-icons" style="font-size:16px">add_location_alt</span>Nueva zona
+            </button>
           </div>
           <div class="editor-card-body">
             <div class="zones-editor-grid" id="zonesEditorGrid">
@@ -801,11 +804,13 @@ async function loadSiteConfig(){
     loadSocialInputs(cfg.social_links||{});
     renderHeroEditor();
     renderZonesEditor();
+    syncZoneSelects();
   }catch(e){
     heroImages=[];
     zoneData=DEFAULT_ZONES.map(z=>({...z}));
     renderHeroEditor();
     renderZonesEditor();
+    syncZoneSelects();
   }
 }
 
@@ -879,17 +884,80 @@ async function saveHeroImages(){
 // ---- ZONES EDITOR ----
 function renderZonesEditor(){
   document.getElementById('zonesEditorGrid').innerHTML=zoneData.map((z,i)=>`
-    <div class="zone-row">
-      <img src="${z.img}" alt="${z.name}" class="zone-row-thumb" onerror="this.src='${PH}'">
-      <div style="flex:1">
-        <div class="zone-row-name">${z.name}</div>
-        <div class="zone-row-subtitle">${z.subtitle||''}</div>
+    <div class="zone-row" id="zone-row-${i}">
+      <img src="${z.img||PH}" alt="${z.name}" class="zone-row-thumb" onerror="this.src='${PH}'">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+        <input
+          type="text"
+          value="${z.name||''}"
+          placeholder="Nombre de zona"
+          oninput="zoneData[${i}].name=this.value;syncZoneSelects()"
+          style="font-size:13px;font-weight:600;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:inherit;background:var(--bg);outline:none;transition:var(--transition);"
+          onfocus="this.style.borderColor='var(--primary)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >
+        <input
+          type="text"
+          value="${z.subtitle||''}"
+          placeholder="Subtítulo (opcional)"
+          oninput="zoneData[${i}].subtitle=this.value"
+          style="font-size:11px;color:var(--text3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-family:inherit;background:var(--bg);outline:none;transition:var(--transition);"
+          onfocus="this.style.borderColor='var(--primary)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >
       </div>
-      <button class="zone-change-btn">
+      <button class="zone-change-btn" title="Cambiar foto">
         <input type="file" accept="image/*" onchange="changeZoneImage(${i},this)">
-        <span class="material-icons">photo_camera</span>Cambiar foto
+        <span class="material-icons">photo_camera</span>Foto
+      </button>
+      <button onclick="removeZone(${i})" title="Eliminar zona" style="padding:6px 8px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;color:#E53935;cursor:pointer;display:flex;align-items:center;transition:var(--transition);flex-shrink:0;" onmouseover="this.style.background='rgba(229,57,53,0.08)'" onmouseout="this.style.background='none'">
+        <span class="material-icons" style="font-size:16px">delete_outline</span>
       </button>
     </div>`).join('');
+}
+
+function addNewZone(){
+  zoneData.push({name:'Nueva zona',subtitle:'',img:''});
+  renderZonesEditor();
+  syncZoneSelects();
+  // Scroll to new zone and focus its name input
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('.zone-row');
+    const last=rows[rows.length-1];
+    if(last){
+      last.scrollIntoView({behavior:'smooth',block:'center'});
+      const inp=last.querySelector('input[type="text"]');
+      if(inp){inp.focus();inp.select();}
+    }
+  },100);
+  showToast('Zona agregada. Edita el nombre, subtítulo y foto, luego guarda.');
+}
+
+function removeZone(i){
+  if(!confirm(`¿Eliminar la zona "${zoneData[i].name}"? Esta acción no se puede deshacer.`)) return;
+  zoneData.splice(i,1);
+  renderZonesEditor();
+  syncZoneSelects();
+  showToast('Zona eliminada. Recuerda guardar los cambios.');
+}
+
+// Sync zone selects in toolbar and property form
+function syncZoneSelects(){
+  const zoneNames=zoneData.map(z=>z.name).filter(n=>n&&n.trim());
+  ['adminZoneFilter','fZone'].forEach(selId=>{
+    const sel=document.getElementById(selId);
+    if(!sel) return;
+    const current=sel.value;
+    const firstOpt=sel.options[0]; // "Todas las zonas" or first option
+    sel.innerHTML='';
+    sel.appendChild(firstOpt.cloneNode?firstOpt.cloneNode(true):firstOpt);
+    zoneNames.forEach(name=>{
+      const opt=document.createElement('option');
+      opt.value=name;opt.textContent=name;
+      sel.appendChild(opt);
+    });
+    if(zoneNames.includes(current)) sel.value=current;
+  });
 }
 
 async function changeZoneImage(i, input){
