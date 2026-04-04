@@ -525,7 +525,7 @@ function renderDynamic(p) {
   if (sg) sg.innerHTML = specs.map(s => `<div class="spec-pill"><span class="spec-svg" style="color:#C9A84C">${s.svg}</span><strong>${s.val}</strong><span>${s.lbl}</span></div>`).join('');
 
   // Description (with EN override)
-  const desc = (lang === 'en' || currentLang === 'en') && p.description_en ? p.description_en : (p.description || '');
+  const desc = currentLang === 'en' && p.description_en ? p.description_en : (p.description || '');
   const dSec = document.getElementById('descSection');
   const dEl  = document.getElementById('propDescription');
   if (dSec && dEl) { dEl.textContent = desc; dSec.style.display = desc ? 'block' : 'none'; }
@@ -575,10 +575,20 @@ async function init() {
       .from('properties')
       .select('*')
       .eq('code', code)
-      .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
+      console.error('[Propiedad] Error Supabase:', error.message, error.hint || '');
+      showError();
+      return;
+    }
+    if (!data) {
+      console.warn('[Propiedad] Propiedad no encontrada:', code);
+      showError();
+      return;
+    }
+    if (data.is_active === false) {
+      console.warn('[Propiedad] Propiedad inactiva:', code);
       showError();
       return;
     }
