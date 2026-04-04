@@ -287,6 +287,45 @@
     .spec .material-icons{font-size:14px;}
     .spec strong{font-size:13px;}
   }
+
+  /* ===== EXPERIENCES SECTION ===== */
+  .experiences-section{background:var(--primary);padding:56px 0 48px;overflow:hidden;}
+  .experiences-header{text-align:center;padding:0 32px;margin-bottom:32px;}
+  .experiences-label{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .experiences-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);color:white;font-weight:600;}
+
+  .experiences-track-wrap{position:relative;padding:0 56px;}
+  .experiences-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 4px 16px;scroll-behavior:smooth;}
+  .experiences-track::-webkit-scrollbar{display:none;}
+
+  .exp-card{flex:0 0 300px;height:380px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;transition:transform 0.3s ease,box-shadow 0.3s ease;}
+  .exp-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+  .exp-card-bg{position:absolute;inset:0;transition:transform 0.6s ease;}
+  .exp-card:hover .exp-card-bg{transform:scale(1.06);}
+  .exp-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 60%,transparent 100%);}
+  .exp-card-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
+  .exp-icon{font-size:32px;margin-bottom:10px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
+  .exp-card h3{font-family:'Playfair Display',serif;font-size:20px;color:white;font-weight:600;line-height:1.2;margin-bottom:6px;}
+  .exp-card p{font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:16px;line-height:1.5;}
+  .exp-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.2s ease;width:fit-content;}
+  .exp-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--primary);}
+
+  .exp-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);z-index:10;backdrop-filter:blur(4px);}
+  .exp-arrow:hover{background:var(--accent);border-color:var(--accent);color:var(--primary);}
+  .exp-arrow-left{left:8px;}
+  .exp-arrow-right{right:8px;}
+
+  .exp-dots{display:flex;justify-content:center;gap:6px;margin-top:16px;}
+  .exp-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s ease;cursor:pointer;}
+  .exp-dot.active{background:var(--accent);width:20px;border-radius:3px;}
+
+  .exp-card.active-filter{box-shadow:0 0 0 3px var(--accent),0 20px 60px rgba(0,0,0,0.4);}
+
+  @media(max-width:768px){
+    .experiences-track-wrap{padding:0 16px;}
+    .exp-arrow{display:none;}
+    .exp-card{flex:0 0 260px;height:340px;}
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -355,6 +394,20 @@
           </select>
         </div>
       </div>
+      <div class="search-field">
+        <span class="material-icons">terrain</span>
+        <div style="flex:1"><label>Categoría</label>
+          <select id="locTypeFilter" onchange="filterProperties()">
+            <option value="">Todas</option>
+            <option value="🌴 Playa">🌴 Playa</option>
+            <option value="🌄 Montaña / Campo">🌄 Montaña / Campo</option>
+            <option value="🌆 Ciudad">🌆 Ciudad</option>
+            <option value="🌿 Naturaleza / Eco">🌿 Naturaleza / Eco</option>
+            <option value="🏖️ Resort / Vacacional">🏖️ Resort / Vacacional</option>
+            <option value="🏙️ Urbano moderno">🏙️ Urbano moderno</option>
+          </select>
+        </div>
+      </div>
       <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span>Buscar</button>
     </div>
   </div>
@@ -367,6 +420,85 @@
   <div class="stat"><div class="stat-num" id="saleCount">—</div><div class="stat-label">En venta</div></div>
   <div class="stat"><div class="stat-num">9</div><div class="stat-label">Zonas disponibles</div></div>
 </div>
+
+<!-- ===== FRANJA DE EXPERIENCIAS ===== -->
+<section class="experiences-section" id="experiencias">
+  <div class="experiences-header">
+    <div class="experiences-label">Encuentra tu lugar ideal</div>
+    <h2 class="experiences-title">¿Qué experiencia buscas?</h2>
+  </div>
+  <div class="experiences-track-wrap">
+    <button class="exp-arrow exp-arrow-left" id="expLeft" onclick="scrollExp(-1)" aria-label="Anterior">
+      <span class="material-icons">chevron_left</span>
+    </button>
+    <div class="experiences-track" id="experiencesTrack">
+      <div class="exp-card" onclick="setLocType('🌴 Playa')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#0077b6,#00b4d8,#90e0ef);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🌴</div>
+          <h3>Vive frente al mar</h3>
+          <p>Buenaventura, San Carlos, Coronado…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+      <div class="exp-card" onclick="setLocType('🌄 Montaña / Campo')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#2d6a4f,#52b788,#95d5b2);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🌄</div>
+          <h3>Paz en la montaña</h3>
+          <p>Boquete, Altos del María, El Valle…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+      <div class="exp-card" onclick="setLocType('🌆 Ciudad')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#1a1a2e,#16213e,#0f3460);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🌆</div>
+          <h3>En el corazón de la ciudad</h3>
+          <p>San Francisco, Costa del Este, Bella Vista…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+      <div class="exp-card" onclick="setLocType('🌿 Naturaleza / Eco')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#386641,#6a994e,#a7c957);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🌿</div>
+          <h3>Rodeado de naturaleza</h3>
+          <p>Eco-proyectos, fincas, entornos verdes…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+      <div class="exp-card" onclick="setLocType('🏖️ Resort / Vacacional')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#c9a84c,#e9c46a,#f4a261);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🏖️</div>
+          <h3>Vacaciones todo el año</h3>
+          <p>Resorts, alquileres vacacionales, AirBnB…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+      <div class="exp-card" onclick="setLocType('🏙️ Urbano moderno')">
+        <div class="exp-card-bg" style="background:linear-gradient(160deg,#370617,#6a040f,#9d0208);"></div>
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-icon">🏙️</div>
+          <h3>Diseño y vanguardia</h3>
+          <p>Punta Pacífica, Avenida Balboa, Ph…</p>
+          <button class="exp-btn">Ver propiedades</button>
+        </div>
+      </div>
+    </div>
+    <button class="exp-arrow exp-arrow-right" id="expRight" onclick="scrollExp(1)" aria-label="Siguiente">
+      <span class="material-icons">chevron_right</span>
+    </button>
+  </div>
+  <div class="exp-dots" id="expDots"></div>
+</section>
 
 <div class="container">
   <section class="section" id="propiedades">
@@ -560,7 +692,7 @@ function goSlide(n) {
 
 // ---- ZONES ----
 function renderZones(zones) {
-  document.getElementById('zonesGrid').innerHTML = zones.slice(0,6).map((z,i)=>`
+  document.getElementById('zonesGrid').innerHTML = zones.map((z,i)=>`
     <div class="zone-card" onclick="setZone('${z.name}')">
       <img src="${z.img}" alt="${z.name}" loading="lazy" onerror="this.src='${PH}'">
       <div class="zone-overlay"></div>
@@ -614,6 +746,7 @@ function applyFilters() {
   const s=document.getElementById('searchInput').value.toLowerCase().trim();
   const type=document.getElementById('typeFilter').value;
   const zone=document.getElementById('zoneFilter').value;
+  const locType=document.getElementById('locTypeFilter').value;
   const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
@@ -629,6 +762,7 @@ function applyFilters() {
   );
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
+  if(locType) list=list.filter(p=>(p.location_type||[]).includes(locType));
   if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
   if(price){
     if(price==='5000+') list=list.filter(p=>p.price>=5000);
@@ -651,9 +785,11 @@ function resetFilters(){
   document.getElementById('searchInput').value='';
   document.getElementById('typeFilter').value='';
   document.getElementById('zoneFilter').value='';
+  document.getElementById('locTypeFilter').value='';
   document.getElementById('priceFilter').value='';
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
+  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('active-filter'));
   activeTab='';
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelector('.tab').classList.add('active');
@@ -670,6 +806,54 @@ function setZone(z){
   document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
   filterProperties();
 }
+
+function setLocType(val){
+  // Toggle: si ya está activo, lo limpia
+  const current=document.getElementById('locTypeFilter').value;
+  document.getElementById('locTypeFilter').value=(current===val)?'':val;
+  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('active-filter'));
+  if(document.getElementById('locTypeFilter').value){
+    const idx=['🌴 Playa','🌄 Montaña / Campo','🌆 Ciudad','🌿 Naturaleza / Eco','🏖️ Resort / Vacacional','🏙️ Urbano moderno'].indexOf(val);
+    if(idx>=0) document.querySelectorAll('.exp-card')[idx]?.classList.add('active-filter');
+  }
+  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
+  filterProperties();
+}
+
+// ---- EXPERIENCES CAROUSEL ----
+(function initExpCarousel(){
+  const track=document.getElementById('experiencesTrack');
+  const dotsEl=document.getElementById('expDots');
+  if(!track||!dotsEl) return;
+  const cards=track.querySelectorAll('.exp-card');
+  const total=cards.length;
+
+  // Build dots
+  for(let i=0;i<total;i++){
+    const d=document.createElement('button');
+    d.className='exp-dot'+(i===0?' active':'');
+    d.setAttribute('aria-label','Ir a '+i);
+    d.addEventListener('click',()=>scrollToCard(i));
+    dotsEl.appendChild(d);
+  }
+
+  function scrollToCard(i){
+    const card=cards[i];
+    if(!card) return;
+    track.scrollTo({left:card.offsetLeft-track.offsetLeft-4,behavior:'smooth'});
+  }
+
+  function updateDots(){
+    const idx=Math.round(track.scrollLeft/(cards[0]?.offsetWidth+20));
+    dotsEl.querySelectorAll('.exp-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  }
+
+  track.addEventListener('scroll',updateDots,{passive:true});
+  window.scrollExp=function(dir){
+    const idx=Math.round(track.scrollLeft/(cards[0]?.offsetWidth+20));
+    scrollToCard(Math.max(0,Math.min(total-1,idx+dir)));
+  };
+})();
 
 function renderProperties(list){
   const grid=document.getElementById('propertyGrid');
