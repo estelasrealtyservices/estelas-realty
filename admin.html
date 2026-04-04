@@ -632,15 +632,35 @@
       <div class="modal-section">
         <div class="modal-section-title">Multimedia</div>
         <div class="form-group" style="margin-bottom:16px;"><label>URL de video (YouTube / Vimeo)</label><input type="url" id="fVideo" placeholder="https://youtube.com/watch?v=..."></div>
-        <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:8px;">Fotos</label>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Fotos</label>
+          <span style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:13px">drag_indicator</span>Arrastra para reordenar</span>
+        </div>
         <div class="upload-area">
-          <input type="file" id="photoInput" multiple accept="image/*" onchange="previewPhotos(this)">
+          <input type="file" id="photoInput" multiple accept="image/*" onchange="addPhotos(this)">
           <span class="material-icons">add_photo_alternate</span>
           <p>Haz clic para agregar fotos</p>
           <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG · Máx. 10 fotos</p>
         </div>
         <div class="modal-prog" id="modalProg"><div class="modal-prog-fill" id="modalProgFill" style="width:0%"></div></div>
-        <div class="upload-preview" id="uploadPreview"></div>
+        <style>
+          .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:14px;}
+          .photo-item{position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--border);background:var(--surface2);transition:border-color 0.2s,box-shadow 0.2s,opacity 0.2s;cursor:grab;}
+          .photo-item:active{cursor:grabbing;}
+          .photo-item.drag-over{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,168,76,0.25);}
+          .photo-item.dragging{opacity:0.35;transform:scale(0.97);}
+          .photo-item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;pointer-events:none;user-select:none;}
+          .photo-badge{position:absolute;top:6px;left:6px;background:var(--primary);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:0.5px;pointer-events:none;}
+          .photo-badge.main{background:var(--accent);color:#3a2800;}
+          .photo-drag-handle{position:absolute;top:6px;right:28px;width:22px;height:22px;background:rgba(0,0,0,0.5);border-radius:5px;display:flex;align-items:center;justify-content:center;color:white;cursor:grab;pointer-events:none;}
+          .photo-drag-handle .material-icons{font-size:14px;}
+          .photo-remove{position:absolute;top:6px;right:6px;width:22px;height:22px;background:rgba(229,57,53,0.9);border:none;border-radius:5px;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;}
+          .photo-remove .material-icons{font-size:14px;}
+          .photo-caption{width:100%;padding:5px 8px;border:none;border-top:1px solid var(--border);font-size:11px;font-family:inherit;color:var(--text2);background:var(--surface);outline:none;resize:none;line-height:1.4;}
+          .photo-caption:focus{background:#fffef5;color:var(--text);}
+          .photo-caption::placeholder{color:var(--text3);}
+        </style>
+        <div class="photo-grid" id="photoGrid"></div>
       </div>
       <div class="modal-section">
         <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
@@ -723,6 +743,8 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let allProperties=[];
 let selectedFiles=[];
+let photoItems=[];
+let dragSrcIdx=null;
 let codeCounter=1;
 let heroImages=[];
 let zoneData=[];
@@ -1212,7 +1234,8 @@ function addCustomAmenity(btn, gridId){
 
 function openModal(id=null){
   selectedFiles=[];
-  document.getElementById('uploadPreview').innerHTML='';
+  photoItems=[];
+  document.getElementById('photoGrid').innerHTML='';
   document.getElementById('modalProgFill').style.width='0%';
   document.querySelectorAll('.feature-toggle').forEach(b=>b.classList.remove('selected'));
   if(id){
@@ -1251,7 +1274,12 @@ function openModal(id=null){
     const lng=p.longitude||(-79.519);
     initAdminMap(parseFloat(lat),parseFloat(lng));
     if(p.features) p.features.forEach(f=>document.querySelectorAll('.feature-toggle').forEach(b=>{if(b.textContent===f)b.classList.add('selected');}));
-    if(p.images?.length) document.getElementById('uploadPreview').innerHTML=p.images.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('');
+    // Load existing images with their captions
+    if(p.images?.length){
+      const caps = p.image_captions||[];
+      p.images.forEach((url,i)=>photoItems.push({url, file:null, caption:caps[i]||'', isExisting:true}));
+      renderPhotoGrid();
+    }
     document.getElementById('deleteBtn').style.display='flex';
   }else{
     document.getElementById('modalTitle').textContent='Agregar propiedad';
@@ -1282,13 +1310,65 @@ function openModal(id=null){
 function closeModal(){document.getElementById('propModal').classList.remove('open');}
 function toggleFeature(btn){btn.classList.toggle('selected');}
 
-function previewPhotos(input){
-  selectedFiles=[...input.files];
-  const preview=document.getElementById('uploadPreview');
-  const id=document.getElementById('editingId').value;
-  const existing=id?(allProperties.find(p=>p.id===id)?.images||[]):[];
-  preview.innerHTML=existing.map(u=>`<div class="thumb-wrap"><img src="${u}" alt=""></div>`).join('')+
-    selectedFiles.map(f=>`<div class="thumb-wrap"><img src="${URL.createObjectURL(f)}" alt=""></div>`).join('');
+// ---- PHOTO MANAGER (drag & drop + captions) ----
+// photoItems = [{url, file, caption, isExisting}]
+let photoItems = [];
+let dragSrcIdx = null;
+
+function renderPhotoGrid(){
+  const grid = document.getElementById('photoGrid');
+  if(!photoItems.length){ grid.innerHTML=''; return; }
+  grid.innerHTML = photoItems.map((item, i) => `
+    <div class="photo-item" draggable="true" data-idx="${i}"
+      ondragstart="photoDragStart(event,${i})"
+      ondragover="photoDragOver(event,${i})"
+      ondrop="photoDrop(event,${i})"
+      ondragend="photoDragEnd(event)">
+      <img src="${item.url}" alt="${item.caption||''}">
+      <div class="photo-badge ${i===0?'main':''}">${i===0?'Principal':'#'+(i+1)}</div>
+      <div class="photo-drag-handle"><span class="material-icons">drag_indicator</span></div>
+      <button class="photo-remove" onclick="removePhoto(${i})" title="Eliminar foto"><span class="material-icons">close</span></button>
+      <textarea class="photo-caption" rows="1" placeholder="Pie de foto (SEO)…" oninput="photoItems[${i}].caption=this.value">${item.caption||''}</textarea>
+    </div>`).join('');
+}
+
+function photoDragStart(e, i){
+  dragSrcIdx = i;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function photoDragOver(e, i){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.photo-item').forEach(el=>el.classList.remove('drag-over'));
+  if(i !== dragSrcIdx) e.currentTarget.classList.add('drag-over');
+}
+function photoDrop(e, i){
+  e.preventDefault();
+  if(dragSrcIdx === null || dragSrcIdx === i) return;
+  const moved = photoItems.splice(dragSrcIdx, 1)[0];
+  photoItems.splice(i, 0, moved);
+  dragSrcIdx = null;
+  renderPhotoGrid();
+}
+function photoDragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.photo-item').forEach(el=>el.classList.remove('drag-over'));
+}
+
+function removePhoto(i){
+  photoItems.splice(i,1);
+  renderPhotoGrid();
+}
+
+function addPhotos(input){
+  const files = [...input.files];
+  files.forEach(f=>{
+    const url = URL.createObjectURL(f);
+    photoItems.push({url, file:f, caption:'', isExisting:false});
+  });
+  renderPhotoGrid();
+  input.value='';
 }
 
 async function saveProperty(){
@@ -1297,17 +1377,32 @@ async function saveProperty(){
   const btn=document.getElementById('saveBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Guardando...';
   const editingId=document.getElementById('editingId').value;
-  let imageUrls=editingId?(allProperties.find(p=>p.id===editingId)?.images||[]):[];
-  if(selectedFiles.length>0){
+
+  // Upload any new files and resolve final ordered arrays
+  const newItems = photoItems.filter(item=>!item.isExisting);
+  if(newItems.length>0){
     document.getElementById('modalProg').classList.add('visible');
-    for(let i=0;i<selectedFiles.length;i++){
-      const path=`${Date.now()}_${i}.${selectedFiles[i].name.split('.').pop()}`;
-      const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,selectedFiles[i],{upsert:true});
-      if(!error){const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);imageUrls.push(u.publicUrl);}
-      document.getElementById('modalProgFill').style.width=`${Math.round(((i+1)/selectedFiles.length)*100)}%`;
+    let uploaded=0;
+    for(let i=0;i<photoItems.length;i++){
+      const item=photoItems[i];
+      if(!item.isExisting && item.file){
+        const path=`${Date.now()}_${i}.${item.file.name.split('.').pop()}`;
+        const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,item.file,{upsert:true});
+        if(!error){
+          const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+          item.url=u.publicUrl;
+          item.isExisting=true;
+        }
+        uploaded++;
+        document.getElementById('modalProgFill').style.width=`${Math.round((uploaded/newItems.length)*100)}%`;
+      }
     }
     document.getElementById('modalProg').classList.remove('visible');
   }
+
+  const imageUrls = photoItems.map(item=>item.url);
+  const imageCaptions = photoItems.map(item=>item.caption||'');
+
   const payload={
     code:document.getElementById('modalCode').textContent,
     operation:document.getElementById('fOperation').value,
@@ -1326,6 +1421,7 @@ async function saveProperty(){
     description_en:document.getElementById('fDescEn').value.trim()||null,
     features:[...document.querySelectorAll('.feature-toggle.selected')].map(b=>b.textContent),
     images:imageUrls,
+    image_captions:imageCaptions,
     video_url:document.getElementById('fVideo').value||'',
     featured:document.getElementById('fFeatured').checked,
     tags:[
