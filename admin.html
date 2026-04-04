@@ -366,14 +366,14 @@
 
         <!-- ZONE IMAGES -->
         <div class="editor-card">
-          <div class="editor-card-header">
+          <div class="editor-card-header" style="display:flex;align-items:center;gap:12px;">
             <div class="editor-card-icon"><span class="material-icons">map</span></div>
-            <div style="flex:1">
+            <div style="flex:1;">
               <div class="editor-card-title">Zonas</div>
               <div class="editor-card-subtitle">Agrega, edita o elimina zonas y sus fotos</div>
             </div>
-            <button onclick="addNewZone()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);flex-shrink:0;" onmouseover="this.style.background='#2d2d4a'" onmouseout="this.style.background='var(--primary)'">
-              <span class="material-icons" style="font-size:16px">add_location_alt</span>Nueva zona
+            <button id="btnAddZone" onclick="addNewZone()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+              <span class="material-icons" style="font-size:16px;">add</span>Nueva zona
             </button>
           </div>
           <div class="editor-card-body">
@@ -743,8 +743,6 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let allProperties=[];
 let selectedFiles=[];
-let photoItems=[];
-let dragSrcIdx=null;
 let codeCounter=1;
 let heroImages=[];
 let zoneData=[];
@@ -905,37 +903,79 @@ async function saveHeroImages(){
 
 // ---- ZONES EDITOR ----
 function renderZonesEditor(){
-  document.getElementById('zonesEditorGrid').innerHTML=zoneData.map((z,i)=>`
-    <div class="zone-row" id="zone-row-${i}">
-      <img src="${z.img||PH}" alt="${z.name}" class="zone-row-thumb" onerror="this.src='${PH}'">
-      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-        <input
-          type="text"
-          value="${z.name||''}"
-          placeholder="Nombre de zona"
-          oninput="zoneData[${i}].name=this.value;syncZoneSelects()"
-          style="font-size:13px;font-weight:600;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:inherit;background:var(--bg);outline:none;transition:var(--transition);"
-          onfocus="this.style.borderColor='var(--primary)'"
-          onblur="this.style.borderColor='var(--border)'"
-        >
-        <input
-          type="text"
-          value="${z.subtitle||''}"
-          placeholder="Subtítulo (opcional)"
-          oninput="zoneData[${i}].subtitle=this.value"
-          style="font-size:11px;color:var(--text3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-family:inherit;background:var(--bg);outline:none;transition:var(--transition);"
-          onfocus="this.style.borderColor='var(--primary)'"
-          onblur="this.style.borderColor='var(--border)'"
-        >
-      </div>
-      <button class="zone-change-btn" title="Cambiar foto">
-        <input type="file" accept="image/*" onchange="changeZoneImage(${i},this)">
-        <span class="material-icons">photo_camera</span>Foto
-      </button>
-      <button onclick="removeZone(${i})" title="Eliminar zona" style="padding:6px 8px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;color:#E53935;cursor:pointer;display:flex;align-items:center;transition:var(--transition);flex-shrink:0;" onmouseover="this.style.background='rgba(229,57,53,0.08)'" onmouseout="this.style.background='none'">
-        <span class="material-icons" style="font-size:16px">delete_outline</span>
-      </button>
-    </div>`).join('');
+  const grid = document.getElementById('zonesEditorGrid');
+  grid.innerHTML = '';
+  zoneData.forEach(function(z, i){
+    const row = document.createElement('div');
+    row.className = 'zone-row';
+    row.id = 'zone-row-' + i;
+
+    // Thumb
+    const img = document.createElement('img');
+    img.src = z.img || PH;
+    img.alt = z.name || '';
+    img.className = 'zone-row-thumb';
+    img.onerror = function(){ this.src = PH; };
+
+    // Text inputs container
+    const textWrap = document.createElement('div');
+    textWrap.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:4px;';
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = z.name || '';
+    nameInput.placeholder = 'Nombre de zona';
+    nameInput.style.cssText = 'font-size:13px;font-weight:600;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:inherit;background:var(--bg);outline:none;width:100%;';
+    nameInput.addEventListener('input', function(){ zoneData[i].name = this.value; syncZoneSelects(); });
+    nameInput.addEventListener('focus', function(){ this.style.borderColor='var(--primary)'; });
+    nameInput.addEventListener('blur', function(){ this.style.borderColor='var(--border)'; });
+
+    const subInput = document.createElement('input');
+    subInput.type = 'text';
+    subInput.value = z.subtitle || '';
+    subInput.placeholder = 'Subtítulo (opcional)';
+    subInput.style.cssText = 'font-size:11px;color:var(--text3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-family:inherit;background:var(--bg);outline:none;width:100%;';
+    subInput.addEventListener('input', function(){ zoneData[i].subtitle = this.value; });
+    subInput.addEventListener('focus', function(){ this.style.borderColor='var(--primary)'; });
+    subInput.addEventListener('blur', function(){ this.style.borderColor='var(--border)'; });
+
+    textWrap.appendChild(nameInput);
+    textWrap.appendChild(subInput);
+
+    // Photo button
+    const photoBtn = document.createElement('button');
+    photoBtn.className = 'zone-change-btn';
+    photoBtn.title = 'Cambiar foto';
+    const photoInput = document.createElement('input');
+    photoInput.type = 'file';
+    photoInput.accept = 'image/*';
+    photoInput.addEventListener('change', function(){ changeZoneImage(i, this); });
+    const cameraIcon = document.createElement('span');
+    cameraIcon.className = 'material-icons';
+    cameraIcon.textContent = 'photo_camera';
+    photoBtn.appendChild(photoInput);
+    photoBtn.appendChild(cameraIcon);
+    photoBtn.appendChild(document.createTextNode(' Foto'));
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.title = 'Eliminar zona';
+    delBtn.style.cssText = 'padding:6px 8px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;color:#E53935;cursor:pointer;display:flex;align-items:center;flex-shrink:0;';
+    const delIcon = document.createElement('span');
+    delIcon.className = 'material-icons';
+    delIcon.style.fontSize = '16px';
+    delIcon.textContent = 'delete_outline';
+    delBtn.appendChild(delIcon);
+    delBtn.addEventListener('click', function(){ removeZone(i); });
+    delBtn.addEventListener('mouseover', function(){ this.style.background='rgba(229,57,53,0.08)'; });
+    delBtn.addEventListener('mouseout', function(){ this.style.background='none'; });
+
+    row.appendChild(img);
+    row.appendChild(textWrap);
+    row.appendChild(photoBtn);
+    row.appendChild(delBtn);
+    grid.appendChild(row);
+  });
 }
 
 function addNewZone(){
@@ -1311,64 +1351,105 @@ function closeModal(){document.getElementById('propModal').classList.remove('ope
 function toggleFeature(btn){btn.classList.toggle('selected');}
 
 // ---- PHOTO MANAGER (drag & drop + captions) ----
-// photoItems = [{url, file, caption, isExisting}]
 let photoItems = [];
 let dragSrcIdx = null;
 
 function renderPhotoGrid(){
   const grid = document.getElementById('photoGrid');
-  if(!photoItems.length){ grid.innerHTML=''; return; }
-  grid.innerHTML = photoItems.map((item, i) => `
-    <div class="photo-item" draggable="true" data-idx="${i}"
-      ondragstart="photoDragStart(event,${i})"
-      ondragover="photoDragOver(event,${i})"
-      ondrop="photoDrop(event,${i})"
-      ondragend="photoDragEnd(event)">
-      <img src="${item.url}" alt="${item.caption||''}">
-      <div class="photo-badge ${i===0?'main':''}">${i===0?'Principal':'#'+(i+1)}</div>
-      <div class="photo-drag-handle"><span class="material-icons">drag_indicator</span></div>
-      <button class="photo-remove" onclick="removePhoto(${i})" title="Eliminar foto"><span class="material-icons">close</span></button>
-      <textarea class="photo-caption" rows="1" placeholder="Pie de foto (SEO)…" oninput="photoItems[${i}].caption=this.value">${item.caption||''}</textarea>
-    </div>`).join('');
-}
+  grid.innerHTML = '';
+  if(!photoItems.length) return;
 
-function photoDragStart(e, i){
-  dragSrcIdx = i;
-  e.currentTarget.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-}
-function photoDragOver(e, i){
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  document.querySelectorAll('.photo-item').forEach(el=>el.classList.remove('drag-over'));
-  if(i !== dragSrcIdx) e.currentTarget.classList.add('drag-over');
-}
-function photoDrop(e, i){
-  e.preventDefault();
-  if(dragSrcIdx === null || dragSrcIdx === i) return;
-  const moved = photoItems.splice(dragSrcIdx, 1)[0];
-  photoItems.splice(i, 0, moved);
-  dragSrcIdx = null;
-  renderPhotoGrid();
-}
-function photoDragEnd(e){
-  e.currentTarget.classList.remove('dragging');
-  document.querySelectorAll('.photo-item').forEach(el=>el.classList.remove('drag-over'));
-}
+  photoItems.forEach(function(item, i){
+    const card = document.createElement('div');
+    card.className = 'photo-item';
+    card.draggable = true;
+    card.dataset.idx = i;
 
-function removePhoto(i){
-  photoItems.splice(i,1);
-  renderPhotoGrid();
+    // Image
+    const img = document.createElement('img');
+    img.src = item.url;
+    img.alt = item.caption || '';
+
+    // Badge
+    const badge = document.createElement('div');
+    badge.className = 'photo-badge' + (i === 0 ? ' main' : '');
+    badge.textContent = i === 0 ? 'Principal' : '#' + (i + 1);
+
+    // Drag handle
+    const handle = document.createElement('div');
+    handle.className = 'photo-drag-handle';
+    const handleIcon = document.createElement('span');
+    handleIcon.className = 'material-icons';
+    handleIcon.textContent = 'drag_indicator';
+    handle.appendChild(handleIcon);
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'photo-remove';
+    removeBtn.title = 'Eliminar foto';
+    const removeIcon = document.createElement('span');
+    removeIcon.className = 'material-icons';
+    removeIcon.textContent = 'close';
+    removeBtn.appendChild(removeIcon);
+    removeBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      photoItems.splice(i, 1);
+      renderPhotoGrid();
+    });
+
+    // Caption textarea
+    const caption = document.createElement('textarea');
+    caption.className = 'photo-caption';
+    caption.rows = 1;
+    caption.placeholder = 'Pie de foto (SEO)…';
+    caption.value = item.caption || '';
+    caption.addEventListener('input', function(){ photoItems[i].caption = this.value; });
+
+    // Drag events
+    card.addEventListener('dragstart', function(e){
+      dragSrcIdx = i;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => card.classList.add('dragging'), 0);
+    });
+    card.addEventListener('dragover', function(e){
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.photo-item').forEach(el => el.classList.remove('drag-over'));
+      if(i !== dragSrcIdx) card.classList.add('drag-over');
+    });
+    card.addEventListener('dragleave', function(){
+      card.classList.remove('drag-over');
+    });
+    card.addEventListener('drop', function(e){
+      e.preventDefault();
+      if(dragSrcIdx === null || dragSrcIdx === i) return;
+      const moved = photoItems.splice(dragSrcIdx, 1)[0];
+      photoItems.splice(i, 0, moved);
+      dragSrcIdx = null;
+      renderPhotoGrid();
+    });
+    card.addEventListener('dragend', function(){
+      card.classList.remove('dragging');
+      document.querySelectorAll('.photo-item').forEach(el => el.classList.remove('drag-over'));
+      dragSrcIdx = null;
+    });
+
+    card.appendChild(img);
+    card.appendChild(badge);
+    card.appendChild(handle);
+    card.appendChild(removeBtn);
+    card.appendChild(caption);
+    grid.appendChild(card);
+  });
 }
 
 function addPhotos(input){
   const files = [...input.files];
-  files.forEach(f=>{
-    const url = URL.createObjectURL(f);
-    photoItems.push({url, file:f, caption:'', isExisting:false});
+  files.forEach(function(f){
+    photoItems.push({ url: URL.createObjectURL(f), file: f, caption: '', isExisting: false });
   });
   renderPhotoGrid();
-  input.value='';
+  input.value = '';
 }
 
 async function saveProperty(){
