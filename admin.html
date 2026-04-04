@@ -479,7 +479,7 @@
               <option>Venta</option>
             </select>
           </div>
-          <div class="form-group"><label>Tipo</label><select id="fType"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option></select></div>
+          <div class="form-group"><label>Tipo</label><select id="fType" onchange="updateTypeFields()"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option><option>Galera</option><option>Terreno</option><option>Lote</option><option>Bodega</option></select></div>
           <div class="form-group full"><label>Título</label><input type="text" id="fTitle" placeholder="Ej: Apartamento moderno en San Francisco"></div>
           <div class="form-group"><label>Zona</label>
             <select id="fZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select>
@@ -490,6 +490,21 @@
               <span class="material-icons" style="font-size:16px">schedule</span>
               <span id="pricePeriodText">por mes</span>
             </div>
+          </div>
+          <!-- Campo condicional: Costo de mantenimiento (solo Venta) -->
+          <div class="form-group" id="fMaintenanceGroup" style="display:none;">
+            <label>Costo de mantenimiento (USD/mes)</label>
+            <input type="number" id="fMaintenance" placeholder="Ej: 150">
+          </div>
+          <!-- Campo condicional: Titulado (solo Terreno / Lote) -->
+          <div class="form-group" id="fTituladoGroup" style="display:none;">
+            <label>Titulado</label>
+            <select id="fTitulado">
+              <option value="">— No especificado —</option>
+              <option value="Sí, titulado">Sí, titulado</option>
+              <option value="No titulado">No titulado</option>
+              <option value="En proceso de titulación">En proceso de titulación</option>
+            </select>
           </div>
         </div>
       </div>
@@ -506,9 +521,9 @@
         <div class="modal-section-title">Características</div>
         <div class="form-grid-3">
           <div class="form-group"><label>Metraje (m²)</label><input type="number" id="fSize" placeholder="120"></div>
-          <div class="form-group"><label>Habitaciones</label><select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-          <div class="form-group"><label>Baños</label><select id="fBaths"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-          <div class="form-group"><label>Parqueos</label><select id="fParking"><option>0</option><option>1</option><option>2</option><option>3</option></select></div>
+          <div class="form-group"><label>Habitaciones</label><select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <div class="form-group"><label>Baños</label><select id="fBaths"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <div class="form-group"><label>Parqueos</label><select id="fParking"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
           <div class="form-group"><label>Piso</label><input type="text" id="fFloor" placeholder="Ej: 12, PH, Planta baja"></div>
         </div>
       </div>
@@ -525,23 +540,91 @@
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Amenidades</div>
-        <div class="features-grid" id="featuresGrid">
-          <button class="feature-toggle" onclick="toggleFeature(this)">Piscina</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Gimnasio</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Amoblado</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Balcón</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Vista al mar</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Seguridad 24h</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">A/C incluido</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Pet friendly</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Área de juegos</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Terraza</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Cuarto de servicio</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Bodega</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Jardín</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">BBQ</button>
-          <button class="feature-toggle" onclick="toggleFeature(this)">Portón eléctrico</button>
+
+        <!-- CSS para categorías de amenidades -->
+        <style>
+          .amenity-category{margin-bottom:20px;}
+          .amenity-cat-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+          .amenity-cat-title{font-size:12px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.7px;display:flex;align-items:center;gap:6px;}
+          .amenity-cat-title span.cat-icon{font-size:15px;}
+          .amenity-cat-grid{display:flex;flex-wrap:wrap;gap:8px;}
+          .btn-add-amenity{padding:5px 12px;border-radius:20px;border:1px dashed var(--accent);background:rgba(201,168,76,0.07);font-size:12px;font-family:inherit;cursor:pointer;color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:4px;transition:var(--transition);}
+          .btn-add-amenity:hover{background:rgba(201,168,76,0.15);}
+          .btn-add-amenity .material-icons{font-size:14px;}
+        </style>
+
+        <!-- CATEGORÍA 1: Equipamiento y Distribución -->
+        <div class="amenity-category">
+          <div class="amenity-cat-header">
+            <div class="amenity-cat-title"><span class="cat-icon">🛋️</span> Equipamiento y Distribución</div>
+            <button class="btn-add-amenity" onclick="addCustomAmenity(this, 'cat-equip')"><span class="material-icons">add</span>Agregar</button>
+          </div>
+          <div class="amenity-cat-grid" id="cat-equip">
+            <button class="feature-toggle" onclick="toggleFeature(this)">Línea blanca</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Amoblado</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Persianas</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Lámparas</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">A/C incluido</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cuarto y baño de servicio</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Baño de visitas</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Depósito</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Balcón</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Terraza</button>
+          </div>
         </div>
+
+        <!-- CATEGORÍA 2: Infraestructura y Conectividad -->
+        <div class="amenity-category">
+          <div class="amenity-cat-header">
+            <div class="amenity-cat-title"><span class="cat-icon">⚡</span> Infraestructura y Conectividad</div>
+            <button class="btn-add-amenity" onclick="addCustomAmenity(this, 'cat-infra')"><span class="material-icons">add</span>Agregar</button>
+          </div>
+          <div class="amenity-cat-grid" id="cat-infra">
+            <button class="feature-toggle" onclick="toggleFeature(this)">WiFi incluido</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Planta eléctrica</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Seguridad 24/7</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Garita con muro perimetral</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Portón eléctrico</button>
+          </div>
+        </div>
+
+        <!-- CATEGORÍA 3: Áreas Comunes y Recreación -->
+        <div class="amenity-category">
+          <div class="amenity-cat-header">
+            <div class="amenity-cat-title"><span class="cat-icon">🏊</span> Áreas Comunes y Recreación</div>
+            <button class="btn-add-amenity" onclick="addCustomAmenity(this, 'cat-areas')"><span class="material-icons">add</span>Agregar</button>
+          </div>
+          <div class="amenity-cat-grid" id="cat-areas">
+            <button class="feature-toggle" onclick="toggleFeature(this)">Área social</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Piscina</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Gimnasio</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cine</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Parque infantil</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cancha de pádel</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cancha de tenis</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Campo de golf</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Jardín</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">BBQ</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Pet friendly</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Spa</button>
+          </div>
+        </div>
+
+        <!-- CATEGORÍA 4: Ubicación y Entorno -->
+        <div class="amenity-category">
+          <div class="amenity-cat-header">
+            <div class="amenity-cat-title"><span class="cat-icon">📍</span> Ubicación y Entorno</div>
+            <button class="btn-add-amenity" onclick="addCustomAmenity(this, 'cat-ubicacion')"><span class="material-icons">add</span>Agregar</button>
+          </div>
+          <div class="amenity-cat-grid" id="cat-ubicacion">
+            <button class="feature-toggle" onclick="toggleFeature(this)">Frente al mar</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Calle sin salida</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cerca de tráfico</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Vista al mar</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Fácil acceso</button>
+          </div>
+        </div>
+
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Multimedia</div>
@@ -594,11 +677,29 @@
         <input type="hidden" id="fLongitude">
       </div>
       <div class="modal-section">
-        <div class="modal-section-title">Opciones</div>
-        <label class="featured-toggle">
-          <input type="checkbox" id="fFeatured">
-          <div><div style="font-size:14px;font-weight:500;color:var(--text)">Marcar como propiedad destacada</div><div style="font-size:12px;color:var(--text3)">Aparecerá con badge rojo en la página</div></div>
-        </label>
+        <div class="modal-section-title">Opciones y etiquetas</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <label class="featured-toggle">
+            <input type="checkbox" id="fFeatured">
+            <div><div style="font-size:14px;font-weight:500;color:var(--text)">⭐ Destacado</div><div style="font-size:12px;color:var(--text3)">Aparece con badge naranja en las tarjetas</div></div>
+          </label>
+          <label class="featured-toggle">
+            <input type="checkbox" id="fExclusivo">
+            <div><div style="font-size:14px;font-weight:500;color:var(--text)">🏅 Exclusivo</div><div style="font-size:12px;color:var(--text3)">Propiedad exclusiva de la agencia</div></div>
+          </label>
+          <label class="featured-toggle">
+            <input type="checkbox" id="fGanga">
+            <div><div style="font-size:14px;font-weight:500;color:var(--text)">🔥 Ganga</div><div style="font-size:12px;color:var(--text3)">Precio por debajo del mercado</div></div>
+          </label>
+          <label class="featured-toggle">
+            <input type="checkbox" id="fOportunidad">
+            <div><div style="font-size:14px;font-weight:500;color:var(--text)">💡 Oportunidad</div><div style="font-size:12px;color:var(--text3)">Excelente oportunidad de inversión</div></div>
+          </label>
+          <label class="featured-toggle">
+            <input type="checkbox" id="fUrgente">
+            <div><div style="font-size:14px;font-weight:500;color:var(--text)">⚡ Urgente</div><div style="font-size:12px;color:var(--text3)">Venta o alquiler urgente</div></div>
+          </label>
+        </div>
       </div>
     </div>
     <div class="modal-actions">
@@ -1000,19 +1101,45 @@ function updatePriceLabel(){
   const badge=document.getElementById('pricePeriodShow');
   const text=document.getElementById('pricePeriodText');
   const priceInput=document.getElementById('fPrice');
+  const maintGroup=document.getElementById('fMaintenanceGroup');
   if(op==='Alquiler vacacional'){
     if(badge){badge.style.background='rgba(46,125,50,0.12)';badge.style.color='#1B5E20';}
     if(text) text.textContent='por noche';
     if(priceInput) priceInput.placeholder='Precio por noche';
+    if(maintGroup) maintGroup.style.display='none';
   } else if(op==='Alquiler'){
     if(badge){badge.style.background='rgba(26,26,46,0.08)';badge.style.color='var(--primary)';}
     if(text) text.textContent='por mes';
     if(priceInput) priceInput.placeholder='Precio mensual';
+    if(maintGroup) maintGroup.style.display='none';
   } else {
     if(badge){badge.style.background='rgba(201,168,76,0.1)';badge.style.color='#7a5c10';}
     if(text) text.textContent='precio único';
     if(priceInput) priceInput.placeholder='Precio de venta';
+    if(maintGroup) maintGroup.style.display='flex';
   }
+}
+
+function updateTypeFields(){
+  const type=document.getElementById('fType').value;
+  const tituladoGroup=document.getElementById('fTituladoGroup');
+  if(type==='Terreno'||type==='Lote'){
+    tituladoGroup.style.display='flex';
+  } else {
+    tituladoGroup.style.display='none';
+  }
+}
+
+function addCustomAmenity(btn, gridId){
+  const name=prompt('Nombre de la nueva amenidad:');
+  if(!name||!name.trim()) return;
+  const grid=document.getElementById(gridId);
+  const newBtn=document.createElement('button');
+  newBtn.className='feature-toggle selected';
+  newBtn.onclick=function(){toggleFeature(this);};
+  newBtn.textContent=name.trim();
+  grid.insertBefore(newBtn,btn.closest('.amenity-cat-header').nextElementSibling===grid?grid.firstChild:null);
+  grid.appendChild(newBtn);
 }
 
 function openModal(id=null){
@@ -1028,9 +1155,12 @@ function openModal(id=null){
     document.getElementById('fOperation').value=p.operation;
     updatePriceLabel();
     document.getElementById('fType').value=p.type;
+    updateTypeFields();
     document.getElementById('fTitle').value=p.title;
     document.getElementById('fZone').value=p.zone;
     document.getElementById('fPrice').value=p.price;
+    document.getElementById('fMaintenance').value=p.maintenance_cost||'';
+    document.getElementById('fTitulado').value=p.titulado||'';
     document.getElementById('fSize').value=p.size;
     document.getElementById('fRooms').value=p.rooms;
     document.getElementById('fBaths').value=p.baths;
@@ -1040,6 +1170,10 @@ function openModal(id=null){
     document.getElementById('fDescEn').value=p.description_en||'';
     document.getElementById('fVideo').value=p.video_url||'';
     document.getElementById('fFeatured').checked=p.featured||false;
+    document.getElementById('fExclusivo').checked=(p.tags||[]).includes('Exclusivo');
+    document.getElementById('fGanga').checked=(p.tags||[]).includes('Ganga');
+    document.getElementById('fOportunidad').checked=(p.tags||[]).includes('Oportunidad');
+    document.getElementById('fUrgente').checked=(p.tags||[]).includes('Urgente');
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
     document.getElementById('fE24Code').value=p.encuentra24_code||'';
@@ -1055,13 +1189,19 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fTitulado').value='';
     document.getElementById('fLatitude').value='';
     document.getElementById('fLongitude').value='';
     document.getElementById('mapCoordsText').textContent='Haz clic en el mapa o busca una dirección para ubicar la propiedad';
     document.getElementById('mapSearchInput').value='';
     document.getElementById('fFeatured').checked=false;
+    document.getElementById('fExclusivo').checked=false;
+    document.getElementById('fGanga').checked=false;
+    document.getElementById('fOportunidad').checked=false;
+    document.getElementById('fUrgente').checked=false;
     updatePriceLabel();
+    updateTypeFields();
     document.getElementById('deleteBtn').style.display='none';
   }
   document.getElementById('propModal').classList.add('open');
@@ -1107,6 +1247,8 @@ async function saveProperty(){
     title,
     zone:document.getElementById('fZone').value,
     price:parseFloat(document.getElementById('fPrice').value)||0,
+    maintenance_cost:parseFloat(document.getElementById('fMaintenance').value)||null,
+    titulado:document.getElementById('fTitulado').value||null,
     size:parseFloat(document.getElementById('fSize').value)||0,
     rooms:parseInt(document.getElementById('fRooms').value)||0,
     baths:parseInt(document.getElementById('fBaths').value)||1,
@@ -1118,6 +1260,12 @@ async function saveProperty(){
     images:imageUrls,
     video_url:document.getElementById('fVideo').value||'',
     featured:document.getElementById('fFeatured').checked,
+    tags:[
+      document.getElementById('fExclusivo').checked?'Exclusivo':null,
+      document.getElementById('fGanga').checked?'Ganga':null,
+      document.getElementById('fOportunidad').checked?'Oportunidad':null,
+      document.getElementById('fUrgente').checked?'Urgente':null,
+    ].filter(Boolean),
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
     owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
     encuentra24_code:document.getElementById('fE24Code').value.trim()||null,
