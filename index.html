@@ -341,7 +341,7 @@
   /* Overlay degradado */
   .bento-overlay{
     position:absolute;inset:0;
-    background:linear-gradient(to top,rgba(10,10,28,0.88) 0%,rgba(10,10,28,0.1) 50%,transparent 100%);
+    background:linear-gradient(to top,rgba(10,10,40,0.96) 0%,rgba(10,10,40,0.55) 45%,rgba(10,10,40,0.25) 100%);
   }
 
   /* Contenido */
@@ -358,14 +358,14 @@
   }
   .bento-sub{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:14px;}
   .bento-pill{
-    display:inline-flex;align-items:center;gap:6px;
-    padding:7px 14px;border-radius:50px;
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);
     font-size:11px;font-weight:600;color:#fff;
-    transition:background 0.2s,border-color 0.2s,color 0.2s;
+    transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.2s;
   }
-  .bento-card:hover .bento-pill{background:var(--accent);border-color:var(--accent);color:var(--primary);}
+  .bento-card:hover .bento-pill{background:var(--accent);border-color:var(--accent);color:var(--primary);transform:scale(1.1);}
   .bento-count{
     position:absolute;top:16px;right:16px;
     background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);
@@ -508,7 +508,7 @@
   <div class="bento-wrap">
 
     <div class="bento-header">
-      <div class="bento-kicker">Encuentra tu lugar</div>
+      <div class="bento-kicker">Descubre tu nuevo destino</div>
     </div>
 
     <div class="bento-grid">
@@ -521,7 +521,7 @@
           <div class="bento-tag">Playa</div>
           <div class="bento-title">Vive<br>frente al mar</div>
           <div class="bento-sub">Buenaventura · San Carlos · Coronado</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
         </div>
       </div>
 
@@ -533,7 +533,7 @@
           <div class="bento-tag">Montaña · Campo</div>
           <div class="bento-title">Aire puro,<br>vistas infinitas</div>
           <div class="bento-sub">Boquete · Altos del María · El Valle</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
         </div>
       </div>
 
@@ -545,7 +545,7 @@
           <div class="bento-tag">Ciudad</div>
           <div class="bento-title">Todo a tu<br>alcance</div>
           <div class="bento-sub">Costa del Este · Ave. Balboa · San Francisco</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
         </div>
       </div>
 
@@ -557,7 +557,7 @@
           <div class="bento-tag">Naturaleza · Eco</div>
           <div class="bento-title">Conecta con<br>la naturaleza</div>
           <div class="bento-sub">Fincas · Casas de campo · Entornos verdes</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
         </div>
       </div>
 
@@ -569,7 +569,7 @@
           <div class="bento-tag">Resort · Vacacional</div>
           <div class="bento-title">Tu paraíso<br>de descanso</div>
           <div class="bento-sub">Resorts · Alquileres vacacionales · Exclusivos</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
         </div>
       </div>
 
@@ -782,7 +782,7 @@ function renderBento(bentoConfig) {
         <div class="bento-tag">${c.tag||c.val}</div>
         <div class="bento-title">${(c.title||'').replace(/\n/g,'<br>')}</div>
         <div class="bento-sub">${c.sub||''}</div>
-        <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
       </div>
     </div>`).join('');
   // Re-inicializar scroll animations y conteos
