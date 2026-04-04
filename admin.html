@@ -250,10 +250,11 @@
   <div class="login-card">
     <div class="login-logo"><img src="logo.png" alt="Estela's Realty Services" style="height:70px;width:auto;object-fit:contain;"></div>
     <h2>Panel de administración</h2>
-    <p>Ingresa tu contraseña para gestionar propiedades</p>
+    <p>Ingresa tus credenciales para gestionar propiedades</p>
+    <input type="email" class="login-input" id="loginEmail" placeholder="Correo electrónico" onkeydown="if(event.key==='Enter')doLogin()">
     <input type="password" class="login-input" id="loginPassword" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()"><span class="material-icons">lock_open</span>Ingresar</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()"><span class="material-icons">lock_open</span>Ingresar</button>
+    <div class="login-error" id="loginError">Credenciales incorrectas. Inténtalo de nuevo.</div>
     <a href="index.html" class="login-back">← Volver a la página principal</a>
   </div>
 </div>
@@ -614,7 +615,6 @@
 const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const STORAGE_BUCKET='property-images';
-const ADMIN_PASSWORD='estela2025';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let allProperties=[];
@@ -639,21 +639,42 @@ const DEFAULT_ZONES=[
 ];
 
 // ---- AUTH ----
-function doLogin(){
-  if(document.getElementById('loginPassword').value===ADMIN_PASSWORD){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminLayout').classList.add('visible');
-    loadAll();
-  } else {
-    document.getElementById('loginError').style.display='block';
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  const btn=document.getElementById('loginBtn');
+  const errEl=document.getElementById('loginError');
+  errEl.style.display='none';
+  if(!email||!password){errEl.textContent='Completa todos los campos.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">refresh</span>Ingresando...';
+  const{error}=await sb.auth.signInWithPassword({email,password});
+  btn.disabled=false;btn.innerHTML='<span class="material-icons">lock_open</span>Ingresar';
+  if(error){
+    errEl.textContent='Credenciales incorrectas. Inténtalo de nuevo.';
+    errEl.style.display='block';
     document.getElementById('loginPassword').value='';
+    return;
   }
+  showAdmin();
 }
-function logout(){
+async function logout(){
+  await sb.auth.signOut();
   document.getElementById('adminLayout').classList.remove('visible');
   document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginEmail').value='';
   document.getElementById('loginPassword').value='';
+  document.getElementById('loginError').style.display='none';
 }
+function showAdmin(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminLayout').classList.add('visible');
+  loadAll();
+}
+// Verificar sesión activa al cargar la página
+(async()=>{
+  const{data:{session}}=await sb.auth.getSession();
+  if(session) showAdmin();
+})();
 
 // ---- TABS ----
 function switchTab(name, btn){
