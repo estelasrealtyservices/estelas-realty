@@ -122,11 +122,10 @@
   .zone-count{font-size:12px;opacity:0.75;margin-top:2px;}
 
   /* SERVICES */
+  #servicios{background:#F7F7F5;}
   .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
   .service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
   .service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
-  .service-icon{width:48px;height:48px;border-radius:12px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-  .service-icon .material-icons{color:var(--accent);font-size:24px;}
   .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
   .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
 
@@ -296,6 +295,116 @@
   .lang-btn:hover:not(.active){color:var(--text);background:var(--border);}
   .lang-flag{font-size:13px;}
 
+  /* =============================================
+     BENTO GRID — Categorías de ubicación
+     ============================================= */
+  #bentoCats{background:#fff;padding:64px 32px 72px;}
+  .bento-wrap{max-width:1280px;margin:0 auto;}
+  .bento-header{margin-bottom:40px;}
+  .bento-kicker{
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+    font-weight:600;color:var(--primary);
+    line-height:1.15;
+  }
+
+  /* Grid — 5 columnas iguales, 1 fila vertical */
+  .bento-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    grid-template-rows:480px;
+    gap:14px;
+  }
+
+  /* Tarjeta base */
+  .bento-card{
+    position:relative;border-radius:20px;overflow:hidden;
+    cursor:pointer;background:var(--surface2);
+    opacity:0;transform:translateY(28px);
+  }
+  .bento-card.in-view{
+    opacity:1;transform:translateY(0);
+    transition:opacity 0.6s cubic-bezier(0.4,0,0.2,1),
+                transform 0.6s cubic-bezier(0.4,0,0.2,1),
+                box-shadow 0.3s ease;
+  }
+  .bento-card:hover{transform:translateY(-5px);box-shadow:0 20px 56px rgba(0,0,0,0.2);}
+
+  /* Foto de fondo */
+  .bento-bg{
+    position:absolute;inset:0;
+    background-size:cover;background-position:center;
+    transition:transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bento-card:hover .bento-bg{transform:scale(1.07);}
+
+  /* Overlay degradado */
+  .bento-overlay{
+    position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(10,10,28,0.88) 0%,rgba(10,10,28,0.1) 50%,transparent 100%);
+  }
+
+  /* Contenido */
+  .bento-body{position:absolute;bottom:0;left:0;right:0;padding:24px 22px 22px;}
+  .bento-tag{
+    display:inline-block;
+    font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .bento-title{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(18px,1.8vw,24px);
+    font-weight:600;color:#fff;line-height:1.2;margin-bottom:6px;
+  }
+  .bento-sub{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:14px;}
+  .bento-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 14px;border-radius:50px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);
+    font-size:11px;font-weight:600;color:#fff;
+    transition:background 0.2s,border-color 0.2s,color 0.2s;
+  }
+  .bento-card:hover .bento-pill{background:var(--accent);border-color:var(--accent);color:var(--primary);}
+  .bento-count{
+    position:absolute;top:16px;right:16px;
+    background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#fff;font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:50px;
+    opacity:0;transition:opacity 0.3s;
+  }
+  .bento-card.has-props .bento-count{opacity:1;}
+
+  /* Sin posición especial — todas en la misma fila */
+  .bc-0,.bc-1,.bc-2,.bc-3,.bc-4{grid-row:1;}
+
+  /* Delays escalonados */
+  .bento-card:nth-child(1){transition-delay:0s;}
+  .bento-card:nth-child(2){transition-delay:0.08s;}
+  .bento-card:nth-child(3){transition-delay:0.16s;}
+  .bento-card:nth-child(4){transition-delay:0.24s;}
+  .bento-card:nth-child(5){transition-delay:0.32s;}
+
+  /* Responsive */
+  @media(max-width:1024px){
+    #bentoCats{padding:48px 20px 56px;}
+    .bento-grid{grid-template-columns:repeat(3,1fr);grid-template-rows:320px 320px;gap:12px;}
+    .bc-0,.bc-1,.bc-2{grid-row:1;}
+    .bc-3,.bc-4{grid-row:2;}
+    .bento-title{font-size:20px;}
+  }
+  @media(max-width:640px){
+    #bentoCats{padding:36px 14px 44px;}
+    .bento-grid{grid-template-columns:1fr 1fr;grid-template-rows:260px 260px 260px;gap:10px;}
+    .bc-0,.bc-1{grid-row:1;}
+    .bc-2,.bc-3{grid-row:2;}
+    .bc-4{grid-row:3;grid-column:1/-1;}
+    .bento-kicker{font-size:24px;}
+    .bento-title{font-size:18px;}
+    .bento-body{padding:18px 16px 16px;}
+  }
+
   /* WHATSAPP FLOAT BUTTON */
   .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
   .wa-float-tooltip{background:var(--primary);color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:var(--shadow);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
@@ -394,6 +503,80 @@
   <div class="stat"><div class="stat-num">9</div><div class="stat-label" id="statLabelZones">Zonas disponibles</div></div>
 </div>
 
+<!-- BENTO GRID — Categorías de ubicación -->
+<section id="bentoCats">
+  <div class="bento-wrap">
+
+    <div class="bento-header">
+      <div class="bento-kicker">Encuentra tu lugar</div>
+    </div>
+
+    <div class="bento-grid">
+
+      <div class="bento-card bc-0" onclick="setBento(this,'Playa')" data-val="Playa">
+        <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80')"></div>
+        <div class="bento-overlay"></div>
+        <div class="bento-count" id="cnt-Playa"></div>
+        <div class="bento-body">
+          <div class="bento-tag">Playa</div>
+          <div class="bento-title">Vive<br>frente al mar</div>
+          <div class="bento-sub">Buenaventura · San Carlos · Coronado</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        </div>
+      </div>
+
+      <div class="bento-card bc-1" onclick="setBento(this,'Montaña / Campo')" data-val="Montaña / Campo">
+        <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80')"></div>
+        <div class="bento-overlay"></div>
+        <div class="bento-count" id="cnt-Montaña / Campo"></div>
+        <div class="bento-body">
+          <div class="bento-tag">Montaña · Campo</div>
+          <div class="bento-title">Aire puro,<br>vistas infinitas</div>
+          <div class="bento-sub">Boquete · Altos del María · El Valle</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        </div>
+      </div>
+
+      <div class="bento-card bc-2" onclick="setBento(this,'Ciudad')" data-val="Ciudad">
+        <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80')"></div>
+        <div class="bento-overlay"></div>
+        <div class="bento-count" id="cnt-Ciudad"></div>
+        <div class="bento-body">
+          <div class="bento-tag">Ciudad</div>
+          <div class="bento-title">Todo a tu<br>alcance</div>
+          <div class="bento-sub">Costa del Este · Ave. Balboa · San Francisco</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        </div>
+      </div>
+
+      <div class="bento-card bc-3" onclick="setBento(this,'Naturaleza / Eco')" data-val="Naturaleza / Eco">
+        <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80')"></div>
+        <div class="bento-overlay"></div>
+        <div class="bento-count" id="cnt-Naturaleza / Eco"></div>
+        <div class="bento-body">
+          <div class="bento-tag">Naturaleza · Eco</div>
+          <div class="bento-title">Conecta con<br>la naturaleza</div>
+          <div class="bento-sub">Fincas · Casas de campo · Entornos verdes</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        </div>
+      </div>
+
+      <div class="bento-card bc-4" onclick="setBento(this,'Resort / Vacacional')" data-val="Resort / Vacacional">
+        <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80')"></div>
+        <div class="bento-overlay"></div>
+        <div class="bento-count" id="cnt-Resort / Vacacional"></div>
+        <div class="bento-body">
+          <div class="bento-tag">Resort · Vacacional</div>
+          <div class="bento-title">Tu paraíso<br>de descanso</div>
+          <div class="bento-sub">Resorts · Alquileres vacacionales · Exclusivos</div>
+          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span>Ver propiedades</div>
+        </div>
+      </div>
+
+    </div><!-- /bento-grid -->
+  </div>
+</section>
+
 <div class="container">
   <section class="section" id="propiedades">
     <div class="section-header"><div class="section-title" id="sectionPropsTitle">Propiedades disponibles</div></div>
@@ -431,6 +614,7 @@
     </div>
   </section>
 
+  <!-- SECCIÓN: ZONAS -->
   <section class="section" id="zonas">
     <div class="section-header"><div class="section-title" id="sectionZonesTitle">Explorar por zona</div></div>
     <div class="zones-grid" id="zonesGrid">
@@ -441,12 +625,12 @@
   <section class="section" id="servicios">
     <div class="section-header"><div class="section-title" id="sectionServicesTitle">Otros servicios</div></div>
     <div class="services-grid" id="servicesGrid">
-      <div class="service-card"><div class="service-icon"><span class="material-icons">gavel</span></div><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
-      <div class="service-card"><div class="service-icon"><span class="material-icons">flight_land</span></div><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
-      <div class="service-card"><div class="service-icon"><span class="material-icons">account_balance</span></div><h3>Servicios de abogados</h3><p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p></div>
-      <div class="service-card"><div class="service-icon"><span class="material-icons">manage_accounts</span></div><h3>Administración de propiedades</h3><p>Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.</p></div>
-      <div class="service-card"><div class="service-icon"><span class="material-icons">request_quote</span></div><h3>Avalúos y tasaciones</h3><p>Valuación profesional de propiedades residenciales y comerciales.</p></div>
-      <div class="service-card"><div class="service-icon"><span class="material-icons">support_agent</span></div><h3>Asesoría personalizada</h3><p>Te acompañamos en todo el proceso. Atención en español e inglés.</p></div>
+      <div class="service-card"><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
+      <div class="service-card"><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
+      <div class="service-card"><h3>Servicios de abogados</h3><p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p></div>
+      <div class="service-card"><h3>Administración de propiedades</h3><p>Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.</p></div>
+      <div class="service-card"><h3>Avalúos y tasaciones</h3><p>Valuación profesional de propiedades residenciales y comerciales.</p></div>
+      <div class="service-card"><h3>Asesoría personalizada</h3><p>Te acompañamos en todo el proceso. Atención en español e inglés.</p></div>
     </div>
   </section>
 </div>
@@ -586,7 +770,8 @@ function goSlide(n) {
 
 // ---- ZONES ----
 function renderZones(zones) {
-  document.getElementById('zonesGrid').innerHTML = zones.map((z,i)=>`
+  const visible = zones.slice(0, 6);
+  document.getElementById('zonesGrid').innerHTML = visible.map((z,i)=>`
     <div class="zone-card" onclick="setZone('${z.name}')">
       <img src="${z.img}" alt="${z.name}" loading="lazy" onerror="this.src='${PH}'">
       <div class="zone-overlay"></div>
@@ -623,6 +808,7 @@ async function loadProperties() {
     if(error) throw error;
     allProperties=data||[];
     updateStats();
+    renderExperiences();
     renderProperties(applyFilters());
   } catch(e) {
     document.getElementById('propertyGrid').innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)"><span class="material-icons" style="font-size:48px;display:block;margin-bottom:12px">cloud_off</span><p>No se pudo conectar. Verifica tu conexión.</p></div>`;
@@ -643,6 +829,8 @@ function applyFilters() {
   const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
+  const locType=document.getElementById('locationTypeFilter')?.value||'';
+  const lifestyle=document.getElementById('lifestyleFilter')?.value||'';
   if(activeTab==='Alquiler') list=list.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional');
   else if(activeTab) list=list.filter(p=>p.operation===activeTab);
   if(s) list=list.filter(p=>
@@ -655,6 +843,8 @@ function applyFilters() {
   );
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
+  if(locType) list=list.filter(p=>(p.location_type||[]).includes(locType));
+  if(lifestyle) list=list.filter(p=>(p.lifestyle||[]).includes(lifestyle));
   if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
   if(price){
     if(price==='5000+') list=list.filter(p=>p.price>=5000);
@@ -680,11 +870,54 @@ function resetFilters(){
   document.getElementById('priceFilter').value='';
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
+  const ltf=document.getElementById('locationTypeFilter');if(ltf)ltf.value='';
+  const lsf=document.getElementById('lifestyleFilter');if(lsf)lsf.value='';
   activeTab='';
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelector('.tab').classList.add('active');
   filterProperties();
 }
+
+function setBento(el, val){
+  const ltf=document.getElementById('locationTypeFilter');
+  if(ltf) ltf.value=val;
+  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
+  filterProperties();
+}
+
+function updateCatCounts(){
+  const map={
+    'Playa':'cnt-Playa',
+    'Montaña / Campo':'cnt-Montaña / Campo',
+    'Ciudad':'cnt-Ciudad',
+    'Naturaleza / Eco':'cnt-Naturaleza / Eco',
+    'Resort / Vacacional':'cnt-Resort / Vacacional'
+  };
+  Object.entries(map).forEach(([cat,id])=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    const n=allProperties.filter(p=>(p.location_type||[]).includes(cat)).length;
+    el.textContent=n>0?n+' propiedades':'';
+    el.closest('.bento-card')?.classList.toggle('has-props',n>0);
+  });
+}
+
+function renderExperiences(){ updateCatCounts(); }
+
+function initBentoScroll(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in-view');
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.bento-card,.bc-all').forEach(el=>obs.observe(el));
+}
+
+// Iniciar observer cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', initBentoScroll);
 
 function setTab(btn,val){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1063,7 +1296,7 @@ function setLang(lang){
   const svc = document.getElementById('servicesGrid');
   if(svc) {
     svc.innerHTML = t.services.map(s=>`
-      <div class="service-card"><div class="service-icon"><span class="material-icons">${s.icon}</span></div><h3>${s.title}</h3><p>${s.desc}</p></div>
+      <div class="service-card"><h3>${s.title}</h3><p>${s.desc}</p></div>
     `).join('');
   }
 
