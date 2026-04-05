@@ -133,6 +133,18 @@
   .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
   .empty-state .material-icons{font-size:48px;display:block;margin-bottom:12px;}
 
+  /* PAGINACIÓN */
+  .pagination-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-top:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);flex-wrap:wrap;gap:12px;}
+  .pagination-info{font-size:13px;color:var(--text3);}
+  .pagination-info strong{color:var(--text);font-weight:600;}
+  .pagination-controls{display:flex;align-items:center;gap:4px;}
+  .pg-btn{min-width:34px;height:34px;padding:0 8px;border-radius:7px;border:1px solid var(--border);background:white;font-family:inherit;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:4px;}
+  .pg-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary);background:var(--surface2);}
+  .pg-btn.active{background:var(--primary);color:white;border-color:var(--primary);font-weight:600;}
+  .pg-btn:disabled{opacity:0.35;cursor:not-allowed;}
+  .pg-btn .material-icons{font-size:16px;}
+  .pg-ellipsis{padding:0 6px;color:var(--text3);font-size:13px;line-height:34px;}
+
   /* SITE EDITOR */
   .site-editor{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
   .editor-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
@@ -334,6 +346,24 @@
             <option value="active">Publicadas</option>
             <option value="inactive">Despublicadas</option>
           </select>
+          <select class="filter-sel" id="adminLocTypeFilter" onchange="renderTable()">
+            <option value="">Tipo de ubicación</option>
+            <option value="Playa">🏖️ Playa</option>
+            <option value="Montaña / Campo">⛰️ Montaña / Campo</option>
+            <option value="Ciudad">🏙️ Ciudad</option>
+            <option value="Naturaleza / Eco">🌿 Naturaleza / Eco</option>
+            <option value="Resort / Vacacional">🏨 Resort / Vacacional</option>
+            <option value="Urbano moderno">🏢 Urbano moderno</option>
+          </select>
+          <select class="filter-sel" id="adminLifestyleFilter" onchange="renderTable()">
+            <option value="">Estilo de vida</option>
+            <option value="Familiar">👨‍👩‍👧 Familiar</option>
+            <option value="Lujo">💎 Lujo</option>
+            <option value="Inversión">📈 Inversión</option>
+            <option value="Vacacional">🌴 Vacacional</option>
+            <option value="Retiro">🌅 Retiro</option>
+            <option value="Ejecutivo">💼 Ejecutivo</option>
+          </select>
         </div>
         <button class="btn-add" onclick="openModal()"><span class="material-icons">add</span>Agregar propiedad</button>
       </div>
@@ -349,6 +379,10 @@
             <tr><td colspan="7" class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite">sync</span><p>Cargando...</p></td></tr>
           </tbody>
         </table>
+        <div class="pagination-bar" id="paginationBar" style="display:none;">
+          <div class="pagination-info" id="paginationInfo"></div>
+          <div class="pagination-controls" id="paginationControls"></div>
+        </div>
       </div>
     </div>
 
@@ -1192,32 +1226,62 @@ async function toggleActive(id, currentActive){
   if(error){showToast('Error al cambiar estado.',true);return;}
   const prop=allProperties.find(p=>p.id===id);
   if(prop) prop.is_active=newActive;
-  renderTable();
+  renderTable(false);
   updateStats();
   showToast(newActive?'Propiedad publicada en la página web.':'Propiedad ocultada de la página web.');
 }
 
-function renderTable(){
-  const s=document.getElementById('adminSearch').value.toLowerCase();
-  const op=document.getElementById('adminOpFilter').value;
-  const zone=document.getElementById('adminZoneFilter').value;
-  const status=document.getElementById('adminStatusFilter').value;
-  let list=[...allProperties];
-  if(s) list=list.filter(p=>p.title?.toLowerCase().includes(s)||p.code?.toLowerCase().includes(s)||p.zone?.toLowerCase().includes(s));
-  if(op) list=list.filter(p=>p.operation===op);
-  if(zone) list=list.filter(p=>p.zone===zone);
-  if(status==='active') list=list.filter(p=>p.is_active!==false);
-  if(status==='inactive') list=list.filter(p=>p.is_active===false);
-  const body=document.getElementById('propTableBody');
-  if(!list.length){body.innerHTML=`<tr><td colspan="9" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;return;}
-  body.innerHTML=list.map(p=>{
-    const active=p.is_active!==false;
-    const fecha=p.created_at?new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}):'—';
-    const hora=p.created_at?new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}):'';
-    return `<tr style="opacity:${active?1:0.55}">
+const PAGE_SIZE = 50;
+let currentPage = 1;
+let filteredList = [];
+
+function renderTable(resetPage = true) {
+  if (resetPage) currentPage = 1;
+  const s      = document.getElementById('adminSearch').value.toLowerCase();
+  const op     = document.getElementById('adminOpFilter').value;
+  const zone   = document.getElementById('adminZoneFilter').value;
+  const status = document.getElementById('adminStatusFilter').value;
+  const locType= document.getElementById('adminLocTypeFilter').value;
+  const life   = document.getElementById('adminLifestyleFilter').value;
+
+  filteredList = [...allProperties];
+  if (s)       filteredList = filteredList.filter(p =>
+                  p.title?.toLowerCase().includes(s) ||
+                  p.code?.toLowerCase().includes(s)  ||
+                  p.zone?.toLowerCase().includes(s));
+  if (op)      filteredList = filteredList.filter(p => p.operation === op);
+  if (zone)    filteredList = filteredList.filter(p => p.zone === zone);
+  if (status === 'active')   filteredList = filteredList.filter(p => p.is_active !== false);
+  if (status === 'inactive') filteredList = filteredList.filter(p => p.is_active === false);
+  if (locType) filteredList = filteredList.filter(p => (p.location_type || []).includes(locType));
+  if (life)    filteredList = filteredList.filter(p => (p.lifestyle || []).includes(life));
+
+  renderPage();
+}
+
+function renderPage() {
+  const body       = document.getElementById('propTableBody');
+  const totalItems = filteredList.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filteredList.slice(start, start + PAGE_SIZE);
+
+  if (!totalItems) {
+    body.innerHTML = `<tr><td colspan="9" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;
+    document.getElementById('paginationBar').style.display = 'none';
+    return;
+  }
+
+  body.innerHTML = page.map(p => {
+    const active = p.is_active !== false;
+    const fecha  = p.created_at ? new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+    const hora   = p.created_at ? new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}) : '';
+    return `<tr style="opacity:${active ? 1 : 0.55}">
       <td style="position:relative">
-        <img src="${p.images?.[0]||PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'">
-        ${!active?`<div style="position:absolute;inset:0;background:rgba(255,255,255,0.5);border-radius:6px;display:flex;align-items:center;justify-content:center"><span class="material-icons" style="font-size:16px;color:#888">visibility_off</span></div>`:''}
+        <img src="${p.images?.[0] || PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'">
+        ${!active ? `<div style="position:absolute;inset:0;background:rgba(255,255,255,0.5);border-radius:6px;display:flex;align-items:center;justify-content:center"><span class="material-icons" style="font-size:16px;color:#888">visibility_off</span></div>` : ''}
       </td>
       <td><span class="prop-code">${p.code}</span></td>
       <td>
@@ -1225,19 +1289,19 @@ function renderTable(){
         <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
       </td>
       <td>
-        <span class="badge ${p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale'}">${p.operation}</span>
-        ${p.featured?'<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>':''}
-        ${p.encuentra24_code?`<br><span style="font-size:10px;color:var(--text3);margin-top:4px;display:inline-block;letter-spacing:0.5px">E24: ${p.encuentra24_code}</span>`:''}
+        <span class="badge ${p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale'}">${p.operation}</span>
+        ${p.featured ? '<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>' : ''}
+        ${p.encuentra24_code ? `<br><span style="font-size:10px;color:var(--text3);margin-top:4px;display:inline-block;letter-spacing:0.5px">E24: ${p.encuentra24_code}</span>` : ''}
       </td>
-      <td class="price-cell">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span></td>
+      <td class="price-cell">$${(p.price || 0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation === 'Alquiler vacacional' ? ' /noche' : p.operation === 'Alquiler' ? ' /mes' : ''}</span></td>
       <td style="font-size:13px;color:var(--text2)">
-        ${p.owner_name?`<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>`:'<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
-        ${p.owner_contact?`<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>`:''}
+        ${p.owner_name ? `<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>` : '<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
+        ${p.owner_contact ? `<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>` : ''}
       </td>
       <td>
-        <button class="btn-toggle ${active?'active':'inactive'}" onclick="toggleActive('${p.id}',${active})">
-          <span class="status-dot ${active?'active':'inactive'}"></span>
-          ${active?'Publicada':'Oculta'}
+        <button class="btn-toggle ${active ? 'active' : 'inactive'}" onclick="toggleActive('${p.id}',${active})">
+          <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
+          ${active ? 'Publicada' : 'Oculta'}
         </button>
       </td>
       <td class="date-cell">
@@ -1252,6 +1316,57 @@ function renderTable(){
       </td>
     </tr>`;
   }).join('');
+
+  renderPagination(totalItems, totalPages);
+}
+
+function renderPagination(totalItems, totalPages) {
+  const bar      = document.getElementById('paginationBar');
+  const infoEl   = document.getElementById('paginationInfo');
+  const ctrlEl   = document.getElementById('paginationControls');
+  const start    = (currentPage - 1) * PAGE_SIZE + 1;
+  const end      = Math.min(currentPage * PAGE_SIZE, totalItems);
+
+  bar.style.display = 'flex';
+  infoEl.innerHTML  = `Mostrando <strong>${start}–${end}</strong> de <strong>${totalItems}</strong> propiedades · Página <strong>${currentPage}</strong> de <strong>${totalPages}</strong>`;
+
+  // Generar números de página con elipsis
+  const pages = [];
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (currentPage > 3) pages.push('…');
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i);
+    if (currentPage < totalPages - 2) pages.push('…');
+    pages.push(totalPages);
+  }
+
+  let html = `<button class="pg-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                <span class="material-icons">chevron_left</span>Anterior
+              </button>`;
+
+  pages.forEach(p => {
+    if (p === '…') {
+      html += `<span class="pg-ellipsis">…</span>`;
+    } else {
+      html += `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    }
+  });
+
+  html += `<button class="pg-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+             Siguiente<span class="material-icons">chevron_right</span>
+           </button>`;
+
+  ctrlEl.innerHTML = html;
+}
+
+function goToPage(page) {
+  const totalPages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE));
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  renderPage();
+  document.getElementById('tab-properties').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ---- MAP ----
