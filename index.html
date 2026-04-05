@@ -6,7 +6,7 @@
 <title>Estela's Realty Services | Propiedades en Panamá</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -46,7 +46,16 @@
   .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
   .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
   .hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
-  .hero h1{font-family:'Playfair Display', serif;font-size:clamp(28px,5vw,48px);font-weight:600;line-height:1.2;margin-bottom:16px;}
+  .hero h1{
+    font-family:'Cormorant Garamond', serif;
+    font-size:25px;
+    font-weight:700;
+    line-height:1.15;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    margin-top:48px;
+    margin-bottom:48px;
+  }
   .hero p{color:rgba(255,255,255,0.7);font-size:16px;max-width:520px;margin:0 auto 36px;}
   .hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:8px;}
   .hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;transition:var(--transition);cursor:pointer;}
@@ -62,11 +71,34 @@
   .search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
   .search-btn:hover{background:#b8973d;}
 
-  /* STATS */
-  .stats{display:flex;justify-content:center;gap:48px;padding:24px 32px;background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;}
-  .stat{text-align:center;}
-  .stat-num{font-family:'Playfair Display', serif;font-size:24px;font-weight:600;color:var(--accent);}
-  .stat-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;}
+  /* TRUST BAND */
+  .trust-band{background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);padding:72px 32px 80px;}
+  .trust-inner{max-width:900px;margin:0 auto;text-align:center;}
+  .trust-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(24px,3vw,38px);
+    font-weight:700;
+    color:#fff;
+    line-height:1.25;
+    margin-bottom:22px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .trust-subtitle{
+    font-family:'Jost',sans-serif;
+    font-size:clamp(13px,1.3vw,15px);
+    font-weight:300;
+    color:rgba(255,255,255,0.6);
+    line-height:1.95;
+    max-width:760px;
+    margin:0 auto;
+    letter-spacing:0.03em;
+  }
+  @media(max-width:768px){
+    .trust-band{padding:52px 24px 60px;}
+    .trust-title{font-size:22px;letter-spacing:0.08em;}
+    .trust-subtitle{font-size:13px;}
+  }
 
   /* LAYOUT */
   .container{max-width:1280px;margin:0 auto;padding:0 32px;}
@@ -227,7 +259,7 @@
 
     /* HERO */
     .hero{padding:36px 16px 48px;min-height:auto;}
-    .hero h1{font-size:26px;}
+    .hero h1{font-size:25px;margin-top:32px;margin-bottom:32px;letter-spacing:0.15em;}
     .hero p{font-size:14px;margin-bottom:24px;}
     .hero-tag{font-size:11px;padding:5px 12px;}
 
@@ -236,11 +268,6 @@
     .search-field{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px;min-width:unset;width:100%;}
     .search-field:last-of-type{border-bottom:none;}
     .search-btn{width:100%;border-radius:8px;justify-content:center;padding:13px;}
-
-    /* STATS */
-    .stats{gap:16px;padding:16px;}
-    .stat-num{font-size:20px;}
-    .stat-label{font-size:10px;}
 
     /* PROPERTIES */
     .container{padding:0 16px;}
@@ -282,7 +309,6 @@
   /* ===== SMALL MOBILE (max 400px) ===== */
   @media(max-width:400px){
     .hero h1{font-size:22px;}
-    .stats{grid-template-columns:1fr 1fr;display:grid;gap:12px;}
     .card-specs .spec{padding:0 4px;}
     .spec .material-icons{font-size:14px;}
     .spec strong{font-size:13px;}
@@ -357,24 +383,16 @@
     font-weight:600;color:#fff;line-height:1.2;margin-bottom:6px;
   }
   .bento-sub{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:14px;}
+  .bento-bottom{display:flex;align-items:center;gap:10px;}
   .bento-pill{
     display:inline-flex;align-items:center;justify-content:center;
-    width:36px;height:36px;border-radius:50%;
+    width:36px;height:36px;border-radius:50%;flex-shrink:0;
     background:rgba(255,255,255,0.18);
     backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);
     font-size:11px;font-weight:600;color:#fff;
     transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.2s;
   }
   .bento-card:hover .bento-pill{background:var(--accent);border-color:var(--accent);color:var(--primary);transform:scale(1.1);}
-  .bento-count{
-    position:absolute;top:16px;right:16px;
-    background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);
-    border:1px solid rgba(255,255,255,0.25);
-    color:#fff;font-size:11px;font-weight:700;
-    padding:3px 10px;border-radius:50px;
-    opacity:0;transition:opacity 0.3s;
-  }
-  .bento-card.has-props .bento-count{opacity:1;}
 
   /* Sin posición especial — todas en la misma fila */
   .bc-0,.bc-1,.bc-2,.bc-3,.bc-4{grid-row:1;}
@@ -523,9 +541,9 @@
   <div class="hero-slides" id="heroSlides"></div>
   <div class="hero-pattern"></div>
   <div class="hero-content">
-    <div class="hero-tag" id="heroTag">Bienvenido a Estela's Realty Services</div>
+    <div class="hero-tag" id="heroTag" style="display:none"></div>
     <h1 id="heroH1">Encuentra tu propiedad<br>ideal en Panamá</h1>
-    <p id="heroP">Propiedades en venta y alquiler en las mejores zonas de Panamá. Asesoría personalizada y servicios legales.</p>
+    <p id="heroP" style="display:none"></p>
     <div class="search-bar">
       <div class="search-field">
         <span class="material-icons">search</span>
@@ -556,12 +574,16 @@
   <div class="hero-dots" id="heroDots"></div>
 </section>
 
-<div class="stats">
-  <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label" id="statLabelTotal">Propiedades activas</div></div>
-  <div class="stat"><div class="stat-num" id="rentCount">—</div><div class="stat-label" id="statLabelRent">En alquiler</div></div>
-  <div class="stat"><div class="stat-num" id="saleCount">—</div><div class="stat-label" id="statLabelSale">En venta</div></div>
-  <div class="stat"><div class="stat-num">9</div><div class="stat-label" id="statLabelZones">Zonas disponibles</div></div>
+<div class="trust-band">
+  <div class="trust-inner">
+    <h2 class="trust-title">Somos el referente de confianza en el mercado inmobiliario panameño.</h2>
+    <p class="trust-subtitle">Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.</p>
+  </div>
 </div>
+<!-- Hidden stat elements kept for JS compatibility -->
+<span id="totalCount" style="display:none"></span>
+<span id="rentCount" style="display:none"></span>
+<span id="saleCount" style="display:none"></span>
 
 <!-- BENTO GRID — Categorías de ubicación -->
 <section id="bentoCats">
@@ -576,60 +598,65 @@
       <div class="bento-card bc-0" onclick="setBento(this,'Playa')" data-val="Playa">
         <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80')"></div>
         <div class="bento-overlay"></div>
-        <div class="bento-count" id="cnt-Playa"></div>
         <div class="bento-body">
           <div class="bento-tag">Playa</div>
           <div class="bento-title">Vive<br>frente al mar</div>
           <div class="bento-sub">Buenaventura · San Carlos · Coronado</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          <div class="bento-bottom">
+            <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          </div>
         </div>
       </div>
 
       <div class="bento-card bc-1" onclick="setBento(this,'Montaña / Campo')" data-val="Montaña / Campo">
         <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80')"></div>
         <div class="bento-overlay"></div>
-        <div class="bento-count" id="cnt-Montaña / Campo"></div>
         <div class="bento-body">
           <div class="bento-tag">Montaña · Campo</div>
           <div class="bento-title">Aire puro,<br>vistas infinitas</div>
           <div class="bento-sub">Boquete · Altos del María · El Valle</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          <div class="bento-bottom">
+            <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          </div>
         </div>
       </div>
 
       <div class="bento-card bc-2" onclick="setBento(this,'Ciudad')" data-val="Ciudad">
         <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80')"></div>
         <div class="bento-overlay"></div>
-        <div class="bento-count" id="cnt-Ciudad"></div>
         <div class="bento-body">
           <div class="bento-tag">Ciudad</div>
           <div class="bento-title">Todo a tu<br>alcance</div>
           <div class="bento-sub">Costa del Este · Ave. Balboa · San Francisco</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          <div class="bento-bottom">
+            <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          </div>
         </div>
       </div>
 
       <div class="bento-card bc-3" onclick="setBento(this,'Naturaleza / Eco')" data-val="Naturaleza / Eco">
         <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80')"></div>
         <div class="bento-overlay"></div>
-        <div class="bento-count" id="cnt-Naturaleza / Eco"></div>
         <div class="bento-body">
           <div class="bento-tag">Naturaleza · Eco</div>
           <div class="bento-title">Conecta con<br>la naturaleza</div>
           <div class="bento-sub">Fincas · Casas de campo · Entornos verdes</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          <div class="bento-bottom">
+            <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          </div>
         </div>
       </div>
 
       <div class="bento-card bc-4" onclick="setBento(this,'Resort / Vacacional')" data-val="Resort / Vacacional">
         <div class="bento-bg" style="background-image:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80')"></div>
         <div class="bento-overlay"></div>
-        <div class="bento-count" id="cnt-Resort / Vacacional"></div>
         <div class="bento-body">
           <div class="bento-tag">Resort · Vacacional</div>
           <div class="bento-title">Tu paraíso<br>de descanso</div>
           <div class="bento-sub">Resorts · Alquileres vacacionales · Exclusivos</div>
-          <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          <div class="bento-bottom">
+            <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+          </div>
         </div>
       </div>
 
@@ -856,12 +883,11 @@ function renderBento(bentoConfig) {
     <div class="bento-card bc-${i}" onclick="setBento(this,'${c.val}')" data-val="${c.val}">
       <div class="bento-bg" style="background-image:url('${c.img||''}')"></div>
       <div class="bento-overlay"></div>
-      <div class="bento-count"></div>
       <div class="bento-body">
         <div class="bento-tag">${c.tag||c.val}</div>
         <div class="bento-title">${(c.title||'').replace(/\n/g,'<br>')}</div>
         <div class="bento-sub">${c.sub||''}</div>
-        <div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div>
+        <div class="bento-bottom"><div class="bento-pill"><span class="material-icons" style="font-size:13px">arrow_forward</span></div></div>
       </div>
     </div>`).join('');
   // Re-inicializar scroll animations y conteos
@@ -987,15 +1013,10 @@ function setBento(el, val){
 }
 
 function updateCatCounts(){
-  // Funciona con tarjetas estáticas Y dinámicas — usa data-val
+  // has-props class mantenida para compatibilidad futura
   document.querySelectorAll('.bento-card[data-val]').forEach(card=>{
     const cat=card.dataset.val;
     const n=allProperties.filter(p=>(p.location_type||[]).includes(cat)).length;
-    // Buscar el elemento contador por ID generado con _ o el que exista dentro de la card
-    const el=card.querySelector('.bento-count');
-    if(el){
-      el.textContent=n>0?n+(n===1?' propiedad':' propiedades'):'';
-    }
     card.classList.toggle('has-props',n>0);
   });
 }
@@ -1244,9 +1265,9 @@ document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==
 // ============================================================
 const TI = {
   es:{
-    heroTag:"Bienvenido a Estela's Realty Services",
+    heroTag:'',
     heroH1:'Encuentra tu propiedad<br>ideal en Panamá',
-    heroP:'Propiedades en venta y alquiler en las mejores zonas de Panamá. Asesoría personalizada y servicios legales.',
+    heroP:'',
     searchLabel:'Buscar',searchPh:'Zona, título, código E24...',
     typeLabel:'Tipo',typeAll:'Todos',
     zoneLabel:'Zona',zoneAll:'Todas',
@@ -1284,9 +1305,9 @@ const TI = {
     ]
   },
   en:{
-    heroTag:"Welcome to Estela's Realty Services",
+    heroTag:'',
     heroH1:'Find your ideal property<br>in Panama',
-    heroP:'Properties for sale and rent in the best areas of Panama. Personalized advice and legal services.',
+    heroP:'',
     searchLabel:'Search',searchPh:'Zone, title, code E24...',
     typeLabel:'Type',typeAll:'All',
     zoneLabel:'Zone',zoneAll:'All',
@@ -1340,9 +1361,11 @@ function setLang(lang){
   if(tt) tt.textContent = t.waTooltip;
 
   // Hero
-  setEl('heroTag', t.heroTag);
+  const heroTagEl = document.getElementById('heroTag');
+  if(heroTagEl){ heroTagEl.textContent = t.heroTag; heroTagEl.style.display = t.heroTag ? '' : 'none'; }
   setInnerHTML('heroH1', t.heroH1);
-  setEl('heroP', t.heroP);
+  const heroPEl = document.getElementById('heroP');
+  if(heroPEl){ heroPEl.textContent = t.heroP; heroPEl.style.display = t.heroP ? '' : 'none'; }
 
   // Search bar labels
   setEl('searchLabel', t.searchLabel);
