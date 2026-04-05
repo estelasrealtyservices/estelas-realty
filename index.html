@@ -415,10 +415,10 @@
 
 /* SECCIÓN ALIADOS - GRIS ELEGANTE */
   .aliados-strip {
-    background: #D1D1D0; /* Gris suave que combina con tu paleta */
-    padding: 35px 0;
-    border-top: 1px solid #D1D1D0;
-    border-bottom: 1px solid #D1D1D0;
+    background: #EDEDEC;
+    padding: 32px 0;
+    border-top: 1px solid #D8D8D6;
+    border-bottom: 1px solid #D8D8D6;
   }
   .aliados-container {
     max-width: 1200px;
@@ -426,35 +426,56 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 22px;
     padding: 0 20px;
   }
   .aliados-title {
-    color: #1A1A2E; /* Azul oscuro de tu marca */
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
+    color: #1A1A2E;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.5;
     margin: 0;
   }
   .aliados-logos {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 32px;
     flex-wrap: wrap;
   }
-  .aliados-logos img {
-    height: 40px;
-    width: auto;
-    opacity: 0.7; /* Suaviza los logos para que no distraigan */
-    filter: grayscale(100%); /* Efecto blanco y negro opcional para máxima elegancia */
-    transition: all 0.3s ease;
+  .aliado-item {
+    display: flex;
+    align-items: center;
+    opacity: 0.55;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
   }
-  .aliados-logos img:hover {
+  .aliado-item:hover {
     opacity: 1;
-    filter: grayscale(0%); /* Vuelven a su color original al pasar el ratón */
-    transform: scale(1.05);
+    transform: scale(1.04);
+  }
+  .aliado-svg {
+    height: 42px;
+    width: auto;
+    filter: grayscale(30%);
+    transition: filter 0.3s ease;
+  }
+  .aliado-item:hover .aliado-svg {
+    filter: grayscale(0%);
+  }
+  .aliado-divider {
+    width: 1px;
+    height: 32px;
+    background: #C0C0BE;
+    flex-shrink: 0;
+  }
+  @media(max-width:640px){
+    .aliados-logos { gap: 20px; }
+    .aliado-svg { height: 34px; }
+    .aliado-divider { display: none; }
   }
 
 </style>
@@ -683,9 +704,43 @@
   <div class="aliados-container">
     <h3 class="aliados-title" id="mAliadosTitle">Nuestros Aliados</h3>
     <div class="aliados-logos">
-      <img src="https://www.acobir.com/images/logo.png" alt="ACOBIR">
-      <img src="https://capac.org/wp-content/uploads/2021/07/logo-capac.png" alt="CAPAC">
-      <img src="https://www.encuentra24.com/assets/images/e24-logo-white.svg" alt="Encuentra24">
+
+      <!-- ACOBIR -->
+      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="aliado-item" aria-label="ACOBIR">
+        <svg viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg" class="aliado-svg">
+          <rect x="0" y="8" width="32" height="32" rx="4" fill="#1A1A2E"/>
+          <text x="16" y="29" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#C9A84C">A</text>
+          <text x="44" y="22" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#1A1A2E" letter-spacing="2">ACOBIR</text>
+          <text x="44" y="36" font-family="Arial,sans-serif" font-size="8.5" fill="#555" letter-spacing="0.5">Asociación Corredores de Bienes</text>
+          <text x="44" y="46" font-family="Arial,sans-serif" font-size="8.5" fill="#555" letter-spacing="0.5">Raíces de Panamá</text>
+        </svg>
+      </a>
+
+      <div class="aliado-divider"></div>
+
+      <!-- CAPAC -->
+      <a href="https://capac.org" target="_blank" rel="noopener" class="aliado-item" aria-label="CAPAC">
+        <svg viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg" class="aliado-svg">
+          <polygon points="16,6 30,40 2,40" fill="#1A1A2E"/>
+          <text x="8" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#C9A84C">C</text>
+          <text x="40" y="22" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#1A1A2E" letter-spacing="2">CAPAC</text>
+          <text x="40" y="35" font-family="Arial,sans-serif" font-size="8.5" fill="#555" letter-spacing="0.3">Cámara Panameña de</text>
+          <text x="40" y="45" font-family="Arial,sans-serif" font-size="8.5" fill="#555" letter-spacing="0.3">la Construcción</text>
+        </svg>
+      </a>
+
+      <div class="aliado-divider"></div>
+
+      <!-- ENCUENTRA24 -->
+      <a href="https://www.encuentra24.com" target="_blank" rel="noopener" class="aliado-item" aria-label="Encuentra24">
+        <svg viewBox="0 0 180 48" xmlns="http://www.w3.org/2000/svg" class="aliado-svg">
+          <circle cx="20" cy="24" r="16" fill="#E8232A"/>
+          <text x="20" y="29" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="white">24</text>
+          <text x="46" y="28" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#1A1A2E">encuentra</text>
+          <text x="152" y="28" font-family="Arial,sans-serif" font-size="16" font-weight="900" fill="#E8232A">24</text>
+        </svg>
+      </a>
+
     </div>
   </div>
 </section>
