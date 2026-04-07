@@ -181,7 +181,54 @@
   .save-config-btn:hover{background:#2d2d4a;}
   .save-config-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
-  /* MODAL */
+  /* LEADS TAB */
+  .leads-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  .leads-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+  .leads-toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .sort-btn{display:flex;align-items:center;gap:4px;padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-family:inherit;color:var(--text2);cursor:pointer;transition:var(--transition);font-weight:500;}
+  .sort-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .sort-btn.active{border-color:var(--primary);color:var(--primary);background:rgba(26,26,46,0.05);}
+  .sort-btn .material-icons{font-size:14px;}
+  .sort-arrow{font-size:11px;margin-left:2px;opacity:0.7;}
+  .lead-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:var(--transition);animation:fadeIn 0.2s ease;}
+  .lead-card:hover{box-shadow:var(--shadow-hover);border-color:rgba(201,168,76,0.3);}
+  .lead-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px;}
+  .lead-avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#2d2d4a);color:white;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:'Playfair Display',serif;}
+  .lead-info{flex:1;}
+  .lead-name{font-size:16px;font-weight:600;color:var(--primary);}
+  .lead-date{font-size:12px;color:var(--text3);margin-top:2px;}
+  .lead-badge-new{background:rgba(46,125,50,0.12);color:#1B5E20;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;flex-shrink:0;}
+  .lead-contacts{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+  .lead-contact-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);}
+  .lead-contact-item .material-icons{font-size:16px;color:var(--accent);}
+  .lead-contact-item a{color:var(--text2);text-decoration:none;}
+  .lead-contact-item a:hover{color:var(--primary);text-decoration:underline;}
+  .lead-property-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:6px 12px;font-size:13px;color:#7a5c10;font-weight:500;margin-bottom:12px;}
+  .lead-property-chip .material-icons{font-size:15px;color:var(--accent);}
+  .lead-message{background:var(--surface2);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--text);line-height:1.6;border-left:3px solid var(--accent);}
+  .lead-message-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px;}
+  .lead-actions{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+  .btn-lead-wa{display:flex;align-items:center;gap:6px;padding:7px 16px;background:rgba(37,211,102,0.1);color:#1a7a3c;border:1px solid rgba(37,211,102,0.3);border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;transition:var(--transition);}
+  .btn-lead-wa:hover{background:rgba(37,211,102,0.2);}
+  .btn-lead-email{display:flex;align-items:center;gap:6px;padding:7px 16px;background:rgba(26,26,46,0.07);color:var(--primary);border:1px solid rgba(26,26,46,0.15);border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;transition:var(--transition);}
+  .btn-lead-email:hover{background:rgba(26,26,46,0.12);}
+  .btn-lead-del{display:flex;align-items:center;gap:4px;padding:7px 12px;background:none;color:#E53935;border:1px solid rgba(229,57,53,0.25);border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;transition:var(--transition);margin-left:auto;}
+  .btn-lead-del:hover{background:rgba(229,57,53,0.08);}
+  .leads-empty{text-align:center;padding:80px 20px;color:var(--text3);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+  .leads-empty .material-icons{font-size:52px;display:block;margin-bottom:12px;opacity:0.4;}
+  .leads-empty p{font-size:15px;}
+  .leads-empty span.sub{font-size:13px;display:block;margin-top:6px;opacity:0.7;}
+  .leads-loading{text-align:center;padding:60px;color:var(--text3);}
+
+  /* LEAD DETAIL MODAL */
+  .lead-modal-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
+  .lead-modal-overlay.open{display:flex;}
+  .lead-modal{background:var(--surface);border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:fadeIn 0.2s ease;}
+  .lead-modal-header{position:sticky;top:0;background:var(--surface);padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .lead-modal-body{padding:24px;}
+  .lead-modal-field{margin-bottom:16px;}
+  .lead-modal-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px;}
+  .lead-modal-value{font-size:15px;color:var(--text);}
   .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border-radius:16px;width:100%;max-width:900px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:fadeIn 0.2s ease;}
@@ -310,6 +357,10 @@
     <button class="admin-tab active" onclick="switchTab('properties',this)">
       <span class="material-icons">home_work</span>Propiedades
     </button>
+    <button class="admin-tab" onclick="switchTab('leads',this); loadLeads();">
+      <span class="material-icons">contact_mail</span>Clientes interesados
+      <span id="leadsTabBadge" style="display:none;background:#E53935;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px;line-height:1.4;">0</span>
+    </button>
     <button class="admin-tab" onclick="switchTab('site',this)">
       <span class="material-icons">web</span>Editar página principal
     </button>
@@ -384,6 +435,73 @@
           <div class="pagination-controls" id="paginationControls"></div>
         </div>
       </div>
+    </div>
+
+    <!-- TAB: LEADS / CLIENTES INTERESADOS -->
+    <div class="tab-panel" id="tab-leads">
+
+      <!-- STATS LEADS -->
+      <div class="leads-stats">
+        <div class="stat-card">
+          <div class="stat-icon gold"><span class="material-icons">groups</span></div>
+          <div class="stat-info"><div class="stat-num" id="leadStatTotal">—</div><div class="stat-label">Total leads</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><span class="material-icons">fiber_new</span></div>
+          <div class="stat-info"><div class="stat-num" id="leadStatNew">—</div><div class="stat-label">Esta semana</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><span class="material-icons">vpn_key</span></div>
+          <div class="stat-info"><div class="stat-num" id="leadStatRent">—</div><div class="stat-label">Interés en alquiler</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><span class="material-icons">sell</span></div>
+          <div class="stat-info"><div class="stat-num" id="leadStatSale">—</div><div class="stat-label">Interés en venta</div></div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR LEADS -->
+      <div class="leads-toolbar">
+        <div class="leads-toolbar-left">
+          <div class="search-wrap">
+            <span class="material-icons">search</span>
+            <input type="text" class="search-input" placeholder="Buscar nombre, correo, teléfono..." id="leadSearch" oninput="renderLeads()">
+          </div>
+          <select class="filter-sel" id="leadPropFilter" onchange="renderLeads()">
+            <option value="">Todas las propiedades</option>
+          </select>
+          <select class="filter-sel" id="leadDateFilter" onchange="renderLeads()">
+            <option value="">Cualquier fecha</option>
+            <option value="today">Hoy</option>
+            <option value="week">Esta semana</option>
+            <option value="month">Este mes</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:12px;color:var(--text3);">Ordenar:</span>
+          <button class="sort-btn active" id="sortDate" onclick="setLeadSort('date',this)">
+            <span class="material-icons">calendar_today</span>Fecha<span class="sort-arrow" id="sortDateArrow">↓</span>
+          </button>
+          <button class="sort-btn" id="sortName" onclick="setLeadSort('name',this)">
+            <span class="material-icons">person</span>Nombre<span class="sort-arrow" id="sortNameArrow"></span>
+          </button>
+          <button class="sort-btn" id="sortProp" onclick="setLeadSort('property',this)">
+            <span class="material-icons">home_work</span>Anuncio<span class="sort-arrow" id="sortPropArrow"></span>
+          </button>
+          <button onclick="exportLeadsCSV()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:none;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text2);cursor:pointer;font-family:inherit;transition:var(--transition);" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+            <span class="material-icons" style="font-size:16px">download</span>Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- LEADS LIST -->
+      <div id="leadsContainer">
+        <div class="leads-loading">
+          <span class="material-icons" style="animation:spin 1s linear infinite;font-size:32px;display:block;margin-bottom:12px;">sync</span>
+          Cargando clientes...
+        </div>
+      </div>
+
     </div>
 
     <!-- TAB: SITE EDITOR -->
@@ -562,11 +680,11 @@
             </select>
           </div>
           <div class="form-group"><label>Tipo</label><select id="fType" onchange="updateTypeFields()"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option><option>Galera</option><option>Terreno</option><option>Lote</option><option>Bodega</option></select></div>
-          <div class="form-group full"><label>Título</label><input type="text" id="fTitle" placeholder="Ej: Apartamento moderno en San Francisco"></div>
+          <div class="form-group full"><label>Título <span style="color:#E53935;">*</span></label><input type="text" id="fTitle" placeholder="Ej: Apartamento moderno en San Francisco"></div>
           <div class="form-group"><label>Zona</label>
             <select id="fZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select>
           </div>
-          <div class="form-group"><label>Precio (USD)</label><input type="number" id="fPrice" placeholder="1500"></div>
+          <div class="form-group"><label>Precio (USD) <span style="color:#E53935;">*</span></label><input type="number" id="fPrice" placeholder="1500"></div>
           <div class="form-group" style="align-self:flex-end;padding-bottom:2px;">
             <div id="pricePeriodShow" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;background:rgba(201,168,76,0.1);color:#7a5c10;">
               <span class="material-icons" style="font-size:16px">schedule</span>
@@ -612,7 +730,7 @@
       <div class="modal-section">
         <div class="modal-section-title">Descripción</div>
         <div class="form-group">
-          <label style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px">🇵🇦</span> Español</label>
+          <label style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px">🇵🇦</span> Español <span style="color:#E53935;">*</span></label>
           <textarea id="fDesc" placeholder="Describe la propiedad en español..."></textarea>
         </div>
         <div class="form-group" style="margin-top:12px;">
@@ -747,14 +865,18 @@
           Información del propietario
           <span style="font-size:10px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;">SOLO VISIBLE EN ADMIN</span>
         </div>
-        <div class="form-grid">
+        <div class="form-grid-3">
           <div class="form-group">
-            <label>Nombre del propietario</label>
+            <label>Nombre del propietario <span style="color:#E53935;">*</span></label>
             <input type="text" id="fOwnerName" placeholder="Ej: Juan Pérez">
           </div>
           <div class="form-group">
             <label>Contacto del propietario</label>
             <input type="text" id="fOwnerContact" placeholder="Ej: +507 6000-0000 / email">
+          </div>
+          <div class="form-group">
+            <label>Unidad / Apto</label>
+            <input type="text" id="fOwnerUnit" placeholder="Ej: Apto 12-B, Casa 4">
           </div>
         </div>
       </div>
@@ -848,6 +970,20 @@
   </div>
 </div>
 
+<!-- LEAD DETAIL MODAL -->
+<div class="lead-modal-overlay" id="leadModal">
+  <div class="lead-modal">
+    <div class="lead-modal-header">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--primary);">Detalle del cliente</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;" id="leadModalDate"></div>
+      </div>
+      <button class="modal-close" onclick="closeLeadModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="lead-modal-body" id="leadModalBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
 <script>
@@ -923,9 +1059,285 @@ function switchTab(name, btn){
   document.getElementById('tab-'+name).classList.add('active');
 }
 
+// ---- LEADS ----
+let allLeads = [];
+let leadsLoaded = false;
+let leadSortField = 'date';
+let leadSortDir = 'desc'; // desc = más reciente primero
+
+async function loadLeads(){
+  if(leadsLoaded) { renderLeads(); return; }
+  document.getElementById('leadsContainer').innerHTML = `<div class="leads-loading"><span class="material-icons" style="animation:spin 1s linear infinite;font-size:32px;display:block;margin-bottom:12px;">sync</span>Cargando clientes...</div>`;
+  try{
+    const { data, error } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+    if(error) throw error;
+    allLeads = data || [];
+    leadsLoaded = true;
+    updateLeadStats();
+    populateLeadPropFilter();
+    updateLeadsTabBadge();
+    renderLeads();
+  } catch(e){
+    // Tabla puede no existir aún → mostrar instrucción
+    document.getElementById('leadsContainer').innerHTML = `
+      <div class="leads-empty">
+        <span class="material-icons">info</span>
+        <p>La tabla <strong>leads</strong> no existe todavía en Supabase.</p>
+        <span class="sub">Crea la tabla con las columnas indicadas en el resumen ejecutivo y los leads del formulario de contacto del index aparecerán aquí automáticamente.</span>
+        <div style="margin-top:20px;background:var(--surface2);border-radius:10px;padding:16px 20px;text-align:left;max-width:500px;margin-left:auto;margin-right:auto;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;">SQL para crear la tabla:</div>
+          <pre style="font-size:12px;color:var(--text);white-space:pre-wrap;line-height:1.7;">CREATE TABLE leads (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  phone text,
+  email text,
+  property_id uuid REFERENCES properties(id) ON DELETE SET NULL,
+  property_title text,
+  property_code text,
+  operation text,
+  message text,
+  created_at timestamptz DEFAULT now()
+);
+
+-- RLS: solo lectura para el admin autenticado
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admin can read leads" ON leads
+  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Anyone can insert lead" ON leads
+  FOR INSERT WITH CHECK (true);</pre>
+        </div>
+      </div>`;
+  }
+}
+
+function updateLeadStats(){
+  const total = allLeads.length;
+  const now = new Date();
+  const weekAgo = new Date(now - 7*24*60*60*1000);
+  const thisWeek = allLeads.filter(l => new Date(l.created_at) > weekAgo).length;
+  const rentOps = ['Alquiler','Alquiler vacacional'];
+  const rent = allLeads.filter(l => rentOps.includes(l.operation)).length;
+  const sale = allLeads.filter(l => l.operation === 'Venta').length;
+  document.getElementById('leadStatTotal').textContent = total;
+  document.getElementById('leadStatNew').textContent = thisWeek;
+  document.getElementById('leadStatRent').textContent = rent;
+  document.getElementById('leadStatSale').textContent = sale;
+}
+
+function updateLeadsTabBadge(){
+  const badge = document.getElementById('leadsTabBadge');
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000);
+  const count = allLeads.filter(l => new Date(l.created_at) > weekAgo).length;
+  if(count > 0){
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function populateLeadPropFilter(){
+  const sel = document.getElementById('leadPropFilter');
+  const seen = new Set();
+  const opts = ['<option value="">Todas las propiedades</option>'];
+  allLeads.forEach(l => {
+    const key = l.property_code || l.property_title;
+    if(key && !seen.has(key)){
+      seen.add(key);
+      const label = [l.property_code, l.property_title].filter(Boolean).join(' · ');
+      opts.push(`<option value="${key}">${label}</option>`);
+    }
+  });
+  sel.innerHTML = opts.join('');
+}
+
+function setLeadSort(field, btn){
+  if(leadSortField === field){
+    leadSortDir = leadSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    leadSortField = field;
+    leadSortDir = field === 'date' ? 'desc' : 'asc';
+  }
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update arrows
+  ['Date','Name','Prop'].forEach(f => {
+    const el = document.getElementById('sort'+f+'Arrow');
+    if(el) el.textContent = '';
+  });
+  const arrowMap = { date:'Date', name:'Name', property:'Prop' };
+  const arrowEl = document.getElementById('sort'+arrowMap[field]+'Arrow');
+  if(arrowEl) arrowEl.textContent = leadSortDir === 'asc' ? '↑' : '↓';
+  renderLeads();
+}
+
+function getFilteredLeads(){
+  const q = (document.getElementById('leadSearch')?.value || '').toLowerCase().trim();
+  const propFilter = document.getElementById('leadPropFilter')?.value || '';
+  const dateFilter = document.getElementById('leadDateFilter')?.value || '';
+  const now = new Date();
+
+  let list = allLeads.filter(l => {
+    if(q){
+      const hay = [l.name, l.email, l.phone, l.property_title, l.property_code, l.message].filter(Boolean).join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    if(propFilter){
+      if(l.property_code !== propFilter && l.property_title !== propFilter) return false;
+    }
+    if(dateFilter){
+      const d = new Date(l.created_at);
+      if(dateFilter === 'today'){
+        if(d.toDateString() !== now.toDateString()) return false;
+      } else if(dateFilter === 'week'){
+        if(now - d > 7*24*60*60*1000) return false;
+      } else if(dateFilter === 'month'){
+        if(d.getMonth() !== now.getMonth() || d.getFullYear() !== now.getFullYear()) return false;
+      }
+    }
+    return true;
+  });
+
+  list.sort((a,b) => {
+    let va, vb;
+    if(leadSortField === 'date'){
+      va = new Date(a.created_at).getTime();
+      vb = new Date(b.created_at).getTime();
+    } else if(leadSortField === 'name'){
+      va = (a.name||'').toLowerCase();
+      vb = (b.name||'').toLowerCase();
+    } else if(leadSortField === 'property'){
+      va = (a.property_title||a.property_code||'').toLowerCase();
+      vb = (b.property_title||b.property_code||'').toLowerCase();
+    }
+    if(va < vb) return leadSortDir === 'asc' ? -1 : 1;
+    if(va > vb) return leadSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return list;
+}
+
+function renderLeads(){
+  const list = getFilteredLeads();
+  const container = document.getElementById('leadsContainer');
+  if(!list.length){
+    container.innerHTML = `<div class="leads-empty"><span class="material-icons">inbox</span><p>No hay clientes que coincidan con los filtros.</p><span class="sub">Prueba cambiando los filtros de búsqueda.</span></div>`;
+    return;
+  }
+
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000);
+
+  container.innerHTML = list.map(l => {
+    const isNew = new Date(l.created_at) > weekAgo;
+    const initials = (l.name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const dateStr = formatLeadDate(l.created_at);
+    const waPhone = (l.phone||'').replace(/\D/g,'');
+    const waMsg = encodeURIComponent(`Hola ${l.name}, vi tu mensaje sobre la propiedad "${l.property_title||''}" y me comunico para darte más información.`);
+
+    return `<div class="lead-card" id="lead-${l.id}">
+      <div class="lead-card-header">
+        <div style="display:flex;align-items:center;gap:14px;flex:1;">
+          <div class="lead-avatar">${initials}</div>
+          <div class="lead-info">
+            <div class="lead-name">${esc(l.name||'Sin nombre')}</div>
+            <div class="lead-date">${dateStr}</div>
+          </div>
+        </div>
+        ${isNew ? '<span class="lead-badge-new">NUEVO</span>' : ''}
+      </div>
+
+      <div class="lead-contacts">
+        ${l.phone ? `<div class="lead-contact-item"><span class="material-icons">phone</span><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a></div>` : ''}
+        ${l.email ? `<div class="lead-contact-item"><span class="material-icons">email</span><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></div>` : ''}
+      </div>
+
+      ${(l.property_title||l.property_code) ? `
+      <div>
+        <div class="lead-property-chip">
+          <span class="material-icons">home_work</span>
+          ${l.property_code ? `<strong>${esc(l.property_code)}</strong> · ` : ''}${esc(l.property_title||'')}
+          ${l.operation ? `<span style="margin-left:6px;background:rgba(201,168,76,0.2);padding:2px 8px;border-radius:6px;font-size:11px;">${esc(l.operation)}</span>` : ''}
+        </div>
+      </div>` : ''}
+
+      ${l.message ? `
+      <div>
+        <div class="lead-message-label">Mensaje</div>
+        <div class="lead-message">${esc(l.message)}</div>
+      </div>` : ''}
+
+      <div class="lead-actions">
+        ${waPhone ? `<a class="btn-lead-wa" href="https://wa.me/${waPhone}?text=${waMsg}" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp</a>` : ''}
+        ${l.email ? `<a class="btn-lead-email" href="mailto:${esc(l.email)}?subject=Re: ${esc(l.property_title||'Propiedad')}" target="_blank"><span class="material-icons" style="font-size:16px;">email</span>Correo</a>` : ''}
+        <button class="btn-lead-del" onclick="deleteLead('${l.id}')"><span class="material-icons" style="font-size:15px;">delete_outline</span>Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function formatLeadDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now - d;
+  const mins = Math.floor(diff/60000);
+  const hours = Math.floor(diff/3600000);
+  const days = Math.floor(diff/86400000);
+  if(mins < 1) return 'Hace un momento';
+  if(mins < 60) return `Hace ${mins} min`;
+  if(hours < 24) return `Hace ${hours}h`;
+  if(days === 1) return 'Ayer · ' + d.toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('es-PA',{day:'numeric',month:'short',year:'numeric'}) + ' · ' + d.toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'});
+}
+
+async function deleteLead(id){
+  if(!confirm('¿Eliminar este lead? Esta acción no se puede deshacer.')) return;
+  const { error } = await sb.from('leads').delete().eq('id', id);
+  if(error){ showToast('Error al eliminar: ' + error.message, true); return; }
+  allLeads = allLeads.filter(l => l.id !== id);
+  updateLeadStats();
+  updateLeadsTabBadge();
+  renderLeads();
+  showToast('Lead eliminado correctamente.');
+}
+
+function closeLeadModal(){ document.getElementById('leadModal').classList.remove('open'); }
+
+function exportLeadsCSV(){
+  const list = getFilteredLeads();
+  if(!list.length){ showToast('No hay leads para exportar.', true); return; }
+  const headers = ['Nombre','Teléfono','Correo','Propiedad','Código','Operación','Mensaje','Fecha'];
+  const rows = list.map(l => [
+    l.name||'', l.phone||'', l.email||'',
+    l.property_title||'', l.property_code||'', l.operation||'',
+    (l.message||'').replace(/\n/g,' '),
+    l.created_at ? new Date(l.created_at).toLocaleString('es-PA') : ''
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\ufeff'+csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = `leads_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast(`${list.length} leads exportados a CSV.`);
+}
+
+// Cargar badge de leads al iniciar (si tabla existe)
+async function preloadLeadsBadge(){
+  try {
+    const { data } = await sb.from('leads').select('id,created_at').order('created_at', { ascending: false });
+    if(data && data.length){
+      allLeads = data;
+      updateLeadsTabBadge();
+    }
+  } catch(e){}
+}
+
 // ---- LOAD ALL ----
 async function loadAll(){
-  await Promise.all([loadProperties(), loadSiteConfig()]);
+  await Promise.all([loadProperties(), loadSiteConfig(), preloadLeadsBadge()]);
 }
 
 // ---- SITE CONFIG ----
@@ -1504,6 +1916,7 @@ function openModal(id=null){
     document.getElementById('fUrgente').checked=(p.tags||[]).includes('Urgente');
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
+    document.getElementById('fOwnerUnit').value=p.owner_unit||'';
     document.getElementById('fE24Code').value=p.encuentra24_code||'';
     document.getElementById('fLatitude').value=p.latitude||'';
     document.getElementById('fLongitude').value=p.longitude||'';
@@ -1524,7 +1937,7 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fOwnerUnit','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fTitulado').value='';
     document.getElementById('fLatitude').value='';
     document.getElementById('fLongitude').value='';
@@ -1547,7 +1960,13 @@ function openModal(id=null){
   ),300);
 }
 
-function closeModal(){document.getElementById('propModal').classList.remove('open');}
+function closeModal(){
+  document.getElementById('propModal').classList.remove('open');
+  ['fTitle','fPrice','fDesc','fOwnerName'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.borderColor='';el.style.boxShadow='';}
+  });
+}
 function toggleFeature(btn){btn.classList.toggle('selected');}
 
 // ---- PHOTO MANAGER (drag & drop + captions) ----
@@ -1653,8 +2072,40 @@ function addPhotos(input){
 }
 
 async function saveProperty(){
+  // --- VALIDACIÓN DE CAMPOS REQUERIDOS ---
   const title=document.getElementById('fTitle').value.trim();
-  if(!title){showToast('Por favor ingresa el título.',true);return;}
+  const price=document.getElementById('fPrice').value.trim();
+  const desc=document.getElementById('fDesc').value.trim();
+  const ownerName=document.getElementById('fOwnerName').value.trim();
+
+  // Limpiar highlights previos
+  ['fTitle','fPrice','fDesc','fOwnerName'].forEach(id=>{
+    document.getElementById(id).style.borderColor='';
+    document.getElementById(id).style.boxShadow='';
+  });
+
+  const missing=[];
+  if(!title){missing.push('fTitle');missing.push('Título');}
+  if(!price||parseFloat(price)<=0){missing.push('fPrice');missing.push('Precio');}
+  if(!desc){missing.push('fDesc');missing.push('Descripción en español');}
+  if(!ownerName){missing.push('fOwnerName');missing.push('Nombre del propietario');}
+
+  // Extraer solo IDs y labels por separado
+  const missingIds=[];const missingLabels=[];
+  for(let i=0;i<missing.length;i+=2){missingIds.push(missing[i]);missingLabels.push(missing[i+1]);}
+
+  if(missingIds.length){
+    missingIds.forEach(id=>{
+      const el=document.getElementById(id);
+      el.style.borderColor='#E53935';
+      el.style.boxShadow='0 0 0 3px rgba(229,57,53,0.15)';
+      el.focus();
+    });
+    // Scroll al primer campo faltante
+    document.getElementById(missingIds[0]).scrollIntoView({behavior:'smooth',block:'center'});
+    showToast('Completa los campos obligatorios: '+missingLabels.join(', ')+'.',true);
+    return;
+  }
   const btn=document.getElementById('saveBtn');
   btn.disabled=true;btn.innerHTML='<span class="material-icons" style="font-size:18px;animation:spin 1s linear infinite">sync</span>Guardando...';
   const editingId=document.getElementById('editingId').value;
@@ -1715,6 +2166,7 @@ async function saveProperty(){
     ].filter(Boolean),
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
     owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
+    owner_unit:document.getElementById('fOwnerUnit').value.trim()||null,
     encuentra24_code:document.getElementById('fE24Code').value.trim()||null,
     latitude:parseFloat(document.getElementById('fLatitude').value)||null,
     longitude:parseFloat(document.getElementById('fLongitude').value)||null
@@ -1891,6 +2343,7 @@ function showToast(msg,isError=false){
 }
 
 document.getElementById('propModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('leadModal').addEventListener('click',function(e){if(e.target===this)closeLeadModal();});
 </script>
 </body>
 </html>

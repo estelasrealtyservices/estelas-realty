@@ -158,8 +158,8 @@
   .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
   .service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
   .service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
-  .svc-icon{width:44px;height:44px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-  .svc-icon .material-icons{font-size:22px;color:var(--accent);}
+  .svc-icon{width:40px;height:40px;border-radius:10px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .svc-icon .material-icons{font-size:20px;color:var(--accent);}
   .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
   .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
   @media(max-width:768px){
@@ -436,65 +436,87 @@
   .wa-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,0.6);}
   .wa-float-btn svg{width:30px;height:30px;fill:white;}
 
-/* SECCIÓN ALIADOS - GRIS ELEGANTE */
-  .aliados-strip {
+/* SECCIÓN ALIADOS — MARQUEE CONTENIDA */
+  .marquee-strip {
     background: #EDEDEC;
-    padding: 64px 0;
     border-top: 1px solid #D8D8D6;
     border-bottom: 1px solid #D8D8D6;
+    padding: 32px 0;
+    position: relative;
   }
-  .aliados-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 36px;
-    padding: 0 20px;
-  }
-  .aliados-title {
-    color: #1A1A2E;
+  .marquee-label {
+    text-align: center;
     font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    opacity: 0.45;
-    margin: 0;
+    color: #1A1A2E;
+    opacity: 0.35;
+    margin-bottom: 22px;
   }
-  .aliados-logos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 64px;
-    flex-wrap: wrap;
+  /* Ventana contenida — no ancho completo */
+  .marquee-window {
+    max-width: 680px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
   }
-  .aliado-item {
+  .marquee-window::before,
+  .marquee-window::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .marquee-window::before { left: 0;  background: linear-gradient(to right, #EDEDEC, transparent); }
+  .marquee-window::after  { right: 0; background: linear-gradient(to left,  #EDEDEC, transparent); }
+  .marquee-track {
     display: flex;
     align-items: center;
-    opacity: 0.75;
+    width: max-content;
+    animation: marquee-scroll 14s linear infinite;
+    will-change: transform;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    opacity: 0.65;
     transition: opacity 0.3s ease, transform 0.3s ease;
     text-decoration: none;
+    flex-shrink: 0;
   }
-  .aliado-item:hover { opacity: 1; transform: scale(1.05); }
-  .aliado-svg {
-    height: 90px;
+  .marquee-item:hover { opacity: 1; transform: scale(1.06); }
+  .marquee-logo {
+    height: 52px;
     width: auto;
-    max-width: 240px;
+    max-width: 160px;
     object-fit: contain;
     filter: grayscale(20%);
     transition: filter 0.3s ease;
+    display: block;
   }
-  .aliado-item:hover .aliado-svg { filter: grayscale(0%); }
-  .aliado-divider {
-    width: 1px; height: 50px;
-    background: #C0C0BE; flex-shrink: 0;
+  .marquee-item:hover .marquee-logo { filter: grayscale(0%); }
+  .marquee-sep {
+    width: 1px; height: 32px;
+    background: #C4C4C2;
+    flex-shrink: 0; opacity: 0.55;
   }
-  @media(max-width:640px){
-    .aliados-strip { padding: 48px 0; }
-    .aliados-logos { gap: 36px; }
-    .aliado-svg { height: 64px; max-width: 160px; }
-    .aliado-divider { display: none; }
+  @media (max-width: 720px) {
+    .marquee-window { max-width: 92vw; }
+    .marquee-window::before,
+    .marquee-window::after { width: 44px; }
+    .marquee-logo { height: 38px; }
+    .marquee-item { padding: 0 28px; }
+    .marquee-track { animation-duration: 10s; }
   }
 
 </style>
@@ -734,21 +756,20 @@
   </div>
 </section>
 
-<section class="aliados-strip">
-  <div class="aliados-container">
-    <h3 class="aliados-title" id="mAliadosTitle">Nuestros Aliados</h3>
-    <div class="aliados-logos">
-      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="aliado-item" aria-label="ACOBIR">
-        <img src="acobir.png" alt="ACOBIR" class="aliado-svg">
-      </a>
-      <div class="aliado-divider"></div>
-      <a href="https://capac.org" target="_blank" rel="noopener" class="aliado-item" aria-label="CAPAC">
-        <img src="capac.png" alt="CAPAC" class="aliado-svg">
-      </a>
-      <div class="aliado-divider"></div>
-      <a href="https://www.encuentra24.com" target="_blank" rel="noopener" class="aliado-item" aria-label="Encuentra24">
-        <img src="encuentra24.svg" alt="Encuentra24" class="aliado-svg">
-      </a>
+<section class="marquee-strip" aria-label="Nuestros Aliados">
+  <p class="marquee-label" id="mAliadosTitle">Nuestros Aliados</p>
+  <div class="marquee-window">
+    <div class="marquee-track">
+      <!-- SET 1 — 2 logos únicos -->
+      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-label="ACOBIR"><img src="acobir.png" alt="ACOBIR" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-label="CAPAC"><img src="capac.png" alt="CAPAC" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <!-- SET 2 — duplicado para loop sin corte -->
+      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="acobir.png" alt="" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="capac.png" alt="" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
     </div>
   </div>
 </section>
@@ -1071,12 +1092,14 @@ function renderProperties(list){
   empty.style.display='none';
   const t=TI[currentLang];
   grid.innerHTML=list.map(p=>{
+    // Usa thumbnail (300-400px) para tarjeta; fallback a imagen completa si no hay thumbs
+    const thumb = p.image_thumbs?.[0] || p.images?.[0] || PH;
     const opClass=p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale';
     const period=getPeriodLabel(p.operation);
     return `
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
-        <img src="${p.images?.[0]||PH}" alt="${p.title}" loading="lazy" onerror="this.src='${PH}'">
+        <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img" onerror="this.src='${PH}'">
         <div class="card-badge ${opClass}">${getOpLabel(p.operation)}</div>
         ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
@@ -1098,6 +1121,8 @@ function renderProperties(list){
       </div>
     </div>`;
   }).join('');
+  // Activar lazy loading con IntersectionObserver
+  initLazyImages();
 }
 
 function openDetail(id){
@@ -1105,7 +1130,8 @@ function openDetail(id){
   if(!p) return;
   document.getElementById('detailCode').textContent=p.code;
   document.getElementById('detailTitle').textContent=p.title;
-  const imgs=p.images?.length?p.images:[PH];
+  // Usa images[] (full) para el modal; fallback a image_thumbs si no hay full
+  const imgs=(p.images?.length ? p.images : p.image_thumbs?.length ? p.image_thumbs : [PH]);
   document.getElementById('detailBody').innerHTML=`
     <div class="detail-gallery">
       <div class="detail-main"><img src="${imgs[0]}" alt="${p.title}"></div>
@@ -1477,6 +1503,26 @@ function getPeriodLabel(op){
   return '';
 }
 
+
+// ---- LAZY LOADING con IntersectionObserver ----
+let lazyObserver = null;
+function initLazyImages(){
+  const imgs = document.querySelectorAll('img.lazy-img[data-src]');
+  if(!imgs.length) return;
+  if(!lazyObserver){
+    lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          const img = e.target;
+          img.src = img.dataset.src;
+          img.classList.remove('lazy-img');
+          lazyObserver.unobserve(img);
+        }
+      });
+    }, { rootMargin: '120px' });
+  }
+  imgs.forEach(img => lazyObserver.observe(img));
+}
 
 // detect lang
 (function(){const saved=localStorage.getItem('ers_lang');const browser=navigator.language?.startsWith('en')?'en':'es';const lang=saved||browser;currentLang=lang;})();
