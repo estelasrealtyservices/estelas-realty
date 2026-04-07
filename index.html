@@ -158,8 +158,17 @@
   .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
   .service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
   .service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
+  .svc-icon{width:44px;height:44px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .svc-icon .material-icons{font-size:22px;color:var(--accent);}
   .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
   .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+  @media(max-width:768px){
+    .services-grid{grid-template-columns:1fr 1fr;gap:14px;}
+    .service-card{padding:20px 18px;}
+  }
+  @media(max-width:480px){
+    .services-grid{grid-template-columns:1fr;}
+  }
 
   /* MODAL */
   .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
@@ -280,10 +289,6 @@
 
     /* ZONES */
     .zones-grid{grid-template-columns:1fr;gap:12px;}
-
-    /* SERVICES */
-    .services-grid{grid-template-columns:1fr;gap:14px;}
-    .service-card{padding:20px 18px;}
 
     /* CONTACT SECTION */
     #contacto > div{grid-template-columns:1fr!important;gap:32px;}
@@ -434,7 +439,7 @@
 /* SECCIÓN ALIADOS - GRIS ELEGANTE */
   .aliados-strip {
     background: #EDEDEC;
-    padding: 36px 0;
+    padding: 64px 0;
     border-top: 1px solid #D8D8D6;
     border-bottom: 1px solid #D8D8D6;
   }
@@ -444,7 +449,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 22px;
+    gap: 36px;
     padding: 0 20px;
   }
   .aliados-title {
@@ -461,7 +466,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 48px;
+    gap: 64px;
     flex-wrap: wrap;
   }
   .aliado-item {
@@ -473,21 +478,22 @@
   }
   .aliado-item:hover { opacity: 1; transform: scale(1.05); }
   .aliado-svg {
-    height: 70px;
+    height: 90px;
     width: auto;
-    max-width: 200px;
+    max-width: 240px;
     object-fit: contain;
     filter: grayscale(20%);
     transition: filter 0.3s ease;
   }
   .aliado-item:hover .aliado-svg { filter: grayscale(0%); }
   .aliado-divider {
-    width: 1px; height: 40px;
+    width: 1px; height: 50px;
     background: #C0C0BE; flex-shrink: 0;
   }
   @media(max-width:640px){
-    .aliados-logos { gap: 28px; }
-    .aliado-svg { height: 52px; max-width: 140px; }
+    .aliados-strip { padding: 48px 0; }
+    .aliados-logos { gap: 36px; }
+    .aliado-svg { height: 64px; max-width: 160px; }
     .aliado-divider { display: none; }
   }
 
@@ -666,7 +672,7 @@
 
 <div class="container">
   <section class="section" id="propiedades">
-    <div class="section-header"><div class="section-title" id="sectionPropsTitle">Propiedades disponibles</div></div>
+    <div class="section-header"><div class="section-title" id="sectionPropsTitle">Explora nuestros anuncios inmobiliarios</div></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
       <div class="tabs">
         <button class="tab active" onclick="setTab(this,'')">Todos</button>
@@ -709,18 +715,24 @@
     </div>
   </section>
 
-  <section class="section" id="servicios">
-    <div class="section-header"><div class="section-title" id="sectionServicesTitle">Otros servicios</div></div>
-    <div class="services-grid" id="servicesGrid">
-      <div class="service-card"><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
-      <div class="service-card"><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
-      <div class="service-card"><h3>Servicios de abogados</h3><p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p></div>
-      <div class="service-card"><h3>Administración de propiedades</h3><p>Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.</p></div>
-      <div class="service-card"><h3>Avalúos y tasaciones</h3><p>Valuación profesional de propiedades residenciales y comerciales.</p></div>
-      <div class="service-card"><h3>Asesoría personalizada</h3><p>Te acompañamos en todo el proceso. Atención en español e inglés.</p></div>
-    </div>
   </section>
 </div>
+
+<section id="servicios">
+  <div class="container">
+    <div class="section" style="padding-top:56px;padding-bottom:56px;">
+      <div class="section-header"><div class="section-title" id="sectionServicesTitle">Otros servicios</div></div>
+      <div class="services-grid" id="servicesGrid">
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">gavel</span></div><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">flight_land</span></div><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">account_balance</span></div><h3>Servicios de abogados</h3><p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p></div>
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">manage_accounts</span></div><h3>Administración de propiedades</h3><p>Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.</p></div>
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">request_quote</span></div><h3>Avalúos y tasaciones</h3><p>Valuación profesional de propiedades residenciales y comerciales.</p></div>
+        <div class="service-card"><div class="svc-icon"><span class="material-icons">support_agent</span></div><h3>Asesoría personalizada</h3><p>Te acompañamos en todo el proceso. Atención en español e inglés.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="aliados-strip">
   <div class="aliados-container">
@@ -1276,7 +1288,7 @@ const TI = {
     tabAll:'Todos',tabRent:'Alquiler',tabVac:'Vacacional',tabSale:'Venta',
     priceFilter:'Precio',roomsFilter:'Habitaciones',orderFilter:'Ordenar',
     orderAsc:'Menor precio',orderDesc:'Mayor precio',orderNew:'Más reciente',
-    sectionProps:'Propiedades disponibles',sectionZones:'Explorar por zona',sectionServices:'Otros servicios',
+    sectionProps:'Explora nuestros anuncios inmobiliarios',sectionZones:'Explorar por zona',sectionServices:'Otros servicios',
     emptyMsg:'No se encontraron propiedades con esos criterios.',emptyBtn:'Ver todas',
     contactTitle:'Contáctanos',contactH2:'¿Listo para encontrar<br>tu propiedad ideal?',
     contactP:'Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.',
@@ -1316,7 +1328,7 @@ const TI = {
     tabAll:'All',tabRent:'Rent',tabVac:'Vacation',tabSale:'Sale',
     priceFilter:'Price',roomsFilter:'Bedrooms',orderFilter:'Sort',
     orderAsc:'Lowest price',orderDesc:'Highest price',orderNew:'Newest',
-    sectionProps:'Available properties',sectionZones:'Explore by zone',sectionServices:'Other services',
+    sectionProps:'Explore our real estate listings',sectionZones:'Explore by zone',sectionServices:'Other services',
     emptyMsg:'No properties found with those criteria.',emptyBtn:'View all',
     contactTitle:'Contact us',contactH2:'Ready to find<br>your ideal property?',
     contactP:'Our team is available to help you find the perfect property.',
@@ -1420,7 +1432,10 @@ function setLang(lang){
   const svc = document.getElementById('servicesGrid');
   if(svc) {
     svc.innerHTML = t.services.map(s=>`
-      <div class="service-card"><h3>${s.title}</h3><p>${s.desc}</p></div>
+      <div class="service-card">
+        <div class="svc-icon"><span class="material-icons">${s.icon}</span></div>
+        <h3>${s.title}</h3><p>${s.desc}</p>
+      </div>
     `).join('');
   }
 
