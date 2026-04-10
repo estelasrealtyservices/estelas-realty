@@ -760,15 +760,23 @@
   <p class="marquee-label" id="mAliadosTitle">Nuestros Aliados</p>
   <div class="marquee-window">
     <div class="marquee-track">
-      <!-- SET 1 — 2 logos únicos -->
-      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-label="ACOBIR"><img src="acobir.png" alt="ACOBIR" class="marquee-logo"></a>
+      <!-- SET 1 — 4 logos únicos -->
+      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-label="ACOBIR"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/acobir.png" alt="ACOBIR" class="marquee-logo"></a>
       <div class="marquee-sep" aria-hidden="true"></div>
-      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-label="CAPAC"><img src="capac.png" alt="CAPAC" class="marquee-logo"></a>
+      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-label="CAPAC"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/capac.png" alt="CAPAC" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="https://www.encuentra24.com" target="_blank" rel="noopener" class="marquee-item" aria-label="Encuentra24"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/encuentra24.svg" alt="Encuentra24" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="#" class="marquee-item" aria-label="CILA"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/CILA.png" alt="CILA" class="marquee-logo"></a>
       <div class="marquee-sep" aria-hidden="true"></div>
       <!-- SET 2 — duplicado para loop sin corte -->
-      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="acobir.png" alt="" class="marquee-logo"></a>
+      <a href="https://www.acobir.com" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/acobir.png" alt="" class="marquee-logo"></a>
       <div class="marquee-sep" aria-hidden="true"></div>
-      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="capac.png" alt="" class="marquee-logo"></a>
+      <a href="https://capac.org" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/capac.png" alt="" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="https://www.encuentra24.com" target="_blank" rel="noopener" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/encuentra24.svg" alt="" class="marquee-logo"></a>
+      <div class="marquee-sep" aria-hidden="true"></div>
+      <a href="#" class="marquee-item" aria-hidden="true" tabindex="-1"><img src="https://raw.githubusercontent.com/estelasrealtyservices/estelas-realty/main/CILA.png" alt="" class="marquee-logo"></a>
       <div class="marquee-sep" aria-hidden="true"></div>
     </div>
   </div>
@@ -1099,7 +1107,7 @@ function renderProperties(list){
     return `
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
-        <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img" onerror="this.src='${PH}'">
+        <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img">
         <div class="card-badge ${opClass}">${getOpLabel(p.operation)}</div>
         ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
@@ -1514,12 +1522,15 @@ function initLazyImages(){
       entries.forEach(e => {
         if(e.isIntersecting){
           const img = e.target;
+          // Asignar onerror ANTES de cambiar src para capturar fallos de Supabase
+          img.onerror = function(){ this.onerror=null; this.src=PH; };
           img.src = img.dataset.src;
+          img.removeAttribute('data-src');
           img.classList.remove('lazy-img');
           lazyObserver.unobserve(img);
         }
       });
-    }, { rootMargin: '120px' });
+    }, { rootMargin: '200px' });
   }
   imgs.forEach(img => lazyObserver.observe(img));
 }
