@@ -139,6 +139,12 @@
 
   /* LEFT COLUMN */
   .prop-left{}
+  .specs-mobile{display:none;}
+  .specs-desktop{}
+  @media(max-width:1024px){
+    .specs-mobile{display:block;}
+    .specs-desktop{display:none;}
+  }
   .info-section{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:28px;margin-bottom:20px;}
   .info-section-title{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:16px;font-weight:600;}
 
@@ -319,8 +325,8 @@
       <!-- LEFT -->
       <div class="prop-left">
 
-        <!-- SPECS -->
-        <div class="info-section">
+        <!-- SPECS (móvil only) -->
+        <div class="info-section specs-mobile">
           <div class="specs-grid" id="specsGrid"></div>
         </div>
 
@@ -353,6 +359,10 @@
 
       <!-- RIGHT — CONTACT CARD -->
       <div>
+        <!-- SPECS (desktop only) -->
+        <div class="info-section specs-desktop">
+          <div class="specs-grid" id="specsGridDesktop"></div>
+        </div>
         <div class="contact-card">
           <div class="card-price-block">
             <span class="card-price" id="cardPrice"></span>
@@ -689,12 +699,14 @@ function renderProperty(p) {
   if (p.size  > 0) specs.push({ svg: SVG.size,   val: p.size + ' m²',  label: 'Metraje' });
   if (p.parking>0) specs.push({ svg: SVG.car,    val: p.parking,       label: 'Parqueos' });
   if (p.floor)     specs.push({ svg: SVG.floor,  val: p.floor,         label: 'Piso' });
-  document.getElementById('specsGrid').innerHTML = specs.map(s => `
+  const specsHTML = specs.map(s => `
     <div class="spec-pill">
       <span class="spec-svg">${s.svg}</span>
       <strong>${s.val}</strong>
       <span>${s.label}</span>
     </div>`).join('');
+  document.getElementById('specsGrid').innerHTML = specsHTML;
+  document.getElementById('specsGridDesktop').innerHTML = specsHTML;
 
   // Contact card ref
 
