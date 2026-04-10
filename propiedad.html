@@ -171,9 +171,9 @@
 
   /* RIGHT COLUMN — CONTACT CARD */
   .contact-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:28px;position:sticky;top:110px;box-shadow:var(--shadow);}
-  .card-price-block{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-  .card-price{display:block;font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--primary);}
-  .card-price-period{font-size:13px;color:var(--text3);}
+  .card-price-block{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:5px;}
+  .card-price{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;color:var(--primary);line-height:1;}
+  .card-price-period{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text3);font-weight:400;}
   .contact-card-period{font-size:13px;color:var(--text3);margin-bottom:20px;display:none;}
   .contact-btns{display:flex;flex-direction:column;gap:10px;}
   .btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;transition:var(--transition);}
@@ -319,13 +319,8 @@
       <!-- LEFT -->
       <div class="prop-left">
 
-        <!-- PRECIO + SPECS -->
+        <!-- SPECS -->
         <div class="info-section">
-          <div class="info-section-title">Precio</div>
-          <div>
-            <span class="prop-price" id="propPrice"></span>
-            <span class="prop-price-period" id="propPeriod"></span>
-          </div>
           <div class="specs-grid" id="specsGrid"></div>
         </div>
 
@@ -673,8 +668,7 @@ function renderProperty(p) {
   if (allImages.length <= 1) allBtn.style.display = 'none';
 
   // Price (left section only)
-  document.getElementById('propPrice').textContent = '$' + (p.price || 0).toLocaleString();
-  document.getElementById('propPeriod').textContent = period;
+
 
   // Contact card ref
   document.getElementById('cardRef').textContent = p.code;
