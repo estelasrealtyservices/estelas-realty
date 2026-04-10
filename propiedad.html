@@ -93,60 +93,45 @@
   .prop-location{display:flex;align-items:center;gap:6px;color:var(--text2);font-size:15px;}
   .prop-location .material-icons{font-size:18px;color:var(--accent);}
 
-  /* GALLERY */
+  /* ── GALLERY AIRBNB STYLE ── */
   .gallery-section{margin-bottom:36px;animation:fadeUp 0.4s 0.1s ease both;opacity:0;animation-fill-mode:forwards;}
-
-  /* Desktop: imagen principal + columna de thumbs a la derecha */
-  .gallery-wrapper{display:flex;gap:8px;align-items:flex-start;}
-  .gallery-main{position:relative;background:#111;border-radius:16px;overflow:hidden;cursor:pointer;flex:1;min-width:0;aspect-ratio:4/3;}
-  .gallery-main img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;transition:transform 0.4s ease;}
-  .gallery-main:hover img{transform:scale(1.02);}
-  .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);pointer-events:none;}
-  .gallery-count-btn{position:absolute;bottom:16px;right:16px;background:rgba(26,26,46,0.85);backdrop-filter:blur(8px);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;transition:var(--transition);}
-  .gallery-count-btn:hover{background:var(--primary);}
-  .gallery-count-btn .material-icons{font-size:15px;}
-
-  /* Columna vertical de thumbs — desktop */
-  .gallery-thumbs{display:flex;flex-direction:column;gap:6px;width:110px;flex-shrink:0;overflow-y:auto;max-height:calc((100vw - 110px - 8px - 64px) * 3/4);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-  .gallery-thumbs::-webkit-scrollbar{width:3px;}
-  .gallery-thumbs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-  .gallery-thumb{border-radius:8px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;flex-shrink:0;}
-  .gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s,opacity 0.3s;}
-  .gallery-thumb:hover img{transform:scale(1.05);opacity:0.85;}
-  .gallery-thumb.active-thumb{outline:3px solid var(--accent);outline-offset:2px;}
-
-  /* Móvil: thumbs debajo, horizontal scroll compacto */
+  .gallery-mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:240px 240px;gap:6px;border-radius:16px;overflow:hidden;position:relative;}
+  .mosaic-cell{overflow:hidden;cursor:pointer;background:var(--surface2);}
+  .mosaic-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.35s ease,filter 0.35s ease;}
+  .mosaic-cell:hover img{transform:scale(1.04);filter:brightness(0.88);}
+  .mosaic-main{grid-row:1/3;}
+  .gallery-all-btn{position:absolute;bottom:16px;right:16px;background:white;color:var(--text);border:1.5px solid var(--text);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;cursor:pointer;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+  .gallery-all-btn:hover{background:var(--surface2);}
+  .gallery-all-btn .material-icons{font-size:16px;}
   @media(max-width:768px){
-    .gallery-wrapper{flex-direction:column;gap:6px;}
-    .gallery-main{aspect-ratio:4/3;width:100%;}
-    .gallery-thumbs{flex-direction:row;width:100%;max-height:none;overflow-x:auto;overflow-y:hidden;padding-bottom:4px;}
-    .gallery-thumb{width:72px;flex-shrink:0;aspect-ratio:4/3;}
-  }
-  @media(max-width:480px){
-    .gallery-thumb{width:60px;}
+    .gallery-mosaic{grid-template-columns:1fr;grid-template-rows:260px;border-radius:12px;}
+    .mosaic-cell{display:none;}
+    .mosaic-main{display:block;grid-row:1;}
+    .gallery-all-btn{bottom:12px;right:12px;font-size:12px;padding:7px 13px;}
   }
 
-  /* LIGHTBOX */
-  .lightbox{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.97);flex-direction:column;}
-  .lightbox.open{display:flex;}
-  .lightbox-header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;color:white;}
-  .lightbox-counter{font-size:14px;color:rgba(255,255,255,0.7);}
-  .lightbox-close{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:white;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
-  .lightbox-close:hover{background:rgba(255,255,255,0.2);}
-  .lightbox-main{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:0 60px;}
-  .lightbox-main img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;}
-  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:white;border-radius:8px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
-  .lb-nav:hover{background:rgba(255,255,255,0.2);}
-  .lb-prev{left:12px;}
-  .lb-next{right:12px;}
-  .lightbox-strip{display:flex;gap:8px;padding:16px 24px;overflow-x:auto;scrollbar-width:thin;}
-  .lightbox-strip::-webkit-scrollbar{height:4px;}
-  .lightbox-strip::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
-  .lightbox-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:2px;}
-  .lb-thumb{width:64px;height:48px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid transparent;transition:border-color 0.2s;}
-  .lb-thumb img{width:100%;height:100%;object-fit:cover;}
-  .lb-thumb.active{border-color:var(--accent);}
-  @media(max-width:600px){.lightbox-main{padding:0 40px;}.lb-nav{width:36px;height:36px;}}
+  /* ── PHOTO TOUR (estilo Airbnb) ── */
+  .phototour{display:none;position:fixed;inset:0;z-index:1000;background:#fff;flex-direction:column;}
+  .phototour.open{display:flex;}
+  .phototour-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:2;}
+  .phototour-title{font-size:14px;font-weight:600;color:var(--primary);}
+  .phototour-counter{font-size:13px;color:var(--text3);}
+  .phototour-close{background:none;border:1.5px solid var(--border);color:var(--text);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:var(--transition);cursor:pointer;}
+  .phototour-close:hover{background:var(--surface2);border-color:var(--text);}
+  .phototour-close .material-icons{font-size:20px;}
+  .phototour-scroll{flex:1;overflow-y:auto;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:12px;background:#f6f6f6;}
+  .phototour-img-wrap{width:100%;max-width:860px;padding:0 24px;box-sizing:border-box;}
+  .phototour-img-wrap img{width:100%;border-radius:12px;display:block;object-fit:cover;}
+  .phototour-nav{display:flex;align-items:center;gap:16px;padding:14px 24px;border-top:1px solid var(--border);background:#fff;justify-content:center;}
+  .pt-nav-btn{background:none;border:1.5px solid var(--border);color:var(--text);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+  .pt-nav-btn:hover{background:var(--surface2);border-color:var(--text);}
+  .pt-nav-btn .material-icons{font-size:22px;}
+  .pt-counter-txt{font-size:14px;font-weight:500;min-width:60px;text-align:center;}
+  @media(max-width:600px){
+    .phototour-bar{padding:10px 16px;}
+    .phototour-scroll{padding:16px 0;gap:8px;}
+    .phototour-img-wrap{padding:0 12px;}
+  }
 
   /* TWO COLUMN LAYOUT */
   .prop-layout{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start;animation:fadeUp 0.4s 0.2s ease both;opacity:0;animation-fill-mode:forwards;}
@@ -314,18 +299,14 @@
       </div>
     </div>
 
-    <!-- GALLERY -->
+    <!-- GALLERY AIRBNB -->
     <div class="gallery-section" id="gallerySection">
-      <div class="gallery-wrapper">
-        <div class="gallery-main" onclick="openLightbox(0)">
-          <img id="mainGalleryImg" src="" alt="">
-          <div class="gallery-overlay"></div>
-          <button class="gallery-count-btn" id="galleryCountBtn" onclick="event.stopPropagation();openLightbox(0)">
-            <span class="material-icons">photo_library</span>
-            <span id="galleryCountText">Ver fotos</span>
-          </button>
-        </div>
-        <div class="gallery-thumbs" id="galleryThumbs"></div>
+      <div class="gallery-mosaic" id="galleryMosaic">
+        <!-- celdas inyectadas por JS -->
+        <button class="gallery-all-btn" id="galleryAllBtn" onclick="openPhotoTour(0)">
+          <span class="material-icons">photo_library</span>
+          <span id="galleryCountText">Ver todas las fotos</span>
+        </button>
       </div>
     </div>
 
@@ -404,18 +385,19 @@
   </div><!-- /property-page -->
 </div><!-- /pageContent -->
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <div class="lightbox-header">
-    <div class="lightbox-counter" id="lbCounter">1 / 1</div>
-    <button class="lightbox-close" onclick="closeLightbox()"><span class="material-icons">close</span></button>
+<!-- PHOTO TOUR (estilo Airbnb) -->
+<div class="phototour" id="phototour">
+  <div class="phototour-bar">
+    <button class="phototour-close" onclick="closePhotoTour()"><span class="material-icons">close</span></button>
+    <span class="phototour-title" id="ptTitle"></span>
+    <span class="phototour-counter" id="ptCounter"></span>
   </div>
-  <div class="lightbox-main">
-    <button class="lb-nav lb-prev" onclick="lbNav(-1)"><span class="material-icons">chevron_left</span></button>
-    <img id="lbImg" src="" alt="">
-    <button class="lb-nav lb-next" onclick="lbNav(1)"><span class="material-icons">chevron_right</span></button>
+  <div class="phototour-scroll" id="ptScroll"></div>
+  <div class="phototour-nav">
+    <button class="pt-nav-btn" onclick="ptNav(-1)"><span class="material-icons">chevron_left</span></button>
+    <span class="pt-counter-txt" id="ptNavCounter">1 / 1</span>
+    <button class="pt-nav-btn" onclick="ptNav(1)"><span class="material-icons">chevron_right</span></button>
   </div>
-  <div class="lightbox-strip" id="lbStrip"></div>
 </div>
 
 <!-- TOAST -->
@@ -653,28 +635,34 @@ function renderProperty(p) {
   document.getElementById('propTitle').textContent = p.title;
   document.getElementById('propLocation').textContent = `${p.zone} · ${p.type}`;
 
-  // Gallery
+  // Gallery — Airbnb mosaic
   allImages = p.images?.length ? p.images : [PH];
-  const mainImg = document.getElementById('mainGalleryImg');
-  mainImg.src = allImages[0];
-  mainImg.alt = p.title;
-
-  const countBtn = document.getElementById('galleryCountBtn');
+  const mosaic = document.getElementById('galleryMosaic');
   const countText = document.getElementById('galleryCountText');
-  countText.textContent = `Ver ${allImages.length} foto${allImages.length !== 1 ? 's' : ''}`;
+  countText.textContent = `Ver todas las fotos (${allImages.length})`;
 
-  // Thumbnails (show up to 8)
-  const thumbContainer = document.getElementById('galleryThumbs');
-  const thumbCount = Math.min(allImages.length, 8);
-  thumbContainer.innerHTML = allImages.slice(0, thumbCount).map((img, i) => `
-    <div class="gallery-thumb${i === 0 ? ' active-thumb' : ''}" onclick="selectThumb(${i}, this)">
-      <img src="${img}" alt="" loading="lazy" onerror="this.src='${PH}'">
-    </div>`).join('');
+  // Build mosaic cells before the button
+  const allBtn = document.getElementById('galleryAllBtn');
+  // Remove old cells if any
+  mosaic.querySelectorAll('.mosaic-cell').forEach(c => c.remove());
 
-  if (allImages.length <= 1) {
-    thumbContainer.style.display = 'none';
-    countBtn.style.display = 'none';
-  }
+  // Slots: [main, top-right, bottom-right] — show up to 3 cells
+  const slots = [
+    { cls: 'mosaic-cell mosaic-main', idx: 0 },
+    { cls: 'mosaic-cell', idx: 1 },
+    { cls: 'mosaic-cell', idx: 2 },
+    { cls: 'mosaic-cell', idx: 3 },
+  ];
+  slots.forEach(slot => {
+    if (allImages[slot.idx] === undefined) return;
+    const cell = document.createElement('div');
+    cell.className = slot.cls;
+    cell.onclick = () => openPhotoTour(slot.idx);
+    cell.innerHTML = `<img src="${allImages[slot.idx]}" alt="" loading="lazy" onerror="this.src='${PH}'">`;
+    mosaic.insertBefore(cell, allBtn);
+  });
+
+  if (allImages.length <= 1) allBtn.style.display = 'none';
 
   // Price (left section only)
   document.getElementById('propPrice').textContent = '$' + (p.price || 0).toLocaleString();
@@ -797,62 +785,72 @@ function goToProperty(code) {
   window.location.href = `/propiedad/${encodeURIComponent(code)}`;
 }
 
-// ---- GALLERY THUMB SELECT ----
-function selectThumb(idx, el) {
-  document.getElementById('mainGalleryImg').src = allImages[idx];
-  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active-thumb'));
-  el.classList.add('active-thumb');
-}
+// ---- PHOTO TOUR (Airbnb style) ----
+let ptIndex = 0;
+const ptImgEls = []; // refs to img elements in scroll for intersection observer
 
-// ---- LIGHTBOX ----
-function openLightbox(startIndex) {
+function openPhotoTour(startIndex) {
   if (!allImages.length) return;
-  lbIndex = startIndex;
-  const lb = document.getElementById('lightbox');
-  lb.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  ptIndex = startIndex;
+  const pt = document.getElementById('phototour');
+  const scroll = document.getElementById('ptScroll');
+  const title = document.getElementById('ptTitle');
 
-  document.getElementById('lbStrip').innerHTML = allImages.map((img, i) => `
-    <div class="lb-thumb${i === startIndex ? ' active' : ''}" onclick="lbGoTo(${i})">
-      <img src="${img}" alt="" loading="lazy" onerror="this.src='${PH}'">
+  title.textContent = currentProperty?.title || '';
+  scroll.innerHTML = allImages.map((img, i) => `
+    <div class="phototour-img-wrap" id="pt-wrap-${i}">
+      <img src="${img}" alt="Foto ${i+1}" loading="lazy" onerror="this.src='${PH}'" onclick="ptNav(1)">
     </div>`).join('');
 
-  updateLightbox();
+  pt.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  ptUpdateCounter();
+
+  // Scroll to startIndex image
+  requestAnimationFrame(() => {
+    const target = document.getElementById(`pt-wrap-${startIndex}`);
+    if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+  });
+
+  // Intersection observer to update counter on scroll
+  ptObserver?.disconnect();
+  ptObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = parseInt(e.target.id.replace('pt-wrap-',''));
+        if (!isNaN(idx)) { ptIndex = idx; ptUpdateCounter(); }
+      }
+    });
+  }, { root: scroll, threshold: 0.5 });
+  scroll.querySelectorAll('.phototour-img-wrap').forEach(el => ptObserver.observe(el));
 }
 
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
+let ptObserver = null;
+
+function ptUpdateCounter() {
+  const txt = `${ptIndex + 1} / ${allImages.length}`;
+  document.getElementById('ptCounter').textContent = txt;
+  document.getElementById('ptNavCounter').textContent = txt;
+}
+
+function closePhotoTour() {
+  document.getElementById('phototour').classList.remove('open');
   document.body.style.overflow = '';
+  ptObserver?.disconnect();
 }
 
-function closeLightboxOnBg(e) {
-  if (e.target === document.getElementById('lightbox')) closeLightbox();
-}
-
-function lbNav(dir) {
-  lbIndex = (lbIndex + dir + allImages.length) % allImages.length;
-  updateLightbox();
-}
-
-function lbGoTo(idx) {
-  lbIndex = idx;
-  updateLightbox();
-}
-
-function updateLightbox() {
-  document.getElementById('lbImg').src = allImages[lbIndex];
-  document.getElementById('lbCounter').textContent = `${lbIndex + 1} / ${allImages.length}`;
-  document.querySelectorAll('.lb-thumb').forEach((t, i) => t.classList.toggle('active', i === lbIndex));
-  const strip = document.getElementById('lbStrip');
-  const activeThumb = strip.children[lbIndex];
-  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+function ptNav(dir) {
+  ptIndex = Math.max(0, Math.min(allImages.length - 1, ptIndex + dir));
+  const target = document.getElementById(`pt-wrap-${ptIndex}`);
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  ptUpdateCounter();
 }
 
 document.addEventListener('keydown', e => {
-  if (!document.getElementById('lightbox').classList.contains('open')) return;
-  if (e.key === 'ArrowLeft') lbNav(-1);
-  if (e.key === 'ArrowRight') lbNav(1);
-  if (e.key === 'Escape') closeLightbox();
+  if (!document.getElementById('phototour').classList.contains('open')) return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') ptNav(-1);
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') ptNav(1);
+  if (e.key === 'Escape') closePhotoTour();
 });
 
 // ---- SHARE ----
