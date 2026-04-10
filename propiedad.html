@@ -97,9 +97,9 @@
   .gallery-section{margin-bottom:36px;animation:fadeUp 0.4s 0.1s ease both;opacity:0;animation-fill-mode:forwards;}
 
   /* Desktop: imagen principal + columna de thumbs a la derecha */
-  .gallery-wrapper{display:flex;gap:8px;align-items:stretch;}
-  .gallery-main{position:relative;background:#000;border-radius:16px;overflow:hidden;cursor:pointer;flex:1;min-width:0;}
-  .gallery-main img{width:100%;height:480px;object-fit:cover;display:block;transition:transform 0.4s ease;}
+  .gallery-wrapper{display:flex;gap:8px;align-items:flex-start;}
+  .gallery-main{position:relative;background:#111;border-radius:16px;overflow:hidden;cursor:pointer;flex:1;min-width:0;aspect-ratio:4/3;}
+  .gallery-main img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;transition:transform 0.4s ease;}
   .gallery-main:hover img{transform:scale(1.02);}
   .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);pointer-events:none;}
   .gallery-count-btn{position:absolute;bottom:16px;right:16px;background:rgba(26,26,46,0.85);backdrop-filter:blur(8px);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;transition:var(--transition);}
@@ -107,7 +107,7 @@
   .gallery-count-btn .material-icons{font-size:15px;}
 
   /* Columna vertical de thumbs — desktop */
-  .gallery-thumbs{display:flex;flex-direction:column;gap:6px;width:110px;flex-shrink:0;overflow-y:auto;max-height:480px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .gallery-thumbs{display:flex;flex-direction:column;gap:6px;width:110px;flex-shrink:0;overflow-y:auto;max-height:calc((100vw - 110px - 8px - 64px) * 3/4);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
   .gallery-thumbs::-webkit-scrollbar{width:3px;}
   .gallery-thumbs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
   .gallery-thumb{border-radius:8px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;flex-shrink:0;}
@@ -118,12 +118,11 @@
   /* Móvil: thumbs debajo, horizontal scroll compacto */
   @media(max-width:768px){
     .gallery-wrapper{flex-direction:column;gap:6px;}
-    .gallery-main img{height:240px;}
+    .gallery-main{aspect-ratio:4/3;width:100%;}
     .gallery-thumbs{flex-direction:row;width:100%;max-height:none;overflow-x:auto;overflow-y:hidden;padding-bottom:4px;}
     .gallery-thumb{width:72px;flex-shrink:0;aspect-ratio:4/3;}
   }
   @media(max-width:480px){
-    .gallery-main img{height:200px;}
     .gallery-thumb{width:60px;}
   }
 
