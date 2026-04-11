@@ -264,6 +264,7 @@
   .mobile-menu a{padding:12px 16px;border-radius:8px;font-size:15px;font-weight:500;color:var(--text2);display:block;}
   .mobile-menu a:hover{background:var(--surface2);color:var(--text);}
   .mobile-menu .mobile-cta{background:var(--accent);color:var(--primary);text-align:center;font-weight:600;margin-top:8px;border-radius:8px;padding:13px;}
+  @media(max-width:768px){#mNavContact{display:none;}}
   @media(max-width:768px){.hamburger{display:flex;}}
   @media(max-width:1024px){
     .container{padding:0 20px;}
@@ -450,6 +451,7 @@
 
   /* WHATSAPP FLOAT BUTTON */
   .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
+  @media(max-width:768px){.wa-float{display:none;}}
   .wa-float-tooltip{background:var(--primary);color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:var(--shadow);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
   .wa-float:hover .wa-float-tooltip{opacity:1;transform:translateX(0);}
   .wa-float-btn{width:58px;height:58px;background:#25D366!important;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.45);transition:transform 0.25s ease,box-shadow 0.25s ease;animation:waPulse 2.5s infinite 2s;text-decoration:none;flex-shrink:0;border:none;}
@@ -1260,7 +1262,7 @@ function shareProperty(id){
 }
 function openPropertyPage(id){
   const p=allProperties.find(x=>x.id===id);if(!p) return;
-  window.location.href=`/propiedad/${encodeURIComponent(p.code)}`;
+  window.open(`/propiedad/${encodeURIComponent(p.code)}`,'_blank');
 }
 
 function generateListing(id){
