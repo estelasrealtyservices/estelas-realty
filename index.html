@@ -214,6 +214,12 @@
   .share-btn:hover{border-color:var(--primary);color:var(--primary);}
   .property-map{height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:20px;position:relative;z-index:0;}
 
+  /* VER MÁS BUTTON */
+  .ver-mas-btn{display:inline-flex;align-items:center;gap:10px;background:var(--primary);color:white;border:none;padding:14px 32px;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:var(--transition);text-decoration:none;letter-spacing:0.01em;}
+  .ver-mas-btn:hover{background:var(--accent);color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.3);}
+  .ver-mas-btn .material-icons{transition:transform 0.25s;}
+  .ver-mas-btn:hover .material-icons{transform:translateX(4px);}
+
   /* TOAST */
   .toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
   .toast.show{transform:translateY(0);opacity:1;}
@@ -740,6 +746,13 @@
       <p style="font-size:16px" id="emptyMsg">No se encontraron propiedades con esos criterios.</p>
       <button onclick="resetFilters()" style="margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer;">Ver todas</button>
     </div>
+    <!-- VER MÁS BUTTON -->
+    <div id="verMasWrap" style="display:none;text-align:center;margin-top:36px;">
+      <a href="anuncios.html" class="ver-mas-btn">
+        <span id="verMasBtnText">Ver más propiedades</span>
+        <span class="material-icons" style="font-size:18px">arrow_forward</span>
+      </a>
+    </div>
   </section>
 
   <!-- SECCIÓN: ZONAS -->
@@ -1119,10 +1132,15 @@ function setZone(z){
 function renderProperties(list){
   const grid=document.getElementById('propertyGrid');
   const empty=document.getElementById('emptyState');
-  if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';return;}
+  const verMasWrap=document.getElementById('verMasWrap');
+  if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';if(verMasWrap)verMasWrap.style.display='none';return;}
   empty.style.display='none';
+  // Show only first 3 on index page
+  const hasMore=list.length>3;
+  const displayed=list.slice(0,3);
+  if(verMasWrap)verMasWrap.style.display=hasMore?'block':'none';
   const t=TI[currentLang];
-  grid.innerHTML=list.map(p=>{
+  grid.innerHTML=displayed.map(p=>{
     // Usa thumbnail (300-400px) para tarjeta; fallback a imagen completa si no hay thumbs
     const thumb = p.image_thumbs?.[0] || p.images?.[0] || PH;
     const opClass=p.operation==='Alquiler'?'badge-rent':p.operation==='Alquiler vacacional'?'badge-vacation':'badge-sale';

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anuncios Inmobiliarios | Estela's Realty Services</title>
+<meta name="description" content="Explora todo nuestro catálogo de propiedades en Panamá: casas, apartamentos, locales, terrenos y más para alquiler y venta.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
+    --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
+    --text:#1A1A1A;--text2:#555;--text3:#888;
+    --border:#E0E0E0;--radius:12px;
+    --shadow:0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover:0 8px 32px rgba(0,0,0,0.14);
+    --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+    --wa-green:#25D366;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+  a{color:inherit;text-decoration:none;}
+  button{cursor:pointer;font-family:inherit;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:90px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  .nav-links{display:flex;gap:4px;}
+  .nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
+  .nav-links a:hover,.nav-links a.active{background:var(--surface2);color:var(--text);}
+  .nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;text-decoration:none;}
+  .nav-cta:hover{background:#b8973d;}
+
+  /* HAMBURGER */
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;border-radius:8px;}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:16px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.1);flex-direction:column;gap:4px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{padding:12px 16px;border-radius:8px;font-size:15px;font-weight:500;color:var(--text2);display:block;}
+  .mobile-menu a:hover{background:var(--surface2);color:var(--text);}
+  @media(max-width:768px){.hamburger{display:flex;}.nav-links{display:none;}nav{height:70px;padding:0 16px;}nav img{height:52px!important;}}
+
+  /* PAGE HEADER */
+  .page-header{background:var(--primary);padding:48px 32px 52px;position:relative;overflow:hidden;}
+  .page-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+  .page-header-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+  .breadcrumb a{color:rgba(255,255,255,0.5);transition:var(--transition);}
+  .breadcrumb a:hover{color:var(--accent);}
+  .breadcrumb .material-icons{font-size:14px;}
+  .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,40px);font-weight:400;color:white;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+  .page-header p{color:rgba(255,255,255,0.6);font-size:15px;max-width:520px;}
+  .result-count{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);color:var(--accent-light);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;letter-spacing:0.5px;margin-top:16px;}
+
+  /* LAYOUT */
+  .container{max-width:1280px;margin:0 auto;padding:0 32px;}
+  @media(max-width:768px){.container{padding:0 16px;}}
+
+  /* FILTER BAR */
+  .filter-bar{background:white;border-bottom:1px solid var(--border);padding:16px 32px;position:sticky;top:90px;z-index:90;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+  @media(max-width:768px){.filter-bar{top:70px;padding:12px 16px;}}
+  .filter-bar-inner{max-width:1280px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .filter-search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:8px;padding:9px 14px;border:1px solid var(--border);transition:var(--transition);}
+  .filter-search:focus-within{border-color:var(--primary);background:white;}
+  .filter-search .material-icons{color:var(--text3);font-size:18px;flex-shrink:0;}
+  .filter-search input{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;}
+  .filter-search input::placeholder{color:var(--text3);}
+  .filter-select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:white;font-size:13px;color:var(--text2);cursor:pointer;font-family:inherit;outline:none;transition:var(--transition);}
+  .filter-select:hover,.filter-select:focus{border-color:var(--primary);}
+  .filter-reset{display:flex;align-items:center;gap:4px;padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--text3);font-size:13px;font-family:inherit;transition:var(--transition);}
+  .filter-reset:hover{border-color:var(--primary);color:var(--primary);}
+  .filter-reset .material-icons{font-size:15px;}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;background:var(--surface2);border-radius:10px;padding:4px;width:fit-content;}
+  .tab{padding:8px 18px;border-radius:8px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text2);transition:var(--transition);}
+  .tab.active{background:white;color:var(--primary);box-shadow:var(--shadow);}
+
+  /* GRID SECTION */
+  .listings-section{padding:36px 0 64px;}
+  .grid-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+  .grid-count{font-size:14px;color:var(--text3);}
+  .grid-count strong{color:var(--text);font-weight:600;}
+  .property-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media(max-width:1024px){.property-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.property-grid{grid-template-columns:1fr;gap:16px;}}
+
+  /* PROPERTY CARDS */
+  .property-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:var(--transition);cursor:pointer;animation:fadeSlide 0.3s ease;}
+  .property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent;}
+  .card-image{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
+  .card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+  .property-card:hover .card-image img{transform:scale(1.04);}
+  .card-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+  .badge-rent{background:var(--primary);color:white;}
+  .badge-sale{background:var(--accent);color:var(--primary);}
+  .badge-vacation{background:#2E7D32;color:white;}
+  .card-code{position:absolute;bottom:10px;left:12px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.9);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:1px;}
+  .card-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;}
+  .card-action-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.9);border:none;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+  .card-action-btn:hover{background:white;transform:scale(1.1);}
+  .card-action-btn .material-icons{font-size:16px;color:var(--text);}
+  .card-body{padding:16px 18px 18px;}
+  .card-price{font-size:22px;font-weight:800;color:var(--primary);letter-spacing:-0.5px;margin-bottom:4px;}
+  .card-price span{font-size:12px;font-weight:400;color:var(--text3);}
+  .card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4;}
+  .card-location{display:flex;align-items:center;gap:4px;color:var(--text3);font-size:13px;margin-bottom:14px;}
+  .card-location .material-icons{font-size:14px;color:var(--accent);}
+  .card-specs{display:flex;border-top:1px solid var(--border);padding-top:12px;}
+  .spec{flex:1;display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--text3);gap:3px;border-right:1px solid var(--border);padding:0 6px;}
+  .spec:last-child{border-right:none;}
+  .spec strong{font-size:14px;font-weight:600;color:var(--text);}
+  .spec .material-icons{font-size:16px;}
+
+  /* PAGINATION */
+  .pagination{display:flex;justify-content:center;align-items:center;gap:8px;padding-top:48px;flex-wrap:wrap;}
+  .page-btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--border);background:white;font-size:14px;font-weight:500;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+  .page-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .page-btn.active{background:var(--primary);border-color:var(--primary);color:white;}
+  .page-btn.arrow{font-size:18px;}
+  .page-btn:disabled{opacity:0.35;cursor:default;pointer-events:none;}
+
+  /* EMPTY STATE */
+  .empty-state{text-align:center;padding:80px 20px;color:var(--text3);}
+  .empty-state .material-icons{font-size:56px;display:block;margin-bottom:16px;opacity:0.5;}
+  .empty-state p{font-size:16px;margin-bottom:20px;}
+  .empty-state button{padding:11px 28px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:var(--transition);}
+  .empty-state button:hover{background:var(--accent);color:var(--primary);}
+
+  /* LOADING */
+  .loading-state{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--text3);}
+  .loading-state .material-icons{font-size:40px;display:block;margin-bottom:12px;animation:spin 1s linear infinite;}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border-radius:16px;width:100%;max-width:960px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);}
+  .modal-header{position:sticky;top:0;background:var(--surface);padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:1;}
+  .modal-header h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--primary);}
+  .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .modal-close .material-icons{font-size:20px;color:var(--text2);}
+  .modal-body{padding:28px;}
+  .detail-gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;}
+  .detail-main{aspect-ratio:4/3;overflow:hidden;}
+  .detail-main img{width:100%;height:100%;object-fit:cover;}
+  .detail-thumbs{display:grid;gap:8px;}
+  .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-info{display:grid;grid-template-columns:1fr 300px;gap:28px;}
+  .detail-specs{display:flex;gap:20px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0;}
+  .detail-spec{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text2);}
+  .detail-spec strong{color:var(--text);}
+  .detail-spec .material-icons{font-size:18px;color:var(--accent);}
+  .feature-pill{padding:5px 12px;background:var(--surface2);border-radius:20px;font-size:12px;color:var(--text2);}
+  .contact-box{background:var(--surface2);border-radius:12px;padding:24px;height:fit-content;}
+  .contact-box h4{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--primary);}
+  .contact-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;margin-bottom:10px;border:none;cursor:pointer;transition:var(--transition);}
+  .contact-whatsapp{background:#25D366;color:white;}
+  .contact-call{background:var(--primary);color:white;}
+  .share-row{display:flex;gap:8px;margin-top:12px;}
+  .share-btn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:white;font-size:12px;font-family:inherit;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:4px;transition:var(--transition);}
+  .share-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .property-map{height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:20px;position:relative;z-index:0;}
+  @media(max-width:768px){
+    .detail-gallery{grid-template-columns:1fr;}
+    .detail-thumbs{grid-template-columns:1fr 1fr;display:grid;}
+    .detail-info{grid-template-columns:1fr;}
+    .contact-box{margin-top:20px;}
+  }
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--primary);color:white;padding:14px 20px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
+  .toast.show{transform:translateY(0);opacity:1;}
+  .toast .material-icons{color:var(--accent);font-size:18px;}
+
+  /* WHATSAPP FLOAT */
+  .wa-float{position:fixed;bottom:28px;left:28px;z-index:150;display:flex;align-items:flex-end;gap:10px;}
+  .wa-float-btn{width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:var(--transition);}
+  .wa-float-btn:hover{transform:scale(1.08);}
+  .wa-float-btn svg{width:28px;height:28px;fill:white;}
+
+  /* FOOTER */
+  footer{background:var(--primary);color:rgba(255,255,255,0.8);padding:40px 32px 24px;}
+  .footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+  .footer-brand{font-family:'Playfair Display',serif;font-size:16px;color:white;}
+  .footer-tagline{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;}
+  .footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+  .footer-links a{font-size:13px;color:rgba(255,255,255,0.55);transition:var(--transition);}
+  .footer-links a:hover{color:var(--accent);}
+  .footer-bottom{max-width:1280px;margin:24px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);font-size:12px;color:rgba(255,255,255,0.3);text-align:center;}
+
+  /* LANG TOGGLE */
+  .lang-toggle{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;}
+  .lang-btn{padding:5px 10px;border:none;background:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--transition);}
+  .lang-btn.active{background:white;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+</style>
+</head>
+<body>
+
+<!-- WHATSAPP FLOTANTE -->
+<a class="wa-float" href="https://wa.me/50766740090" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <div class="wa-float-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </div>
+</a>
+
+<!-- NAV -->
+<nav>
+  <div><a href="index.html"><img src="logo.png" alt="Estela's Realty Services" style="height:70px;width:auto;object-fit:contain;display:block;"></a></div>
+  <div class="nav-links">
+    <a href="index.html">Inicio</a>
+    <a href="index.html#propiedades">Propiedades</a>
+    <a href="index.html#zonas">Zonas</a>
+    <a href="index.html#servicios">Servicios</a>
+    <a href="index.html#contacto">Contacto</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnEs" onclick="setLang('es')"><span>🇵🇦</span> ES</button>
+      <button class="lang-btn" id="btnEn" onclick="setLang('en')"><span>🇺🇸</span> EN</button>
+    </div>
+    <a href="index.html#contacto" class="nav-cta"><span class="material-icons" style="font-size:16px">phone</span><span>Contacto</span></a>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">Inicio</a>
+  <a href="index.html#propiedades" onclick="closeMenu()">Propiedades</a>
+  <a href="index.html#zonas" onclick="closeMenu()">Zonas</a>
+  <a href="index.html#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="index.html#contacto" onclick="closeMenu()">Contacto</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span class="material-icons">chevron_right</span>
+      <span id="breadcrumbLabel">Anuncios</span>
+    </div>
+    <h1 id="pageTitle">Anuncios Inmobiliarios</h1>
+    <p id="pageSubtitle">Explora todo nuestro catálogo de propiedades disponibles en Panamá</p>
+    <div class="result-count" id="resultBadge">
+      <span class="material-icons" style="font-size:14px">home_work</span>
+      <span id="resultCountText">Cargando...</span>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR (sticky) -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this,'')">Todos</button>
+      <button class="tab" onclick="setTab(this,'Alquiler')">Alquiler</button>
+      <button class="tab" onclick="setTab(this,'Alquiler vacacional')">Vacacional</button>
+      <button class="tab" onclick="setTab(this,'Venta')">Venta</button>
+    </div>
+
+    <!-- Search -->
+    <div class="filter-search">
+      <span class="material-icons">search</span>
+      <input type="text" id="searchInput" placeholder="Zona, título, código E24..." oninput="filterAndRender()">
+    </div>
+
+    <!-- Selects -->
+    <select class="filter-select" id="typeFilter" onchange="filterAndRender()">
+      <option value="">Tipo</option>
+      <option>Casa</option><option>Apartamento</option><option>Local</option>
+      <option>Oficina</option><option>Galera</option><option>Terreno</option>
+      <option>Bodega</option><option>Lote</option>
+    </select>
+    <select class="filter-select" id="priceFilter" onchange="filterAndRender()">
+      <option value="">Precio</option>
+      <option value="0-1000">Hasta $1,000</option>
+      <option value="1000-2000">$1,000 – $2,000</option>
+      <option value="2000-5000">$2,000 – $5,000</option>
+      <option value="5000+">+$5,000</option>
+    </select>
+    <select class="filter-select" id="roomsFilter" onchange="filterAndRender()">
+      <option value="">Hab.</option>
+      <option value="1">1</option><option value="2">2</option>
+      <option value="3">3</option><option value="4">4+</option>
+    </select>
+    <select class="filter-select" id="orderFilter" onchange="filterAndRender()">
+      <option value="">Ordenar</option>
+      <option value="price-asc">Menor precio</option>
+      <option value="price-desc">Mayor precio</option>
+      <option value="newest">Más reciente</option>
+    </select>
+
+    <!-- Reset -->
+    <button class="filter-reset" onclick="resetFilters()">
+      <span class="material-icons">tune</span> Limpiar
+    </button>
+  </div>
+</div>
+
+<!-- LISTINGS -->
+<div class="container">
+  <section class="listings-section">
+    <div class="grid-header">
+      <div class="grid-count" id="gridCount"></div>
+    </div>
+    <div class="property-grid" id="propertyGrid">
+      <div class="loading-state">
+        <span class="material-icons">sync</span>
+        <p>Cargando propiedades...</p>
+      </div>
+    </div>
+    <!-- PAGINATION -->
+    <div class="pagination" id="paginationWrap"></div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Estela's Realty Services</div>
+      <div class="footer-tagline">Tu aliado de confianza en el mercado inmobiliario de Panamá.</div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Inicio</a>
+      <a href="index.html#propiedades">Propiedades</a>
+      <a href="index.html#servicios">Servicios</a>
+      <a href="index.html#contacto">Contacto</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 Estela's Realty Services. Todos los derechos reservados.</div>
+</footer>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:11px;color:var(--text3);letter-spacing:1px;" id="detailCode"></div>
+        <h2 id="detailTitle"></h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
+
+<script>
+const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const PH = 'https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp';
+const PER_PAGE = 12; // 3 columns × 4 rows
+
+let allProperties = [];
+let filteredList = [];
+let currentPage = 1;
+let activeTab = '';
+let currentLang = 'es';
+
+// ---- I18N ----
+const TI = {
+  es: {
+    pageTitle:'Anuncios Inmobiliarios',
+    pageSubtitle:'Explora todo nuestro catálogo de propiedades disponibles en Panamá',
+    breadcrumb:'Anuncios',
+    resultCount:(n)=> n===1 ? '1 propiedad encontrada' : `${n} propiedades encontradas`,
+    loading:'Cargando propiedades...',
+    emptyMsg:'No se encontraron propiedades con esos criterios.',
+    emptyBtn:'Ver todas',
+    gridCount:(shown,total)=>`Mostrando <strong>${shown}</strong> de <strong>${total}</strong> propiedades`,
+    opRent:'Alquiler',opVac:'Vacacional',opSale:'Venta',
+    perMonth:'/mes',perNight:'/noche',
+    hab:'hab.',banos:'baños',park:'park.',
+    interested:'¿Te interesa esta propiedad?',
+    whatsapp:'WhatsApp',call:'Llamar ahora',
+    share:'Compartir propiedad',copy:'Copiar',copied:'¡Enlace copiado!',
+    approxLoc:'Ubicación aproximada',feats:'Características',seeVideo:'Ver video'
+  },
+  en: {
+    pageTitle:'Property Listings',
+    pageSubtitle:'Browse our full catalog of available properties in Panama',
+    breadcrumb:'Listings',
+    resultCount:(n)=> n===1 ? '1 property found' : `${n} properties found`,
+    loading:'Loading properties...',
+    emptyMsg:'No properties found matching your criteria.',
+    emptyBtn:'View all',
+    gridCount:(shown,total)=>`Showing <strong>${shown}</strong> of <strong>${total}</strong> properties`,
+    opRent:'For Rent',opVac:'Vacation',opSale:'For Sale',
+    perMonth:'/mo',perNight:'/night',
+    hab:'bed.',banos:'bath',park:'park.',
+    interested:'Interested in this property?',
+    whatsapp:'WhatsApp',call:'Call now',
+    share:'Share property',copy:'Copy',copied:'Link copied!',
+    approxLoc:'Approximate location',feats:'Features',seeVideo:'Watch video'
+  }
+};
+
+function t(){ return TI[currentLang]; }
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('ers_lang', lang);
+  document.getElementById('btnEs').classList.toggle('active', lang==='es');
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  applyLangUI();
+  renderPage();
+}
+
+function applyLangUI(){
+  const tx = t();
+  document.getElementById('pageTitle').textContent = tx.pageTitle;
+  document.getElementById('pageSubtitle').textContent = tx.pageSubtitle;
+  document.getElementById('breadcrumbLabel').textContent = tx.breadcrumb;
+  document.title = `${tx.pageTitle} | Estela's Realty Services`;
+}
+
+// ---- INIT ----
+async function init(){
+  const saved = localStorage.getItem('ers_lang') || (navigator.language?.startsWith('en') ? 'en' : 'es');
+  currentLang = saved;
+  document.getElementById('btnEs').classList.toggle('active', saved==='es');
+  document.getElementById('btnEn').classList.toggle('active', saved==='en');
+  applyLangUI();
+  await loadProperties();
+}
+
+async function loadProperties(){
+  try {
+    const {data,error} = await sb
+      .from('properties')
+      .select('*')
+      .eq('active', true)
+      .order('created_at', {ascending: false});
+    if(error) throw error;
+    allProperties = data || [];
+    filterAndRender();
+  } catch(e){
+    document.getElementById('propertyGrid').innerHTML = `
+      <div class="loading-state" style="grid-column:1/-1">
+        <span class="material-icons" style="animation:none;opacity:0.4">cloud_off</span>
+        <p>No se pudo conectar. Verifica tu conexión.</p>
+      </div>`;
+  }
+}
+
+// ---- FILTERS ----
+function applyFilters(){
+  let list = [...allProperties];
+  const s = document.getElementById('searchInput').value.toLowerCase().trim();
+  const type = document.getElementById('typeFilter').value;
+  const price = document.getElementById('priceFilter').value;
+  const rooms = document.getElementById('roomsFilter').value;
+  const order = document.getElementById('orderFilter').value;
+
+  if(activeTab === 'Alquiler') list = list.filter(p => p.operation==='Alquiler' || p.operation==='Alquiler vacacional');
+  else if(activeTab) list = list.filter(p => p.operation===activeTab);
+
+  if(s) list = list.filter(p =>
+    p.title?.toLowerCase().includes(s) ||
+    p.zone?.toLowerCase().includes(s) ||
+    p.code?.toLowerCase().includes(s) ||
+    p.description?.toLowerCase().includes(s) ||
+    p.type?.toLowerCase().includes(s) ||
+    p.encuentra24_code?.toLowerCase().includes(s)
+  );
+  if(type) list = list.filter(p => p.type===type);
+  if(rooms){ const r=parseInt(rooms); list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r); }
+  if(price){
+    if(price==='5000+') list = list.filter(p=>p.price>=5000);
+    else { const[mn,mx]=price.split('-').map(Number); list=list.filter(p=>p.price>=mn&&p.price<=mx); }
+  }
+  if(order==='price-asc') list.sort((a,b)=>a.price-b.price);
+  else if(order==='price-desc') list.sort((a,b)=>b.price-a.price);
+  else if(order==='newest') list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+  return list;
+}
+
+function filterAndRender(){
+  currentPage = 1;
+  filteredList = applyFilters();
+  renderPage();
+}
+
+function setTab(btn, val){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  activeTab = val;
+  filterAndRender();
+}
+
+function resetFilters(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('typeFilter').value='';
+  document.getElementById('priceFilter').value='';
+  document.getElementById('roomsFilter').value='';
+  document.getElementById('orderFilter').value='';
+  activeTab='';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('.tab').classList.add('active');
+  filterAndRender();
+}
+
+// ---- RENDER ----
+function renderPage(){
+  const tx = t();
+  const total = filteredList.length;
+
+  // Result badge
+  document.getElementById('resultCountText').textContent = tx.resultCount(total);
+
+  // Grid count
+  const start = (currentPage-1)*PER_PAGE;
+  const end = Math.min(start+PER_PAGE, total);
+  document.getElementById('gridCount').innerHTML = total > 0
+    ? tx.gridCount(end-start, total)
+    : '';
+
+  const grid = document.getElementById('propertyGrid');
+
+  if(!total){
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <span class="material-icons">search_off</span>
+        <p>${tx.emptyMsg}</p>
+        <button onclick="resetFilters()">${tx.emptyBtn}</button>
+      </div>`;
+    document.getElementById('paginationWrap').innerHTML='';
+    return;
+  }
+
+  const pageItems = filteredList.slice(start, end);
+  grid.innerHTML = pageItems.map(p => cardHTML(p, tx)).join('');
+
+  // Lazy images
+  initLazyImages();
+
+  // Pagination
+  renderPagination(total);
+
+  // Scroll to top of grid (smooth) only if not first load
+  if(currentPage > 1){
+    document.querySelector('.listings-section').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function cardHTML(p, tx){
+  const thumb = p.image_thumbs?.[0] || p.images?.[0] || PH;
+  const opClass = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
+  const opLabel = p.operation==='Alquiler vacacional' ? tx.opVac : p.operation==='Alquiler' ? tx.opRent : tx.opSale;
+  const period = p.operation==='Alquiler vacacional' ? tx.perNight : p.operation==='Alquiler' ? tx.perMonth : '';
+  return `
+  <div class="property-card" onclick="openDetail('${p.id}')">
+    <div class="card-image">
+      <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img">
+      <div class="card-badge ${opClass}">${opLabel}</div>
+      ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
+      <div class="card-code">${p.code||''}</div>
+      <div class="card-actions" onclick="event.stopPropagation()">
+        <button class="card-action-btn" onclick="shareProperty('${p.id}')" title="Copiar enlace"><span class="material-icons">share</span></button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-price">$${(p.price||0).toLocaleString()}<span> ${period}</span></div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-location"><span class="material-icons">location_on</span>${p.zone||''}</div>
+      <div class="card-specs">
+        ${p.rooms>0?`<div class="spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong>${tx.hab}</div>`:''}
+        <div class="spec"><span class="material-icons">shower</span><strong>${p.baths||1}</strong>${tx.banos}</div>
+        <div class="spec"><span class="material-icons">square_foot</span><strong>${p.size||0}</strong>m²</div>
+        <div class="spec"><span class="material-icons">directions_car</span><strong>${p.parking||0}</strong>${tx.park}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ---- PAGINATION ----
+function renderPagination(total){
+  const totalPages = Math.ceil(total / PER_PAGE);
+  const wrap = document.getElementById('paginationWrap');
+  if(totalPages <= 1){ wrap.innerHTML=''; return; }
+
+  let html = '';
+  // Prev
+  html += `<button class="page-btn arrow" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>
+    <span class="material-icons" style="font-size:18px">chevron_left</span>
+  </button>`;
+
+  // Page numbers
+  for(let i=1; i<=totalPages; i++){
+    if(totalPages > 7 && Math.abs(i - currentPage) > 2 && i !== 1 && i !== totalPages){
+      if(i === 2 || i === totalPages-1) html += `<span style="padding:0 4px;color:var(--text3)">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+
+  // Next
+  html += `<button class="page-btn arrow" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>
+    <span class="material-icons" style="font-size:18px">chevron_right</span>
+  </button>`;
+
+  wrap.innerHTML = html;
+}
+
+function goPage(n){
+  const totalPages = Math.ceil(filteredList.length / PER_PAGE);
+  if(n < 1 || n > totalPages) return;
+  currentPage = n;
+  renderPage();
+  window.scrollTo({top: document.querySelector('.listings-section').offsetTop - 120, behavior:'smooth'});
+}
+
+// ---- DETAIL MODAL ----
+function openDetail(id){
+  const p = allProperties.find(x=>x.id===id);
+  if(!p) return;
+  const tx = t();
+  document.getElementById('detailCode').textContent = p.code;
+  document.getElementById('detailTitle').textContent = p.title;
+  const imgs = (p.images?.length ? p.images : p.image_thumbs?.length ? p.image_thumbs : [PH]);
+  const opClass = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
+  document.getElementById('detailBody').innerHTML = `
+    <div class="detail-gallery">
+      <div class="detail-main"><img src="${imgs[0]}" alt="${p.title}"></div>
+      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb"><img src="${i}" alt=""></div>`).join('')}</div>
+    </div>
+    <div class="detail-info">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span class="card-badge ${opClass}" style="position:static">${p.operation}</span>
+          <span style="font-size:13px;color:var(--text3)">${p.type} · ${p.zone}</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-0.5px">
+          $${(p.price||0).toLocaleString()}<span style="font-size:14px;font-weight:400;color:var(--text3)">${p.operation==='Alquiler vacacional'?' /noche':p.operation==='Alquiler'?' /mes':''}</span>
+        </div>
+        <div class="detail-specs">
+          ${p.rooms>0?`<div class="detail-spec"><span class="material-icons">bed</span><strong>${p.rooms}</strong> hab.</div>`:''}
+          <div class="detail-spec"><span class="material-icons">shower</span><strong>${p.baths}</strong> baños</div>
+          <div class="detail-spec"><span class="material-icons">square_foot</span><strong>${p.size} m²</strong></div>
+          <div class="detail-spec"><span class="material-icons">directions_car</span><strong>${p.parking}</strong> parqueo(s)</div>
+          ${p.floor?`<div class="detail-spec"><span class="material-icons">apartment</span>Piso <strong>${p.floor}</strong></div>`:''}
+        </div>
+        <p style="font-size:14px;color:var(--text2);line-height:1.7">${p.description||''}</p>
+        ${p.features?.length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">${tx.feats}</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
+        ${p.video_url?`<div style="margin-top:20px"><a href="${p.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:14px;font-weight:500"><span class="material-icons">play_circle</span>${tx.seeVideo}</a></div>`:''}
+        ${p.latitude&&p.longitude?`<div style="margin-top:20px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span class="material-icons" style="font-size:15px;color:var(--accent)">location_on</span>${tx.approxLoc}</div><div class="property-map" id="clientMap"></div></div>`:''}
+      </div>
+      <div>
+        <div class="contact-box">
+          <h4>${tx.interested}</h4>
+          <button class="contact-btn contact-whatsapp" onclick="window.open('https://wa.me/50766740090?text=Hola, me interesa la propiedad ${p.code}: ${encodeURIComponent(p.title)}')"><span class="material-icons">chat</span>${tx.whatsapp}</button>
+          <button class="contact-btn contact-call" onclick="window.location.href='tel:+50766740090'"><span class="material-icons">phone</span>${tx.call}</button>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:10px">${tx.share}</div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareProperty('${p.id}')"><span class="material-icons" style="font-size:14px">link</span>${tx.copy}</button>
+              <button class="share-btn" onclick="window.open('https://wa.me/?text=${encodeURIComponent('Mira esta propiedad: '+p.title+' - '+window.location.href)}','_blank')"><span class="material-icons" style="font-size:14px">share</span>WA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('detailModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  // Map
+  if(p.latitude && p.longitude){
+    loadLeafletThen(()=>{
+      const map = L.map('clientMap',{zoomControl:true}).setView([p.latitude,p.longitude],15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+      L.circle([p.latitude,p.longitude],{radius:120,color:'#C9A84C',fillColor:'#C9A84C',fillOpacity:0.15}).addTo(map);
+    });
+  }
+}
+
+function closeModal(){
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('detailModal').addEventListener('click', e=>{ if(e.target===document.getElementById('detailModal')) closeModal(); });
+
+// ---- SHARE ----
+function shareProperty(id){
+  const link = `${window.location.origin}${window.location.pathname}?id=${id}`;
+  navigator.clipboard.writeText(link).then(()=>showToast(t().copied));
+}
+
+// ---- TOAST ----
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3000);
+}
+
+// ---- MOBILE MENU ----
+function toggleMenu(){
+  const btn=document.getElementById('hamburgerBtn');
+  const menu=document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ---- LAZY IMAGES ----
+let lazyObserver=null;
+function initLazyImages(){
+  const imgs=document.querySelectorAll('img.lazy-img[data-src]');
+  if(!imgs.length) return;
+  if(!lazyObserver){
+    lazyObserver=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const img=e.target;
+          img.onerror=function(){this.onerror=null;this.src=PH;};
+          img.src=img.dataset.src;
+          img.removeAttribute('data-src');
+          img.classList.remove('lazy-img');
+          lazyObserver.unobserve(img);
+        }
+      });
+    },{rootMargin:'200px'});
+  }
+  imgs.forEach(img=>lazyObserver.observe(img));
+}
+
+// ---- LEAFLET ----
+let leafletLoaded=false;
+function loadLeafletThen(cb){
+  if(leafletLoaded){cb();return;}
+  const link=document.createElement('link');
+  link.rel='stylesheet';
+  link.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css';
+  document.head.appendChild(link);
+  const script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js';
+  script.onload=()=>{leafletLoaded=true;cb();};
+  document.head.appendChild(script);
+}
+
+// ---- DEEP LINK (open specific property from ?id=) ----
+function handleDeepLink(){
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if(id) setTimeout(()=>openDetail(id), 600);
+}
+
+// ---- START ----
+init().then(handleDeepLink);
+</script>
+</body>
+</html>
