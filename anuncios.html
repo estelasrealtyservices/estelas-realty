@@ -436,7 +436,21 @@ async function init(){
   document.getElementById('btnEs').classList.toggle('active', saved==='es');
   document.getElementById('btnEn').classList.toggle('active', saved==='en');
   applyLangUI();
-  await loadProperties();
+  await Promise.all([loadProperties(), loadAnunciosBg()]);
+}
+
+async function loadAnunciosBg(){
+  try{
+    const{data}=await sb.from('site_config').select('value').eq('id','anuncios_header_bg').single();
+    if(data?.value){
+      const header=document.querySelector('.page-header');
+      if(header){
+        header.style.backgroundImage=`url('${data.value}')`;
+        header.style.backgroundSize='cover';
+        header.style.backgroundPosition='center';
+      }
+    }
+  }catch(e){ /* sin imagen configurada, usa el color sólido por defecto */ }
 }
 
 async function loadProperties(){

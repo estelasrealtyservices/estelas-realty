@@ -364,6 +364,9 @@
     <button class="admin-tab" onclick="switchTab('site',this)">
       <span class="material-icons">web</span>Editar página principal
     </button>
+    <button class="admin-tab" onclick="switchTab('anuncios',this)">
+      <span class="material-icons">view_list</span>Editar página Anuncios
+    </button>
   </div>
 
   <div class="admin-content">
@@ -658,6 +661,62 @@
 
     </div>
   </div>
+
+  <!-- TAB: ANUNCIOS PAGE EDITOR -->
+  <div class="tab-panel" id="tab-anuncios">
+    <div class="site-editor">
+
+      <div class="editor-card">
+        <div class="editor-card-header">
+          <div class="editor-card-icon"><span class="material-icons">image</span></div>
+          <div>
+            <div class="editor-card-title">Imagen de fondo — Encabezado de Anuncios</div>
+            <div class="editor-card-subtitle">Esta imagen aparece detrás del título "Anuncios Inmobiliarios" en la página anuncios.html</div>
+          </div>
+        </div>
+        <div class="editor-card-body">
+
+          <!-- Preview -->
+          <div id="anunciosBgPreview" style="width:100%;height:220px;border-radius:12px;overflow:hidden;background:var(--primary);position:relative;margin-bottom:20px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
+            <div id="anunciosBgImg" style="position:absolute;inset:0;background-size:cover;background-position:center;transition:all 0.4s;"></div>
+            <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.62) 0%,rgba(45,45,82,0.5) 100%);"></div>
+            <div style="position:relative;z-index:1;text-align:center;color:white;">
+              <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:8px;">Vista previa</div>
+              <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;">Anuncios Inmobiliarios</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:6px;">Explora todo nuestro catálogo de propiedades</div>
+            </div>
+          </div>
+
+          <!-- URL input -->
+          <div class="form-group" style="margin-bottom:14px;">
+            <label>URL de la imagen de fondo</label>
+            <input type="url" id="anunciosBgUrl" placeholder="https://..." style="width:100%;" oninput="previewAnunciosBg()">
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+            <div style="flex:1;height:1px;background:var(--border);"></div>
+            <span style="font-size:12px;color:var(--text3);font-weight:500;">ó sube una foto</span>
+            <div style="flex:1;height:1px;background:var(--border);"></div>
+          </div>
+
+          <!-- Upload -->
+          <div class="progress-bar" id="anunciosBgProgress"><div class="progress-fill" id="anunciosBgProgressFill" style="width:0%"></div></div>
+          <div class="upload-btn" style="margin-bottom:8px;">
+            <input type="file" accept="image/*" onchange="uploadAnunciosBg(this)">
+            <span class="material-icons">add_photo_alternate</span>
+            Subir imagen de fondo
+          </div>
+          <p style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:20px;">JPG o PNG recomendado horizontal (16:9 o panorámica) · mínimo 1200px de ancho</p>
+
+          <button class="save-config-btn" id="saveAnunciosBgBtn" onclick="saveAnunciosBg()">
+            <span class="material-icons">save</span>Guardar imagen de fondo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 <div class="modal-overlay" id="propModal">
   <div class="modal">
     <div class="modal-header">
@@ -1057,6 +1116,7 @@ function switchTab(name, btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
+  if(name==='anuncios') loadAnunciosBg();
 }
 
 // ---- LEADS ----
@@ -2331,6 +2391,60 @@ async function saveSocialLinks(){
     showToast('Error: '+e.message,true);
   }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar redes sociales';
+}
+
+// ---- ANUNCIOS PAGE EDITOR ----
+async function loadAnunciosBg(){
+  try{
+    const{data}=await sb.from('site_config').select('value').eq('id','anuncios_header_bg').single();
+    if(data?.value){
+      document.getElementById('anunciosBgUrl').value=data.value;
+      previewAnunciosBg();
+    }
+  }catch(e){ /* no hay imagen aún, sin problema */ }
+}
+
+function previewAnunciosBg(){
+  const url=document.getElementById('anunciosBgUrl').value.trim();
+  const div=document.getElementById('anunciosBgImg');
+  if(url) div.style.backgroundImage=`url('${url}')`;
+  else div.style.backgroundImage='none';
+}
+
+async function uploadAnunciosBg(input){
+  const file=input.files[0]; if(!file) return;
+  const bar=document.getElementById('anunciosBgProgress');
+  const fill=document.getElementById('anunciosBgProgressFill');
+  bar.classList.add('visible'); fill.style.width='30%';
+  const ext=file.name.split('.').pop().toLowerCase();
+  const path=`anuncios/anuncios_header_${Date.now()}.${ext}`;
+  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
+  fill.style.width='80%';
+  if(!error){
+    const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+    document.getElementById('anunciosBgUrl').value=u.publicUrl;
+    previewAnunciosBg();
+    showToast('Imagen subida. Presiona "Guardar imagen de fondo" para aplicarla.');
+  } else {
+    showToast('Error al subir imagen: '+error.message,true);
+  }
+  fill.style.width='100%';
+  setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
+}
+
+async function saveAnunciosBg(){
+  const url=document.getElementById('anunciosBgUrl').value.trim();
+  if(!url){ showToast('Ingresa o sube una imagen primero.',true); return; }
+  const btn=document.getElementById('saveAnunciosBgBtn');
+  btn.disabled=true; btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
+  try{
+    const{error}=await sb.from('site_config').upsert({id:'anuncios_header_bg',value:url,updated_at:new Date().toISOString()},{onConflict:'id'});
+    if(error) throw error;
+    showToast('¡Imagen de fondo guardada! Ya aparece en la página Anuncios.');
+  }catch(e){
+    showToast('Error: '+e.message,true);
+  }
+  btn.disabled=false; btn.innerHTML='<span class="material-icons">save</span>Guardar imagen de fondo';
 }
 
 // ---- TOAST ----

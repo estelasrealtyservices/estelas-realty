@@ -557,6 +557,7 @@
   <div class="nav-links">
     <a href="#" id="navLinkHome">Inicio</a>
     <a href="#propiedades" id="navLinkProps">Propiedades</a>
+    <a href="#bentoCats" id="navLinkDestinos">Destinos</a>
     <a href="#zonas" id="navLinkZones">Zonas</a>
     <a href="#servicios" id="navLinkSvcs">Servicios</a>
     <a href="#contacto" id="navLinkContact">Contacto</a>
@@ -576,6 +577,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#" onclick="closeMenu()" id="mNavHome">Inicio</a>
   <a href="#propiedades" onclick="closeMenu()" id="mNavProps">Propiedades</a>
+  <a href="#bentoCats" onclick="closeMenu()" id="mNavDestinos">Destinos</a>
   <a href="#zonas" onclick="closeMenu()" id="mNavZones">Zonas</a>
   <a href="#servicios" onclick="closeMenu()" id="mNavSvcs">Servicios</a>
   <a href="#contacto" onclick="closeMenu()" id="mNavContact">Contacto</a>
@@ -622,9 +624,9 @@
 
 <div class="trust-band">
   <div class="trust-inner">
-    <h2 class="trust-title">Somos el referente de confianza en el mercado inmobiliario panameño.</h2>
+    <h2 class="trust-title" id="trustTitle">Somos el referente de confianza en el mercado inmobiliario panameño.</h2>
     <div class="trust-divider"></div>
-    <p class="trust-subtitle">Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.</p>
+    <p class="trust-subtitle" id="trustSubtitle">Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.</p>
   </div>
 </div>
 <!-- Hidden stat elements kept for JS compatibility -->
@@ -637,7 +639,7 @@
   <div class="bento-wrap">
 
     <div class="bento-header">
-      <div class="bento-kicker">Descubre tu nuevo destino</div>
+      <div class="bento-kicker" id="bentoKicker">Descubre tu nuevo destino</div>
     </div>
 
     <div class="bento-grid">
@@ -1135,7 +1137,6 @@ function renderProperties(list){
   const verMasWrap=document.getElementById('verMasWrap');
   if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';if(verMasWrap)verMasWrap.style.display='none';return;}
   empty.style.display='none';
-  // Show only first 3 on index page
   const hasMore=list.length>3;
   const displayed=list.slice(0,3);
   if(verMasWrap)verMasWrap.style.display=hasMore?'block':'none';
@@ -1380,7 +1381,12 @@ const TI = {
     featured:'Destacado',
     hab:'Hab.',banos:'Baños',park:'Park.',
     waTooltip:'¡Escríbenos al WhatsApp!',
-    navHome:'Inicio',navProps:'Propiedades',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',
+    navHome:'Inicio',navProps:'Propiedades',navDestinos:'Destinos',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',
+    bentoKicker:'Descubre tu nuevo destino',
+    verMasBtn:'Ver más propiedades',
+    trustTitle:'Somos el referente de confianza en el mercado inmobiliario panameño.',
+    trustSubtitle:'Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.',
+    aliados:'Nuestros Aliados',
     footerTagline:'Tu aliado de confianza en el mercado inmobiliario de Panamá.',
     footerCol1:'Propiedades',footerCol2:'Zonas',footerCol3:'Servicios',
     footerCopyright:"© 2025 Estela's Realty Services. Todos los derechos reservados.",
@@ -1420,7 +1426,12 @@ const TI = {
     featured:'Featured',
     hab:'Bed.',banos:'Baths',park:'Park.',
     waTooltip:'Chat with us on WhatsApp!',
-    navHome:'Home',navProps:'Properties',navZones:'Zones',navSvcs:'Services',navContact:'Contact',
+    navHome:'Home',navProps:'Properties',navDestinos:'Destinations',navZones:'Zones',navSvcs:'Services',navContact:'Contact',
+    bentoKicker:'Go to your next destination',
+    verMasBtn:'View more listings',
+    trustTitle:"We are the trusted benchmark in Panama's real estate market.",
+    trustSubtitle:'With over 38 years of experience, we offer one of the most attractive portfolios of carefully selected properties for both sale and rent. In addition, we provide legal and immigration solutions, ensuring a smooth and secure transition for your investment.',
+    aliados:'Our Partners',
     footerTagline:"Your trusted partner in Panama's real estate market.",
     footerCol1:'Properties',footerCol2:'Zones',footerCol3:'Services',
     footerCopyright:"© 2025 Estela's Realty Services. All rights reserved.",
@@ -1520,11 +1531,18 @@ function setLang(lang){
   setEl('navLinkHome', t.navHome);
   setEl('navLinkProps', t.navProps);
   setEl('navLinkZones', t.navZones);
+  setEl('navLinkDestinos', t.navDestinos);
+  setEl('bentoKicker', t.bentoKicker);
+  setEl('verMasBtnText', t.verMasBtn);
+  setEl('trustTitle', t.trustTitle);
+  setEl('trustSubtitle', t.trustSubtitle);
+  setEl('mAliadosTitle', t.aliados);
   setEl('navLinkSvcs', t.navSvcs);
   setEl('navLinkContact', t.navContact);
   setEl('mNavHome', t.navHome);
   setEl('mNavProps', t.navProps);
   setEl('mNavZones', t.navZones);
+  setEl('mNavDestinos', t.navDestinos);
   setEl('mNavSvcs', t.navSvcs);
   setEl('mNavContact', t.navContact);
 
