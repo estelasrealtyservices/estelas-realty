@@ -444,7 +444,7 @@ async function loadProperties(){
     const {data,error} = await sb
       .from('properties')
       .select('*')
-      .eq('active', true)
+      .eq('is_active', true)
       .order('created_at', {ascending: false});
     if(error) throw error;
     allProperties = data || [];
