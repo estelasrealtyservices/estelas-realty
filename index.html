@@ -6,7 +6,7 @@
 <title>Estela's Realty Services | Propiedades en Panamá</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -41,20 +41,20 @@
   .hero-slides{position:absolute;inset:0;z-index:0;}
   .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
   .hero-slide.active{opacity:1;}
-  .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.82) 0%,rgba(45,45,82,0.75) 100%);}
+  .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.58) 0%,rgba(45,45,82,0.48) 100%);}
   .hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary) 0%,#2d2d52 100%);z-index:-1;}
   .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
   .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
   .hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
   .hero h1{
-    font-family:'Cormorant Garamond', serif;
+    font-family:'Playfair Display', serif;
     font-size:25px;
-    font-weight:700;
+    font-weight:400;
     line-height:1.15;
     letter-spacing:0.22em;
     text-transform:uppercase;
     margin-top:48px;
-    margin-bottom:48px;
+    margin-bottom:68px;
   }
   .hero p{color:rgba(255,255,255,0.7);font-size:16px;max-width:520px;margin:0 auto 36px;}
   .hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:8px;}
@@ -72,31 +72,40 @@
   .search-btn:hover{background:#b8973d;}
 
   /* TRUST BAND */
-  .trust-band{background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);padding:72px 32px 80px;}
-  .trust-inner{max-width:900px;margin:0 auto;text-align:center;}
+  .trust-band{background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);padding:96px 32px 104px;}
+  .trust-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:56px;}
   .trust-title{
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(24px,3vw,38px);
-    font-weight:400;
+    font-family:'Playfair Display',serif;
+    font-size:clamp(22px,2.6vw,34px);
+    font-weight:300;
     color:#fff;
     line-height:1.25;
-    margin-bottom:22px;
     letter-spacing:0.12em;
     text-transform:uppercase;
+    flex:1;
+    margin:0;
+  }
+  .trust-divider{
+    width:1px;
+    height:72px;
+    background:rgba(255,255,255,0.15);
+    flex-shrink:0;
   }
   .trust-subtitle{
-    font-family:'Jost',sans-serif;
+    font-family:'DM Sans',sans-serif;
     font-size:clamp(13px,1.3vw,15px);
     font-weight:300;
     color:rgba(255,255,255,0.6);
     line-height:1.95;
-    max-width:760px;
-    margin:0 auto;
     letter-spacing:0.03em;
+    flex:1;
+    margin:0;
   }
   @media(max-width:768px){
-    .trust-band{padding:52px 24px 60px;}
-    .trust-title{font-size:22px;letter-spacing:0.08em;}
+    .trust-band{padding:64px 24px 72px;}
+    .trust-inner{flex-direction:column;gap:24px;text-align:center;}
+    .trust-title{font-size:22px;letter-spacing:0.08em;max-width:100%;}
+    .trust-divider{width:48px;height:1px;}
     .trust-subtitle{font-size:13px;}
   }
 
@@ -146,8 +155,6 @@
   .zones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   .zone-card{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;cursor:pointer;transition:var(--transition);background:var(--surface2);}
   .zone-card:hover{transform:scale(1.01);box-shadow:var(--shadow-hover);}
-  .zone-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-  .zone-card:hover img{transform:scale(1.06);}
   .zone-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,46,0.75) 0%,transparent 55%);}
   .zone-info{position:absolute;bottom:16px;left:18px;color:white;}
   .zone-name{font-family:'Playfair Display', serif;font-size:18px;font-weight:600;}
@@ -155,18 +162,25 @@
 
   /* SERVICES */
   #servicios{background:#F7F7F5;}
-  .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
   .service-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);}
   .service-card:hover{box-shadow:var(--shadow-hover);border-color:var(--accent);transform:translateY(-2px);}
   .svc-icon{width:40px;height:40px;border-radius:10px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
   .svc-icon .material-icons{font-size:20px;color:var(--accent);}
   .service-card h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:8px;}
   .service-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+
+  @media(max-width:1024px){
+    .zones-grid{grid-template-columns:repeat(2,1fr);}
+    .services-grid{grid-template-columns:repeat(2,1fr);}
+  }
   @media(max-width:768px){
+    .zones-grid{grid-template-columns:1fr 1fr;gap:12px;}
     .services-grid{grid-template-columns:1fr 1fr;gap:14px;}
     .service-card{padding:20px 18px;}
   }
   @media(max-width:480px){
+    .zones-grid{grid-template-columns:1fr;}
     .services-grid{grid-template-columns:1fr;}
   }
 
@@ -520,8 +534,6 @@
   }
 
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -605,6 +617,7 @@
 <div class="trust-band">
   <div class="trust-inner">
     <h2 class="trust-title">Somos el referente de confianza en el mercado inmobiliario panameño.</h2>
+    <div class="trust-divider"></div>
     <p class="trust-subtitle">Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.</p>
   </div>
 </div>
@@ -624,7 +637,7 @@
     <div class="bento-grid">
 
       <div class="bento-card bc-0" onclick="setBento(this,'Playa')" data-val="Playa">
-        <div class="bento-bg" style="background-image:url('https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp')"></div>
+        <div class="bento-bg" data-bg="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp"></div>
         <div class="bento-overlay"></div>
         <div class="bento-body">
           <div class="bento-tag">Playa</div>
@@ -637,7 +650,7 @@
       </div>
 
       <div class="bento-card bc-1" onclick="setBento(this,'Montaña / Campo')" data-val="Montaña / Campo">
-        <div class="bento-bg" style="background-image:url('https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp')"></div>
+        <div class="bento-bg" data-bg="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp"></div>
         <div class="bento-overlay"></div>
         <div class="bento-body">
           <div class="bento-tag">Montaña · Campo</div>
@@ -650,7 +663,7 @@
       </div>
 
       <div class="bento-card bc-2" onclick="setBento(this,'Ciudad')" data-val="Ciudad">
-        <div class="bento-bg" style="background-image:url('https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp')"></div>
+        <div class="bento-bg" data-bg="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp"></div>
         <div class="bento-overlay"></div>
         <div class="bento-body">
           <div class="bento-tag">Ciudad</div>
@@ -663,7 +676,7 @@
       </div>
 
       <div class="bento-card bc-3" onclick="setBento(this,'Naturaleza / Eco')" data-val="Naturaleza / Eco">
-        <div class="bento-bg" style="background-image:url('https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_3_1775322324051.webp')"></div>
+        <div class="bento-bg" data-bg="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_3_1775322324051.webp"></div>
         <div class="bento-overlay"></div>
         <div class="bento-body">
           <div class="bento-tag">Naturaleza · Eco</div>
@@ -676,7 +689,7 @@
       </div>
 
       <div class="bento-card bc-4" onclick="setBento(this,'Resort / Vacacional')" data-val="Resort / Vacacional">
-        <div class="bento-bg" style="background-image:url('https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_4_1775324465687.webp')"></div>
+        <div class="bento-bg" data-bg="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_4_1775324465687.webp"></div>
         <div class="bento-overlay"></div>
         <div class="bento-body">
           <div class="bento-tag">Resort · Vacacional</div>
@@ -731,7 +744,9 @@
 
   <!-- SECCIÓN: ZONAS -->
   <section class="section" id="zonas">
-    <div class="section-header"><div class="section-title" id="sectionZonesTitle">Explorar por zona</div></div>
+    <div class="section-header">
+      <div class="section-title" id="sectionZonesTitle">Encuentra tu zona</div>
+    </div>
     <div class="zones-grid" id="zonesGrid">
       <!-- rendered by JS from Supabase config -->
     </div>
@@ -743,7 +758,9 @@
 <section id="servicios">
   <div class="container">
     <div class="section" style="padding-top:56px;padding-bottom:56px;">
-      <div class="section-header"><div class="section-title" id="sectionServicesTitle">Otros servicios</div></div>
+      <div class="section-header">
+        <div class="section-title" id="sectionServicesTitle">Otros servicios</div>
+      </div>
       <div class="services-grid" id="servicesGrid">
         <div class="service-card"><div class="svc-icon"><span class="material-icons">gavel</span></div><h3>Trámites legales</h3><p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p></div>
         <div class="service-card"><div class="svc-icon"><span class="material-icons">flight_land</span></div><h3>Trámites de migración</h3><p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p></div>
@@ -898,17 +915,15 @@ async function loadSiteConfig() {
   }
 }
 
-// ---- HERO SLIDESHOW ----
+// ---- HERO — imagen única ----
 function renderHero(images) {
   const container = document.getElementById('heroSlides');
   const dotsEl = document.getElementById('heroDots');
-  if (!images.length) { container.innerHTML=''; dotsEl.innerHTML=''; return; }
-  container.innerHTML = images.map((img,i)=>`<div class="hero-slide${i===0?' active':''}" style="background-image:url('${img}')"></div>`).join('');
-  dotsEl.innerHTML = images.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})"></button>`).join('');
-  if (images.length > 1) {
-    clearInterval(slideTimer);
-    slideTimer = setInterval(()=>goSlide((currentSlide+1)%images.length), 5000);
-  }
+  if(dotsEl) dotsEl.innerHTML = '';
+  if(!images || !images.length) { if(container) container.innerHTML=''; return; }
+  // Solo usamos la primera imagen
+  const img = images[0];
+  if(container) container.innerHTML = `<div class="hero-slide active" style="background-image:url('${img}')"></div>`;
 }
 
 function goSlide(n) {
@@ -928,7 +943,7 @@ function renderBento(bentoConfig) {
   if (!grid || !bentoConfig || !bentoConfig.length) return;
   grid.innerHTML = bentoConfig.map((c, i) => `
     <div class="bento-card bc-${i}" onclick="setBento(this,'${c.val}')" data-val="${c.val}">
-      <div class="bento-bg" style="background-image:url('${c.img||''}')"></div>
+      <div class="bento-bg" data-bg="${c.img||''}"></div>
       <div class="bento-overlay"></div>
       <div class="bento-body">
         <div class="bento-tag">${c.tag||c.val}</div>
@@ -940,17 +955,19 @@ function renderBento(bentoConfig) {
   // Re-inicializar scroll animations y conteos
   initBentoScroll();
   updateCatCounts();
+  if(typeof initLazyBg === 'function') initLazyBg();
 }
 
 // ---- ZONES ----
 function renderZones(zones) {
   const visible = zones.slice(0, 6);
-  document.getElementById('zonesGrid').innerHTML = visible.map((z,i)=>`
+  document.getElementById('zonesGrid').innerHTML = visible.map((z)=>`
     <div class="zone-card" onclick="setZone('${z.name}')">
-      <img src="${z.img}" alt="${z.name}" loading="lazy" onerror="this.src='${PH}'">
+      <div class="bento-bg" data-bg="${z.img}" style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
       <div class="zone-overlay"></div>
       <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
     </div>`).join('');
+  if(typeof initLazyBg === 'function') initLazyBg();
 }
 
 // ---- SOCIAL ICONS ----
@@ -1192,23 +1209,25 @@ function openDetail(id){
 
   // Init map if property has coordinates
   if(p.latitude && p.longitude){
-    setTimeout(()=>{
-      const existingMap = document.getElementById('clientMap')?._leaflet_id;
-      if(existingMap) return;
-      const map = L.map('clientMap', {
-        zoomControl:true,
-        scrollWheelZoom:false,
-        attributionControl:false
-      }).setView([p.latitude, p.longitude], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
-      const icon = L.divIcon({
-        html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
-        iconSize:[24,24], iconAnchor:[12,24], className:''
-      });
-      L.marker([p.latitude, p.longitude], {icon}).addTo(map)
-        .bindPopup(`<strong>${p.title}</strong><br>${p.zone}`)
-        .openPopup();
-    }, 300);
+    loadLeafletThen(() => {
+      setTimeout(()=>{
+        const existingMap = document.getElementById('clientMap')?._leaflet_id;
+        if(existingMap) return;
+        const map = L.map('clientMap', {
+          zoomControl:true,
+          scrollWheelZoom:false,
+          attributionControl:false
+        }).setView([p.latitude, p.longitude], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+        const icon = L.divIcon({
+          html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+          iconSize:[24,24], iconAnchor:[12,24], className:''
+        });
+        L.marker([p.latitude, p.longitude], {icon}).addTo(map)
+          .bindPopup(`<strong>${p.title}</strong><br>${p.zone}`)
+          .openPopup();
+      }, 300);
+    });
   }
 }
 
@@ -1328,7 +1347,7 @@ const TI = {
     tabAll:'Todos',tabRent:'Alquiler',tabVac:'Vacacional',tabSale:'Venta',
     priceFilter:'Precio',roomsFilter:'Habitaciones',orderFilter:'Ordenar',
     orderAsc:'Menor precio',orderDesc:'Mayor precio',orderNew:'Más reciente',
-    sectionProps:'Explora nuestros anuncios inmobiliarios',sectionZones:'Explorar por zona',sectionServices:'Otros servicios',
+    sectionProps:'Explora nuestros anuncios inmobiliarios',sectionZones:'Encuentra tu zona',sectionServices:'Otros servicios',
     emptyMsg:'No se encontraron propiedades con esos criterios.',emptyBtn:'Ver todas',
     contactTitle:'Contáctanos',contactH2:'¿Listo para encontrar<br>tu propiedad ideal?',
     contactP:'Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.',
@@ -1368,7 +1387,7 @@ const TI = {
     tabAll:'All',tabRent:'Rent',tabVac:'Vacation',tabSale:'Sale',
     priceFilter:'Price',roomsFilter:'Bedrooms',orderFilter:'Sort',
     orderAsc:'Lowest price',orderDesc:'Highest price',orderNew:'Newest',
-    sectionProps:'Explore our real estate listings',sectionZones:'Explore by zone',sectionServices:'Other services',
+    sectionProps:'Explore our real estate listings',sectionZones:'Find your zone',sectionServices:'Other services',
     emptyMsg:'No properties found with those criteria.',emptyBtn:'View all',
     contactTitle:'Contact us',contactH2:'Ready to find<br>your ideal property?',
     contactP:'Our team is available to help you find the perfect property.',
@@ -1518,7 +1537,10 @@ function getPeriodLabel(op){
 }
 
 
-// ---- LAZY LOADING con IntersectionObserver ----
+
+
+
+// ---- LAZY LOADING — imágenes <img> con data-src ----
 let lazyObserver = null;
 function initLazyImages(){
   const imgs = document.querySelectorAll('img.lazy-img[data-src]');
@@ -1528,7 +1550,6 @@ function initLazyImages(){
       entries.forEach(e => {
         if(e.isIntersecting){
           const img = e.target;
-          // Asignar onerror ANTES de cambiar src para capturar fallos de Supabase
           img.onerror = function(){ this.onerror=null; this.src=PH; };
           img.src = img.dataset.src;
           img.removeAttribute('data-src');
@@ -1539,6 +1560,40 @@ function initLazyImages(){
     }, { rootMargin: '200px' });
   }
   imgs.forEach(img => lazyObserver.observe(img));
+}
+
+// ---- LAZY LOADING — bento-bg y zone-card con data-bg ----
+let bgObserver = null;
+function initLazyBg(){
+  const els = document.querySelectorAll('[data-bg]');
+  if(!els.length) return;
+  if(!bgObserver){
+    bgObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.style.backgroundImage = `url('${e.target.dataset.bg}')`;
+          e.target.removeAttribute('data-bg');
+          bgObserver.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '300px' });
+  }
+  els.forEach(el => bgObserver.observe(el));
+}
+document.addEventListener('DOMContentLoaded', initLazyBg);
+
+// ---- LEAFLET — carga dinámica solo al abrir el modal ----
+let leafletLoaded = false;
+function loadLeafletThen(cb){
+  if(leafletLoaded){ cb(); return; }
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css';
+  document.head.appendChild(link);
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js';
+  script.onload = () => { leafletLoaded = true; cb(); };
+  document.head.appendChild(script);
 }
 
 // detect lang
