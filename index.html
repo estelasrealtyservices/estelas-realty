@@ -1260,7 +1260,7 @@ function shareProperty(id){
 }
 function openPropertyPage(id){
   const p=allProperties.find(x=>x.id===id);if(!p) return;
-  window.open(`/propiedad/${encodeURIComponent(p.code)}`,'_blank');
+  window.location.href=`/propiedad/${encodeURIComponent(p.code)}`;
 }
 
 function generateListing(id){
