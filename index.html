@@ -214,6 +214,7 @@
     stroke-linejoin:round;
     transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
   }
+  .service-card{cursor:pointer;}
   .service-card h3{
     font-family:'DM Sans',sans-serif;
     font-size:12px;
@@ -221,14 +222,41 @@
     letter-spacing:1.8px;
     text-transform:uppercase;
     color:var(--primary);
-    margin-bottom:8px;
+    margin-bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .service-card h3::after{
+    content:'';
+    display:inline-block;
+    width:8px;height:8px;
+    border-right:1.5px solid var(--primary);
+    border-bottom:1.5px solid var(--primary);
+    transform:rotate(45deg);
+    transition:transform 0.3s ease;
+    flex-shrink:0;
+    margin-top:-3px;
+  }
+  .service-card.open h3::after{
+    transform:rotate(-135deg);
+    margin-top:3px;
   }
   .service-card p{
     font-size:13px;
     color:rgba(26,26,46,0.70);
     line-height:1.65;
     max-width:210px;
-    margin:0 auto;
+    margin:8px auto 0;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+    opacity:0;
+  }
+  .service-card.open p{
+    max-height:120px;
+    opacity:1;
   }
 
   @media(max-width:1024px){
@@ -729,7 +757,7 @@
     <!-- Tres tarjetas verticales -->
     <div class="destinos-cards">
 
-      <div class="destino-card" onclick="setBento(this,'Playa')" data-val="Playa">
+      <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Playa'" data-val="Playa">
         <img
           src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp"
           alt="Propiedades en Playa"
@@ -739,7 +767,7 @@
         <span class="destino-label">Playa</span>
       </div>
 
-      <div class="destino-card" onclick="setBento(this,'Montaña / Campo')" data-val="Montaña / Campo">
+      <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Campo'" data-val="Montaña / Campo">
         <img
           src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp"
           alt="Propiedades en Campo"
@@ -749,7 +777,7 @@
         <span class="destino-label">Campo</span>
       </div>
 
-      <div class="destino-card" onclick="setBento(this,'Ciudad')" data-val="Ciudad">
+      <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Ciudad'" data-val="Ciudad">
         <img
           src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp"
           alt="Propiedades en Ciudad"
@@ -827,32 +855,32 @@
         <div class="section-title" id="sectionServicesTitle">Servicios Adicionales</div>
       </div>
       <div class="services-grid" id="servicesGrid">
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><path d="M16 14l1.5 1.5L20 13"/></svg></div>
           <h3>Trámites legales</h3>
           <p>Gestión completa de contratos, escrituras, promesas de compraventa y asesoría jurídica inmobiliaria.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 3.6-7 8-7"/><path d="M16 14l4 4m0-4l-4 4"/></svg></div>
           <h3>Trámites de migración</h3>
           <p>Visas de residencia, permiso de trabajo, jubilado, inversionista y más. Proceso ágil y seguro.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21c0-4 2.7-7 6-7h3"/><path d="M16 11l5 5-5 5"/><path d="M21 16H13"/></svg></div>
           <h3>Servicios de abogados</h3>
           <p>Consultas legales, representación notarial, poderes especiales, constitución de sociedades.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2m3 0h2M7 12h2m3 0h2"/></svg></div>
           <h3>Administración de propiedades</h3>
           <p>Gestión de alquileres, mantenimiento, cobro de rentas y coordinación con inquilinos.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/><path d="M12 6v.01"/></svg></div>
           <h3>Avalúos y tasaciones</h3>
           <p>Valuación profesional de propiedades residenciales y comerciales para banco o traspaso.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
           <h3>Asesoría personalizada</h3>
           <p>Te acompañamos en todo el proceso. Atención personalizada en español e inglés.</p>
@@ -1577,7 +1605,7 @@ function setLang(lang){
   const svc = document.getElementById('servicesGrid');
   if(svc) {
     svc.innerHTML = t.services.map(s=>`
-      <div class="service-card">
+      <div class="service-card" onclick="toggleService(this)">
         <div class="svc-icon">${SVC_ICONS[s.icon]||''}</div>
         <h3>${s.title}</h3><p>${s.desc}</p>
       </div>
@@ -1609,6 +1637,14 @@ function setLang(lang){
 
   // Re-render cards with translated labels
   renderProperties(applyFilters());
+}
+
+
+function toggleService(card){
+  const grid = document.getElementById('servicesGrid');
+  const isOpen = card.classList.contains('open');
+  grid.querySelectorAll('.service-card.open').forEach(c => c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
 }
 
 function setEl(id, txt){ const el=document.getElementById(id); if(el) el.textContent=txt; }

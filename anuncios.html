@@ -12,7 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --primary:#1A1A2E;--accent:#FFC145;--accent-light:#FFE599;
+    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
     --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
     --text:#1A1A1A;--text2:#555;--text3:#888;
     --border:#E0E0E0;--radius:12px;
@@ -35,7 +35,7 @@
   .nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
   .nav-links a:hover,.nav-links a.active{background:var(--surface2);color:var(--text);}
   .nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;text-decoration:none;}
-  .nav-cta:hover{background:#e6a800;}
+  .nav-cta:hover{background:#b8973d;}
 
   /* HAMBURGER */
   .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;border-radius:8px;}
@@ -52,7 +52,7 @@
   /* PAGE HEADER */
   .page-header{background:linear-gradient(160deg,#0d0d1f 0%,#1a1a3a 100%);padding:48px 32px 52px;position:relative;overflow:hidden;}
   .page-header::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(8,8,28,0.78) 0%,rgba(18,18,52,0.70) 100%);z-index:0;}
-  .page-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23FFC145' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");z-index:1;}
+  .page-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");z-index:1;}
   .page-header-inner{max-width:1280px;margin:0 auto;position:relative;z-index:2;}
   .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px;}
   .breadcrumb a{color:rgba(255,255,255,0.5);transition:var(--transition);}
@@ -60,7 +60,7 @@
   .breadcrumb .material-icons{font-size:14px;}
   .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,40px);font-weight:400;color:white;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
   .page-header p{color:rgba(255,255,255,0.6);font-size:15px;max-width:520px;}
-  .result-count{display:inline-flex;align-items:center;gap:6px;background:rgba(255,193,69,0.15);border:1px solid rgba(255,193,69,0.25);color:var(--accent-light);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;letter-spacing:0.5px;margin-top:16px;}
+  .result-count{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);color:var(--accent-light);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;letter-spacing:0.5px;margin-top:16px;}
   @media(max-width:768px){
     .page-header{padding:18px 16px 20px;}
     .page-header h1{font-size:20px;margin-bottom:4px;}
@@ -731,7 +731,7 @@ function openDetail(id){
     loadLeafletThen(()=>{
       const map = L.map('clientMap',{zoomControl:true}).setView([p.latitude,p.longitude],15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
-      L.circle([p.latitude,p.longitude],{radius:120,color:'#FFC145',fillColor:'#FFC145',fillOpacity:0.15}).addTo(map);
+      L.circle([p.latitude,p.longitude],{radius:120,color:'#C9A84C',fillColor:'#C9A84C',fillOpacity:0.15}).addTo(map);
     });
   }
 }
@@ -822,6 +822,22 @@ function loadLeafletThen(cb){
 // ---- DEEP LINK (open specific property from ?id=) ----
 function handleDeepLink(){
   const params = new URLSearchParams(window.location.search);
+
+  // Filtro por zona desde index.html destinos
+  const zona = params.get('zona');
+  if(zona){
+    const input = document.getElementById('searchInput');
+    if(input){
+      input.value = zona;
+      filterAndRender();
+      // Hacer scroll suave a los resultados
+      setTimeout(()=>{
+        document.querySelector('.filter-bar')?.scrollIntoView({behavior:'smooth'});
+      }, 300);
+    }
+  }
+
+  // Deep link a propiedad específica
   const id = params.get('id');
   if(id) setTimeout(()=>openDetail(id), 600);
 }
