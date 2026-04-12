@@ -452,11 +452,10 @@
   }
 
   /* LANGUAGE TOGGLE */
-  .lang-toggle{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px;}
-  .lang-btn{padding:5px 10px;border-radius:16px;border:none;background:none;font-size:12px;font-weight:600;color:var(--text3);transition:var(--transition);letter-spacing:0.5px;cursor:pointer;}
-  .lang-btn.active{background:var(--primary);color:white;}
-  .lang-btn:hover:not(.active){color:var(--text);background:var(--border);}
-  .lang-flag{font-size:13px;}
+  .lang-toggle{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;}
+  .lang-btn{padding:5px 10px;border:none;background:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--transition);}
+  .lang-btn.active{background:white;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+  .lang-btn:hover:not(.active){color:var(--text);}
 
   /* =============================================
      BENTO GRID — Categorías de ubicación
@@ -481,8 +480,8 @@
   }
   .destinos-heading{
     font-family:'Playfair Display',serif;
-    font-size:25px;
-    font-weight:400;
+    font-size:26px;
+    font-weight:600;
     color:#fff;
     line-height:1.15;
     letter-spacing:0.01em;
@@ -551,7 +550,7 @@
       padding:36px 28px;
       justify-content:center;
     }
-    .destinos-heading{font-size:25px;}
+    .destinos-heading{font-size:26px;}
   }
   @media(max-width:540px){
     .destinos-grid{grid-template-rows:auto 260px;}
@@ -675,8 +674,8 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <div class="lang-toggle" role="group" aria-label="Idioma">
-      <button class="lang-btn active" id="btnEs" onclick="setLang('es')"><span class="lang-flag">🇵🇦</span> ES</button>
-      <button class="lang-btn" id="btnEn" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span> EN</button>
+      <button class="lang-btn active" id="btnEs" onclick="setLang('es')"><span>🇵🇦</span> ES</button>
+      <button class="lang-btn" id="btnEn" onclick="setLang('en')"><span>🇺🇸</span> EN</button>
     </div>
     <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
