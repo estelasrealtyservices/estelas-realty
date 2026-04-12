@@ -2,10 +2,27 @@
   "rewrites": [
     {
       "source": "/propiedad/:code",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(whatsapp|facebookexternalhit|facebot|twitterbot|linkedinbot|telegrambot|slackbot|discordbot|pinterest|vkshare|w3c_validator|developers\\.google\\.com|googlebot|bingbot|applebot).*"
+        }
+      ],
+      "destination": "/api/og/:code"
+    },
+    {
+      "source": "/propiedad/:code",
       "destination": "/propiedad.html?code=:code"
     }
   ],
   "headers": [
+    {
+      "source": "/api/og/:code",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=60, stale-while-revalidate=300" }
+      ]
+    },
     {
       "source": "/propiedad/:code",
       "headers": [
