@@ -89,7 +89,7 @@
   .badge-sale{background:var(--accent);color:var(--primary);}
   .badge-featured{background:#E53935;color:white;}
   .prop-code{font-size:12px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;background:var(--surface2);padding:5px 12px;border-radius:20px;border:1px solid var(--border);}
-  .prop-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:600;color:var(--primary);line-height:1.25;margin-bottom:8px;}
+  .prop-title{font-family:'DM Sans',sans-serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:var(--primary);line-height:1.2;margin-bottom:8px;letter-spacing:-0.3px;}
   .prop-location{display:flex;align-items:center;gap:6px;color:var(--text2);font-size:15px;}
   .prop-location .material-icons{font-size:18px;color:var(--accent);}
 
@@ -139,12 +139,6 @@
 
   /* LEFT COLUMN */
   .prop-left{}
-  .specs-mobile{display:none;}
-  .specs-desktop{}
-  @media(max-width:1024px){
-    .specs-mobile{display:block;}
-    .specs-desktop{display:none;}
-  }
   .info-section{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:28px;margin-bottom:20px;}
   .info-section-title{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:16px;font-weight:600;}
 
@@ -152,13 +146,31 @@
   .prop-price{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:36px;font-weight:700;color:var(--accent);line-height:1;}
   .prop-price-period{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:15px;color:var(--text3);font-weight:400;margin-left:4px;}
 
-  /* SPECS */
-  .specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;}
-  .spec-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--surface2);border-radius:10px;padding:12px 8px;text-align:center;overflow:hidden;}
+  /* SPECS wrapper sin card */
+  .specs-mobile{display:none;margin-bottom:20px;}
+  .specs-desktop{margin-bottom:20px;}
+  @media(max-width:1024px){
+    .specs-mobile{display:block;}
+    .specs-desktop{display:none;}
+  }
+  /* Fila de badges encima de los specs */
+  .spec-badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+
+  /* SPECS — detail-specs horizontal */
+  .specs-grid{display:flex;flex-wrap:wrap;align-items:center;padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);gap:0;}
+  .spec-pill{display:flex;align-items:center;gap:8px;padding:4px 20px;border-right:1px solid var(--border);}
+  .spec-pill:first-child{padding-left:0;}
+  .spec-pill:last-child{border-right:none;}
   .spec-pill .spec-svg{color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .spec-pill .spec-svg svg{fill:var(--accent);}
-  .spec-pill strong{font-size:15px;color:var(--primary);font-weight:600;line-height:1.2;word-break:break-word;}
-  .spec-pill span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;line-height:1.2;}
+  .spec-pill strong{font-size:15px;color:var(--primary);font-weight:700;line-height:1;}
+  .spec-pill span{font-size:13px;color:var(--text2);}
+  @media(max-width:600px){
+    .spec-pill{padding:4px 12px;}
+    .spec-pill:first-child{padding-left:0;}
+    .spec-pill strong{font-size:14px;}
+    .spec-pill span{font-size:12px;}
+  }
 
   /* DESCRIPTION */
   .prop-description{font-size:15px;color:var(--text2);line-height:1.8;white-space:pre-line;}
@@ -247,6 +259,7 @@
       border-top:1px solid var(--border);
       box-shadow:0 -4px 20px rgba(0,0,0,0.10);
       padding:14px 16px 20px;
+      transition:bottom 0.2s ease;
     }
     /* Espacio para que el contenido no quede tapado por la barra */
     #pageContent .property-page{padding-bottom:200px;}
@@ -331,8 +344,9 @@
       <!-- LEFT -->
       <div class="prop-left">
 
-        <!-- SPECS (móvil only) -->
-        <div class="info-section specs-mobile">
+        <!-- BADGES + SPECS (móvil only) -->
+        <div class="specs-mobile">
+          <div class="spec-badges-row" id="specBadgesMobile"></div>
           <div class="specs-grid" id="specsGrid"></div>
         </div>
 
@@ -365,8 +379,9 @@
 
       <!-- RIGHT — CONTACT CARD -->
       <div>
-        <!-- SPECS (desktop only) -->
-        <div class="info-section specs-desktop">
+        <!-- BADGES + SPECS (desktop only) -->
+        <div class="specs-desktop">
+          <div class="spec-badges-row" id="specBadgesDesktop"></div>
           <div class="specs-grid" id="specsGridDesktop"></div>
         </div>
         <div class="contact-card">
@@ -434,12 +449,12 @@
     <a href="../#servicios">Servicios</a>
     <a href="../#contacto">Contacto</a>
     <a href="tel:+50766740090">+507 6674-0090</a>
-    <a href="mailto:erealtylegal@gmail.com">erealtylegal@gmail.com</a>
+    <a href="/cdn-cgi/l/email-protection#096c7b6c68657d70656c6e6865496e64686065276a6664"><span class="__cf_email__" data-cfemail="60051205010c14190c0507010c20070d01090c4e030f0d">[email&#160;protected]</span></a>
   </div>
   <p style="font-size:12px;margin-top:20px;opacity:0.5">© 2025 Estela's Realty Services. Todos los derechos reservados.</p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = 'https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const PH = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80';
@@ -652,6 +667,17 @@ function renderProperty(p) {
   document.getElementById('propCode').textContent = p.code;
   document.getElementById('propTitle').textContent = p.title;
   document.getElementById('propLocation').textContent = `${p.zone} · ${p.type}`;
+
+  // Badges row above specs (mobile + desktop)
+  const badgeClass = 'badge ' + (p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale');
+  const badgesHTML = `
+    <span class="${badgeClass}">${p.operation === 'Alquiler' ? 'Alquiler' : p.operation === 'Alquiler vacacional' ? 'Vacacional' : 'Venta'}</span>
+    ${p.featured ? '<span class="badge badge-featured">⭐ Destacado</span>' : ''}
+    <span class="prop-code">${p.code}</span>`;
+  const sbm = document.getElementById('specBadgesMobile');
+  const sbd = document.getElementById('specBadgesDesktop');
+  if (sbm) sbm.innerHTML = badgesHTML;
+  if (sbd) sbd.innerHTML = badgesHTML;
 
   // Gallery — Airbnb mosaic
   allImages = p.images?.length ? p.images : [PH];
@@ -972,6 +998,22 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+// ---- MOBILE CTA: sube sobre el footer cuando es visible ----
+(function() {
+  function adjustCTA() {
+    const bar = document.querySelector('.mobile-cta-bar');
+    const footer = document.querySelector('footer');
+    if (!bar || !footer || window.innerWidth >= 1025) return;
+    const fRect = footer.getBoundingClientRect();
+    const vh = window.innerHeight;
+    bar.style.bottom = fRect.top < vh ? (vh - fRect.top) + 'px' : '0px';
+  }
+  window.addEventListener('scroll', adjustCTA, { passive: true });
+  window.addEventListener('resize', adjustCTA, { passive: true });
+  // Re-check once page content is visible
+  setTimeout(adjustCTA, 800);
+})();
+
 // ---- START ----
 // Apply saved language
 setLang(currentLang);
@@ -1000,12 +1042,4 @@ init();
       <svg viewBox="0 0 24 24" style="fill:white;width:20px;height:20px;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       WhatsApp
     </a>
-    <button onclick="window.location.href='tel:+50766740090'" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--primary);color:white;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;">
-      <span class="material-icons" style="font-size:18px">phone</span>
-      Llamar
-    </button>
-  </div>
-</div>
-
-</body>
-</html>
+    <button onclick="window.location.href='tel:+50766740090'" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--primary);color:w
