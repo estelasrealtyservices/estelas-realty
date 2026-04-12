@@ -520,6 +520,7 @@ function applyFilters(){
   if(s) list = list.filter(p =>
     p.title?.toLowerCase().includes(s) ||
     p.zone?.toLowerCase().includes(s) ||
+    p.location_type?.toLowerCase().includes(s) ||
     p.code?.toLowerCase().includes(s) ||
     p.description?.toLowerCase().includes(s) ||
     p.type?.toLowerCase().includes(s) ||
