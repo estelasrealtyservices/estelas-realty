@@ -1179,10 +1179,7 @@ function resetFilters(){
 }
 
 function setBento(el, val){
-  const ltf=document.getElementById('locationTypeFilter');
-  if(ltf) ltf.value=val;
-  document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
-  filterProperties();
+  window.location.href = 'anuncios.html?zona=' + encodeURIComponent(val);
 }
 
 function updateCatCounts(){
