@@ -140,12 +140,12 @@
 
   /* LEFT COLUMN */
   .prop-left{}
-  /* SPECS wrappers sin card, con badges encima */
+  /* SPECS wrappers */
   .specs-mobile{display:none;margin-bottom:20px;}
-  .specs-desktop{margin-bottom:20px;}
+  .specs-desktop-left{display:block;margin-bottom:20px;}
   @media(max-width:1024px){
     .specs-mobile{display:block;}
-    .specs-desktop{display:none;}
+    .specs-desktop-left{display:none;}
   }
   .spec-badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
   .info-section{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:28px;margin-bottom:20px;}
@@ -349,6 +349,11 @@
           <div class="specs-grid" id="specsGrid"></div>
         </div>
 
+        <!-- SPECS (desktop only) — sin badges, arriba de descripción -->
+        <div class="specs-desktop-left">
+          <div class="specs-grid" id="specsGridDesktop"></div>
+        </div>
+
         <!-- DESCRIPCIÓN -->
         <div class="info-section" id="descSection" style="display:none">
           <div class="info-section-title">Descripción</div>
@@ -378,11 +383,6 @@
 
       <!-- RIGHT — CONTACT CARD -->
       <div>
-        <!-- BADGES + SPECS (desktop only) -->
-        <div class="specs-desktop">
-          <div class="spec-badges-row" id="specBadgesDesktop"></div>
-          <div class="specs-grid" id="specsGridDesktop"></div>
-        </div>
         <div class="contact-card">
           <div class="card-price-block">
             <span class="card-price" id="cardPrice"></span>
@@ -658,9 +658,7 @@ function renderProperty(p) {
   const _opLabel = p.operation === 'Alquiler vacacional' ? 'Vacacional' : p.operation === 'Alquiler' ? 'Alquiler' : 'Venta';
   const _badgesHTML = `<span class="${_badgeClass}">${_opLabel}</span>${p.featured ? '<span class="badge badge-featured">⭐ Destacado</span>' : ''}<span class="prop-code">${p.code}</span>`;
   const _sbm = document.getElementById('specBadgesMobile');
-  const _sbd = document.getElementById('specBadgesDesktop');
   if (_sbm) _sbm.innerHTML = _badgesHTML;
-  if (_sbd) _sbd.innerHTML = _badgesHTML;
 
   // Gallery — Airbnb mosaic
   allImages = p.images?.length ? p.images : [PH];
