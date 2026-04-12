@@ -526,10 +526,13 @@ async function loadProperties(){
     }
     filterAndRender();
   } catch(e){
+    console.error('loadProperties error:', e?.message || e?.code || JSON.stringify(e));
     document.getElementById('propertyGrid').innerHTML = `
       <div class="loading-state" style="grid-column:1/-1">
         <span class="material-icons" style="animation:none;opacity:0.4">cloud_off</span>
-        <p>No se pudo conectar. Verifica tu conexión.</p>
+        <p>No se pudo cargar las propiedades.</p>
+        <p style="font-size:12px;color:var(--text3);margin-top:8px">${e?.message || e?.code || ''}</p>
+        <button onclick="loadProperties()" style="margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer">Reintentar</button>
       </div>`;
   }
 }
