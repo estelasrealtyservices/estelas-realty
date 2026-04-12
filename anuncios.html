@@ -150,12 +150,12 @@
   .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .modal-close .material-icons{font-size:20px;color:var(--text2);}
   .modal-body{padding:28px;}
-  .detail-gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;}
-  .detail-main{aspect-ratio:4/3;overflow:hidden;}
-  .detail-main img{width:100%;height:100%;object-fit:cover;}
-  .detail-thumbs{display:grid;grid-template-rows:1fr 1fr;gap:8px;}
-  .detail-thumb{overflow:hidden;min-height:0;}
-  .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;height:380px;}
+  .detail-main{overflow:hidden;height:100%;}
+  .detail-main img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-thumbs{display:grid;grid-template-rows:1fr 1fr;gap:8px;height:100%;}
+  .detail-thumb{overflow:hidden;min-height:0;position:relative;}
+  .detail-thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;position:absolute;inset:0;}
   .detail-info{display:grid;grid-template-columns:1fr 300px;gap:28px;}
   .detail-specs{display:flex;gap:20px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0;}
   .detail-spec{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text2);}
@@ -172,8 +172,9 @@
   .share-btn:hover{border-color:var(--primary);color:var(--primary);}
   .property-map{height:240px;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-top:20px;position:relative;z-index:0;}
   @media(max-width:768px){
-    .detail-gallery{grid-template-columns:1fr;}
-    .detail-thumbs{grid-template-columns:1fr 1fr;display:grid;}
+    .detail-gallery{grid-template-columns:1fr;height:auto;}
+    .detail-main{height:260px;}
+    .detail-thumbs{grid-template-rows:none;grid-template-columns:1fr 1fr;height:130px;}
     .detail-info{grid-template-columns:1fr;}
     .contact-box{margin-top:20px;}
   }
