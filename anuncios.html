@@ -223,6 +223,15 @@
   .lang-toggle{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;}
   .lang-btn{padding:5px 10px;border:none;background:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:4px;transition:var(--transition);}
   .lang-btn.active{background:white;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+
+  /* ACTIVE FILTER CHIP */
+  .active-filter-bar{display:none;align-items:center;gap:8px;padding:10px 32px;background:#f0f9ff;border-bottom:1px solid #bae6fd;font-size:13px;color:#0369a1;}
+  .active-filter-bar.visible{display:flex;}
+  @media(max-width:768px){.active-filter-bar{padding:10px 16px;}}
+  .active-filter-chip{display:inline-flex;align-items:center;gap:6px;background:#0ea5e9;color:white;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;}
+  .active-filter-chip button{background:none;border:none;color:white;cursor:pointer;display:flex;align-items:center;padding:0;margin-left:2px;opacity:0.85;transition:opacity 0.2s;}
+  .active-filter-chip button:hover{opacity:1;}
+  .active-filter-chip button .material-icons{font-size:14px;}
 </style>
 </head>
 <body>
@@ -339,6 +348,16 @@
       </button>
     </div>
   </div>
+</div>
+
+<!-- ACTIVE FILTER INDICATOR -->
+<div class="active-filter-bar" id="activeFilterBar">
+  <span class="material-icons" style="font-size:16px;color:#0369a1">filter_list</span>
+  <span>Filtrando por:</span>
+  <span class="active-filter-chip" id="activeFilterChip">
+    <span id="activeFilterLabel"></span>
+    <button onclick="clearZoneFilter()" title="Quitar filtro"><span class="material-icons">close</span></button>
+  </span>
 </div>
 
 <!-- LISTINGS -->
@@ -495,6 +514,16 @@ async function loadProperties(){
       .order('created_at', {ascending: false});
     if(error) throw error;
     allProperties = data || [];
+    // Aplicar ?zona= antes del primer render si viene en la URL
+    const params = new URLSearchParams(window.location.search);
+    const zona = params.get('zona');
+    if(zona){
+      const input = document.getElementById('searchInput');
+      const inputMobile = document.getElementById('searchInputMobile');
+      if(input) input.value = zona;
+      if(inputMobile) inputMobile.value = zona;
+      showZoneChip(zona);
+    }
     filterAndRender();
   } catch(e){
     document.getElementById('propertyGrid').innerHTML = `
@@ -820,6 +849,36 @@ function loadLeafletThen(cb){
   document.head.appendChild(script);
 }
 
+// ---- ACTIVE FILTER CHIP ----
+let activeZonaFilter = '';
+
+function showZoneChip(label){
+  activeZonaFilter = label;
+  const bar = document.getElementById('activeFilterBar');
+  const lbl = document.getElementById('activeFilterLabel');
+  if(!bar || !lbl) return;
+  if(label){
+    lbl.textContent = label;
+    bar.classList.add('visible');
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function clearZoneFilter(){
+  activeZonaFilter = '';
+  const input = document.getElementById('searchInput');
+  const inputMobile = document.getElementById('searchInputMobile');
+  if(input) input.value = '';
+  if(inputMobile) inputMobile.value = '';
+  document.getElementById('activeFilterBar')?.classList.remove('visible');
+  // Limpiar el parámetro de la URL sin recargar
+  const url = new URL(window.location);
+  url.searchParams.delete('zona');
+  window.history.replaceState({}, '', url);
+  filterAndRender();
+}
+
 // ---- DEEP LINK (open specific property from ?id=) ----
 function handleDeepLink(){
   const params = new URLSearchParams(window.location.search);
@@ -828,14 +887,14 @@ function handleDeepLink(){
   const zona = params.get('zona');
   if(zona){
     const input = document.getElementById('searchInput');
-    if(input){
-      input.value = zona;
-      filterAndRender();
-      // Hacer scroll suave a los resultados
-      setTimeout(()=>{
-        document.querySelector('.filter-bar')?.scrollIntoView({behavior:'smooth'});
-      }, 300);
-    }
+    const inputMobile = document.getElementById('searchInputMobile');
+    if(input) input.value = zona;
+    if(inputMobile) inputMobile.value = zona;
+    showZoneChip(zona);
+    filterAndRender();
+    setTimeout(()=>{
+      document.querySelector('.filter-bar')?.scrollIntoView({behavior:'smooth'});
+    }, 300);
   }
 
   // Deep link a propiedad específica
