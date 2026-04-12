@@ -897,6 +897,21 @@ document.addEventListener('keydown', e => {
 });
 
 // ---- SHARE ----
+function shareProperty() {
+  const p = currentProperty;
+  const url = window.location.href;
+  const title = p ? p.title : document.title;
+  const period = p ? (p.operation === 'Alquiler vacacional' ? ' / noche' : p.operation === 'Alquiler' ? ' / mes' : '') : '';
+  const price = p ? '$' + (p.price || 0).toLocaleString() + period : '';
+  const text = p ? `${title} · ${price} · ${p.zone || ''}` : title;
+
+  if (navigator.share) {
+    navigator.share({ title, text, url }).catch(() => {});
+  } else {
+    copyLink();
+  }
+}
+
 function copyLink() {
   const url = window.location.href;
   navigator.clipboard?.writeText(url).then(() => showToast('Enlace copiado al portapapeles')).catch(() => {
@@ -1014,7 +1029,7 @@ init();
       <span id="ctaBarPrice" style="font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-1px;line-height:1;"></span>
       <span id="ctaBarPeriod" style="font-size:13px;color:var(--text3);font-weight:400;margin-left:2px;"></span>
     </div>
-    <button onclick="copyLink()" style="background:var(--surface2);color:var(--text);border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;">Compartir</button>
+    <button onclick="shareProperty()" style="background:var(--surface2);color:var(--text);border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;">Compartir</button>
   </div>
   <!-- Fila 3: botones acción -->
   <div style="display:flex;gap:10px;">
