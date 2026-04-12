@@ -25,7 +25,7 @@
 
 <style>
   :root {
-    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
+    --primary:#1A1A2E;--accent:#FFC145;--accent-light:#FFE599;
     --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
     --text:#1A1A1A;--text2:#555;--text3:#888;
     --border:#E0E0E0;--radius:12px;
@@ -48,7 +48,7 @@
   .back-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--primary);}
   .back-btn .material-icons{font-size:18px;}
   .nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;}
-  .nav-cta:hover{background:#b8973d;}
+  .nav-cta:hover{background:#e6a800;}
   .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;}
   .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition);}
   @media(max-width:768px){
@@ -528,7 +528,7 @@ function renderDynamic(p) {
   if (p.parking > 0) specs.push({svg:SVG.car,  val:p.parking,     lbl:t.parking});
   if (p.floor)       specs.push({svg:SVG.flr,  val:p.floor,       lbl:t.floor});
   const sg = document.getElementById('specsGrid');
-  if (sg) sg.innerHTML = specs.map(s => `<div class="spec-pill"><span class="spec-svg" style="color:#C9A84C">${s.svg}</span><strong>${s.val}</strong><span>${s.lbl}</span></div>`).join('');
+  if (sg) sg.innerHTML = specs.map(s => `<div class="spec-pill"><span class="spec-svg" style="color:#FFC145">${s.svg}</span><strong>${s.val}</strong><span>${s.lbl}</span></div>`).join('');
 
   // Description (with EN override)
   const desc = currentLang === 'en' && p.description_en ? p.description_en : (p.description || '');
@@ -541,7 +541,7 @@ function renderDynamic(p) {
     const ICONS = {'Piscina':'pool','Gimnasio':'fitness_center','Amoblado':'chair','Balcón':'balcony','Vista al mar':'beach_access','Seguridad 24h':'security','A/C incluido':'ac_unit','Pet friendly':'pets','Área de juegos':'sports_esports','Terraza':'deck','Cuarto de servicio':'cleaning_services','Bodega':'inventory','Jardín':'grass','BBQ':'outdoor_grill','Portón eléctrico':'garage'};
     const amap = t.amenities;
     const fg = document.getElementById('featuresGrid');
-    if (fg) fg.innerHTML = p.features.map(f => `<span class="feature-chip"><span class="material-icons" style="font-size:14px;color:#C9A84C">${ICONS[f]||'check_circle'}</span>${amap[f]||f}</span>`).join('');
+    if (fg) fg.innerHTML = p.features.map(f => `<span class="feature-chip"><span class="material-icons" style="font-size:14px;color:#FFC145">${ICONS[f]||'check_circle'}</span>${amap[f]||f}</span>`).join('');
   }
 
   // WhatsApp links
@@ -752,7 +752,7 @@ function renderProperty(p) {
       const map = L.map('propMap', { zoomControl: true, scrollWheelZoom: false, attributionControl: false }).setView([p.latitude, p.longitude], 15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
       const icon = L.divIcon({
-        html: `<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+        html: `<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #FFC145;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
         iconSize: [24, 24], iconAnchor: [12, 24], className: ''
       });
       L.marker([p.latitude, p.longitude], { icon }).addTo(map)
@@ -893,13 +893,13 @@ function generatePDF() {
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <style>
     body{font-family:'DM Sans',sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#1a1a1a;}
-    .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:2px solid #C9A84C;margin-bottom:28px;}
+    .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:2px solid #FFC145;margin-bottom:28px;}
     .brand{font-family:'Playfair Display',serif;font-size:22px;color:#1A1A2E;}
     .code{font-size:12px;letter-spacing:2px;color:#888;background:#f4f4f2;padding:6px 14px;border-radius:20px;}
     img{width:100%;border-radius:12px;margin-bottom:20px;aspect-ratio:16/9;object-fit:cover;}
     h1{font-family:'Playfair Display',serif;font-size:26px;color:#1A1A2E;margin-bottom:8px;}
-    .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#C9A84C'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
-    .price{font-family:'Playfair Display',serif;font-size:30px;color:#C9A84C;margin:12px 0;}
+    .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#FFC145'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
+    .price{font-family:'Playfair Display',serif;font-size:30px;color:#FFC145;margin:12px 0;}
     .specs{display:flex;gap:20px;padding:16px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:16px 0;}
     .spec{text-align:center;flex:1;font-size:13px;color:#666;}.spec strong{display:block;font-size:18px;color:#1a1a1a;}
     .features{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}.feat{padding:5px 12px;background:#f4f4f2;border-radius:20px;font-size:12px;}

@@ -12,7 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
-    --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
+    --primary:#1A1A2E;--accent:#FFC145;--accent-light:#FFE599;
     --bg:#FAFAFA;--surface:#FFFFFF;--surface2:#F4F4F2;
     --text:#1A1A1A;--text2:#555;--text3:#888;
     --border:#E0E0E0;--radius:12px;
@@ -34,7 +34,7 @@
   .nav-links a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
   .nav-links a:hover{background:var(--surface2);color:var(--text);}
   .nav-cta{background:var(--accent);color:var(--primary);border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:6px;}
-  .nav-cta:hover{background:#b8973d;}
+  .nav-cta:hover{background:#e6a800;}
 
   /* HERO SLIDESHOW */
   .hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:72px 32px 80px;}
@@ -43,9 +43,9 @@
   .hero-slide.active{opacity:1;}
   .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.58) 0%,rgba(45,45,82,0.48) 100%);}
   .hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary) 0%,#2d2d52 100%);z-index:-1;}
-  .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+  .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23FFC145' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
   .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
-  .hero-tag{display:inline-block;background:rgba(201,168,76,0.2);color:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+  .hero-tag{display:inline-block;background:rgba(255,193,69,0.2);color:var(--accent-light);border:1px solid rgba(255,193,69,0.3);border-radius:20px;padding:6px 16px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
   .hero h1{
     font-family:'Playfair Display', serif;
     font-size:25px;
@@ -69,7 +69,7 @@
   .search-field select,.search-field input{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;}
   .search-field label{display:block;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
   .search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
-  .search-btn:hover{background:#b8973d;}
+  .search-btn:hover{background:#e6a800;}
 
   /* TRUST BAND */
   .trust-band{background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);padding:96px 32px 104px;}
@@ -161,8 +161,8 @@
   .zone-count{font-size:12px;opacity:0.75;margin-top:2px;}
 
   /* SERVICES — rediseño #FFC145 */
-  #servicios{background:#FFC145;}
-  #servicios .section-title{color:var(--primary);}
+  #servicios{background:#FFC145;padding-top:50px;}
+  #servicios .section-title{color:var(--primary);text-align:center;font-family:'DM Sans',sans-serif;}
   #servicios .section-header{margin-bottom:40px;}
   .services-grid{
     display:grid;
@@ -291,7 +291,7 @@
 
   /* VER MÁS BUTTON */
   .ver-mas-btn{display:inline-flex;align-items:center;gap:10px;background:var(--primary);color:white;border:none;padding:14px 32px;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:var(--transition);text-decoration:none;letter-spacing:0.01em;}
-  .ver-mas-btn:hover{background:var(--accent);color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.3);}
+  .ver-mas-btn:hover{background:var(--accent);color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,193,69,0.3);}
   .ver-mas-btn .material-icons{transition:transform 0.25s;}
   .ver-mas-btn:hover .material-icons{transform:translateX(4px);}
 
@@ -440,17 +440,8 @@
     background:#ff853f;
     display:flex;
     flex-direction:column;
-    justify-content:flex-end;
+    justify-content:center;
     padding:48px 40px;
-  }
-  .destinos-eyebrow{
-    font-family:'DM Sans',sans-serif;
-    font-size:11px;
-    font-weight:600;
-    letter-spacing:2.5px;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.65);
-    margin-bottom:16px;
   }
   .destinos-heading{
     font-family:'Playfair Display',serif;
@@ -724,8 +715,7 @@
 
     <!-- Bloque izquierdo: fondo sólido + texto -->
     <div class="destinos-left">
-      <div class="destinos-eyebrow" id="bentoKicker">Descubre tu nuevo destino</div>
-      <h2 class="destinos-heading">Playa,<br>Campo<br>&amp; Ciudad</h2>
+      <h2 class="destinos-heading" id="bentoKicker">Descubre tu nuevo destino</h2>
     </div>
 
     <!-- Tres tarjetas verticales -->
@@ -1290,7 +1280,7 @@ function openDetail(id){
         }).setView([p.latitude, p.longitude], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
         const icon = L.divIcon({
-          html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #C9A84C;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+          html:`<div style="background:#1A1A2E;width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #FFC145;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
           iconSize:[24,24], iconAnchor:[12,24], className:''
         });
         L.marker([p.latitude, p.longitude], {icon}).addTo(map)
@@ -1320,13 +1310,13 @@ function generateListing(id){
   win.document.write(`<!DOCTYPE html><html><head><title>Listado ${p.code}</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <style>body{font-family:'DM Sans', sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#1a1a1a;}
-  .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:2px solid #C9A84C;margin-bottom:28px;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:2px solid #FFC145;margin-bottom:28px;}
   .brand{font-family:'Playfair Display', serif;font-size:22px;color:#1A1A2E;}
   .code{font-size:12px;letter-spacing:2px;color:#888;background:#f4f4f2;padding:6px 14px;border-radius:20px;}
   img{width:100%;border-radius:12px;margin-bottom:20px;aspect-ratio:16/9;object-fit:cover;}
   h1{font-family:'Playfair Display', serif;font-size:26px;color:#1A1A2E;margin-bottom:8px;}
-  .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#C9A84C'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
-  .price{font-family:'Playfair Display', serif;font-size:30px;color:#C9A84C;margin:12px 0;}
+  .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${p.operation==='Alquiler'?'#1A1A2E':p.operation==='Alquiler vacacional'?'#2E7D32':'#FFC145'};color:${p.operation==='Alquiler'||p.operation==='Alquiler vacacional'?'white':'#1A1A2E'};margin-bottom:16px;}
+  .price{font-family:'Playfair Display', serif;font-size:30px;color:#FFC145;margin:12px 0;}
   .specs{display:flex;gap:20px;padding:16px 0;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:16px 0;}
   .spec{text-align:center;flex:1;font-size:13px;color:#666;}.spec strong{display:block;font-size:18px;color:#1a1a1a;}
   .features{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}.feat{padding:5px 12px;background:#f4f4f2;border-radius:20px;font-size:12px;}
