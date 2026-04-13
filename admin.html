@@ -70,10 +70,10 @@
   .tab-panel.active{display:block;animation:fadeIn 0.2s ease;}
 
   /* STATS */
-  .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
-  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;gap:16px;transition:var(--transition);}
+  .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;transition:var(--transition);}
   .stat-card:hover{box-shadow:var(--shadow-hover);}
-  .stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+  .stat-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .stat-icon.gold{background:rgba(201,168,76,0.12);}
   .stat-icon.gold .material-icons{color:var(--accent);}
   .stat-icon.blue{background:rgba(26,26,46,0.08);}
@@ -82,10 +82,10 @@
   .stat-icon.green .material-icons{color:#2E7D32;}
   .stat-icon.red{background:rgba(229,57,53,0.1);}
   .stat-icon.red .material-icons{color:#E53935;}
-  .stat-icon .material-icons{font-size:24px;}
+  .stat-icon .material-icons{font-size:18px;}
   .stat-info{flex:1;}
-  .stat-num{font-family:'Playfair Display', serif;font-size:28px;font-weight:600;color:var(--primary);line-height:1;}
-  .stat-label{font-size:12px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;}
+  .stat-num{font-family:'Playfair Display', serif;font-size:20px;font-weight:600;color:var(--primary);line-height:1;}
+  .stat-label{font-size:11px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.4px;}
 
   /* TOOLBAR */
   .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px;}
@@ -486,6 +486,13 @@
       color:var(--primary);
     }
     .mob-card-price-period{font-size:11px;font-weight:400;color:var(--text3);}
+    .mob-card-owner{
+      display:flex;align-items:center;gap:3px;
+      font-size:11px;color:var(--text3);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .mob-card-owner .material-icons{font-size:12px;color:var(--accent);flex-shrink:0;}
+    .mob-card-owner-contact{color:var(--text3);opacity:0.8;}
     .mob-card-actions{
       display:flex;
       align-items:center;
@@ -740,7 +747,7 @@
         <div class="toolbar-left">
           <div class="search-wrap">
             <span class="material-icons">search</span>
-            <input type="text" class="search-input" placeholder="Buscar propiedad..." id="adminSearch" oninput="renderTable()">
+            <input type="text" class="search-input" placeholder="Buscar por título, código, zona, E24..." id="adminSearch" oninput="renderTable()">
           </div>
           <select class="filter-sel" id="adminOpFilter" onchange="renderTable()">
             <option value="">Todas las operaciones</option><option>Alquiler</option><option>Alquiler vacacional</option><option>Venta</option>
@@ -2073,7 +2080,8 @@ function renderTable(resetPage = true) {
                   p.owner_name?.toLowerCase().includes(s) ||
                   p.owner_unit?.toLowerCase().includes(s) ||
                   p.description?.toLowerCase().includes(s)||
-                  String(p.price||'').includes(s));
+                  String(p.price||'').includes(s)||
+                  p.encuentra24_code?.toLowerCase().includes(s));
   if (op)      filteredList = filteredList.filter(p => p.operation === op);
   if (zone)    filteredList = filteredList.filter(p => p.zone === zone);
   if (status === 'active')   filteredList = filteredList.filter(p => p.is_active !== false);
@@ -2192,6 +2200,7 @@ function renderPage() {
             ${p.featured ? '<span class="badge badge-featured" style="font-size:10px;padding:2px 7px;">⭐ Dest.</span>' : ''}
           </div>
           <div class="mob-card-price">$${(p.price||0).toLocaleString()}<span class="mob-card-price-period"> ${period(p.operation)}</span></div>
+          ${p.owner_name ? `<div class="mob-card-owner"><span class="material-icons">person</span>${p.owner_name}${p.owner_contact ? `<span class="mob-card-owner-contact"> · ${p.owner_contact}</span>` : ''}</div>` : ''}
           <div class="mob-card-actions">
             <button class="mob-card-toggle ${active ? 'active' : 'inactive'}" onclick="toggleActive('${p.id}',${active})">
               <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
