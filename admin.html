@@ -122,6 +122,41 @@
   .btn-edit:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2);}
   .btn-del{padding:6px 10px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;font-size:12px;color:#E53935;display:flex;align-items:center;transition:var(--transition);}
   .btn-del:hover{background:rgba(229,57,53,0.08);}
+  .btn-view-info{padding:6px 12px;background:none;border:1px solid rgba(201,168,76,0.4);border-radius:6px;font-size:12px;color:var(--accent);display:flex;align-items:center;gap:4px;transition:var(--transition);}
+  .btn-view-info:hover{background:rgba(201,168,76,0.1);border-color:var(--accent);}
+  .btn-view-info .material-icons{font-size:14px;}
+
+  /* QUICK-VIEW MODAL */
+  .qv-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1100;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+  .qv-overlay.open{display:flex;}
+  .qv-modal{background:var(--surface);border-radius:16px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.25);animation:fadeIn 0.2s ease;}
+  .qv-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--surface);z-index:2;border-radius:16px 16px 0 0;}
+  .qv-header-left{display:flex;flex-direction:column;gap:4px;}
+  .qv-code{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase;}
+  .qv-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--primary);line-height:1.25;}
+  .qv-close{background:none;border:none;color:var(--text3);padding:4px;border-radius:6px;transition:var(--transition);flex-shrink:0;}
+  .qv-close:hover{background:var(--surface2);color:var(--text);}
+  .qv-close .material-icons{font-size:22px;}
+  .qv-body{padding:20px 24px 28px;}
+  .qv-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+  .qv-section{margin-bottom:20px;}
+  .qv-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+  .qv-section-title .material-icons{font-size:14px;color:var(--accent);}
+  .qv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .qv-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .qv-item{background:var(--surface2);border-radius:8px;padding:10px 12px;}
+  .qv-item-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+  .qv-item-value{font-size:14px;font-weight:500;color:var(--text);}
+  .qv-item-value.price{font-family:'Playfair Display',serif;font-size:18px;color:var(--primary);}
+  .qv-desc{font-size:14px;color:var(--text2);line-height:1.65;background:var(--surface2);border-radius:8px;padding:12px 14px;}
+  .qv-notes{font-size:14px;color:var(--text2);line-height:1.65;background:#fffbef;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:12px 14px;white-space:pre-wrap;}
+  .qv-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .qv-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--text2);}
+  .qv-owner-box{background:rgba(26,26,46,0.04);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+  .qv-owner-name{font-size:15px;font-weight:600;color:var(--primary);}
+  .qv-owner-contact{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:4px;}
+  .qv-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--surface);border-radius:0 0 16px 16px;}
+  @media(max-width:600px){.qv-grid,.qv-grid-3{grid-template-columns:1fr 1fr;}.qv-modal{border-radius:12px;}.qv-header,.qv-body,.qv-footer{padding-left:16px;padding-right:16px;}}
   .btn-toggle{padding:5px 10px;border-radius:6px;font-size:12px;font-family:inherit;display:flex;align-items:center;gap:4px;cursor:pointer;transition:var(--transition);border:none;font-weight:500;}
   .btn-toggle.active{background:rgba(46,125,50,0.12);color:#2E7D32;}
   .btn-toggle.active:hover{background:rgba(46,125,50,0.2);}
@@ -1525,11 +1560,40 @@ CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role(
           </label>
         </div>
       </div>
+      <div class="modal-section">
+        <div class="modal-section-title" style="display:flex;align-items:center;gap:8px;">
+          <span class="material-icons" style="font-size:16px;color:var(--accent)">sticky_note_2</span>
+          Notas internas
+          <span style="font-size:10px;background:rgba(201,168,76,0.15);color:#7a5c10;padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;">SOLO VISIBLE EN ADMIN</span>
+        </div>
+        <div class="form-group">
+          <label>Notas adicionales</label>
+          <textarea id="fNotes" placeholder="Ej: El apto lo muestra el asistente · Propietario disponible solo fines de semana · Llave en la oficina · Precio negociable..." style="min-height:80px;"></textarea>
+        </div>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
       <button class="btn-danger" id="deleteBtn" style="display:none" onclick="deleteProperty()"><span class="material-icons" style="font-size:16px">delete</span>Eliminar</button>
       <button class="btn-primary" id="saveBtn" onclick="saveProperty()"><span class="material-icons" style="font-size:18px">save</span>Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK VIEW MODAL -->
+<div class="qv-overlay" id="qvOverlay" onclick="if(event.target===this)closeQV()">
+  <div class="qv-modal">
+    <div class="qv-header">
+      <div class="qv-header-left">
+        <span class="qv-code" id="qvCode"></span>
+        <div class="qv-title" id="qvTitle"></div>
+      </div>
+      <button class="qv-close" onclick="closeQV()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="qv-body" id="qvBody"></div>
+    <div class="qv-footer">
+      <button class="btn-secondary" onclick="closeQV()">Cerrar</button>
+      <button class="btn-primary" id="qvEditBtn" onclick="closeQV()"><span class="material-icons" style="font-size:16px">edit</span>Editar</button>
     </div>
   </div>
 </div>
@@ -2329,6 +2393,7 @@ function renderPage() {
         </td>
         <td>
           <div class="action-btns">
+            <button class="btn-view-info" onclick="openQV('${p.id}')"><span class="material-icons" style="font-size:14px">visibility</span>Ver</button>
             <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button>
             <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
           </div>
@@ -2372,6 +2437,7 @@ function renderPage() {
               <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
               ${active ? 'Publicada' : 'Oculta'}
             </button>
+            <button class="mob-card-edit" style="border-color:rgba(201,168,76,0.4);color:var(--accent);" onclick="openQV('${p.id}')"><span class="material-icons">visibility</span>Ver</button>
             <button class="mob-card-edit" onclick="openModal('${p.id}')"><span class="material-icons">edit</span>Editar</button>
             <button class="mob-card-del" onclick="confirmDelete('${p.id}')"><span class="material-icons">delete</span></button>
           </div>
@@ -2599,6 +2665,7 @@ function openModal(id=null){
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
     document.getElementById('fE24Code').value=p.encuentra24_code||'';
+    document.getElementById('fNotes').value=p.notes||'';
     document.getElementById('fLatitude').value=p.latitude||'';
     document.getElementById('fLongitude').value=p.longitude||'';
     const lat=p.latitude||8.994;
@@ -2618,7 +2685,7 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance','fNotes'].forEach(id=>document.getElementById(id).value='');
     // Clear zone autocomplete
     document.getElementById('fZone').value='';
     zoneACUpdateClear();
@@ -2650,6 +2717,103 @@ function closeModal(){
     const el=document.getElementById(id);
     if(el){el.style.borderColor='';el.style.boxShadow='';}
   });
+}
+
+// ---- QUICK VIEW ----
+function openQV(id){
+  const p = allProperties.find(x=>x.id===id); if(!p) return;
+  document.getElementById('qvCode').textContent = p.code;
+  document.getElementById('qvTitle').textContent = p.title;
+  document.getElementById('qvEditBtn').onclick = ()=>{ closeQV(); openModal(id); };
+
+  const period = p.operation==='Alquiler vacacional' ? '/noche' : p.operation==='Alquiler' ? '/mes' : '';
+  const badgeCls = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
+  const statusColor = p.is_active!==false ? '#2E7D32' : '#888';
+  const statusLabel = p.is_active!==false ? '● Publicada' : '○ Oculta';
+  const fecha = p.created_at ? new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+
+  const allTags = [
+    p.featured ? '⭐ Destacado' : null,
+    ...(p.tags||[]).map(t=>t==='Exclusivo'?'🏅 Exclusivo':t==='Ganga'?'🔥 Ganga':t==='Oportunidad'?'💡 Oportunidad':t==='Urgente'?'⚡ Urgente':t),
+  ].filter(Boolean);
+
+  document.getElementById('qvBody').innerHTML = `
+    <div class="qv-badges">
+      <span class="badge ${badgeCls}">${p.operation}</span>
+      <span class="badge" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);">${p.type}</span>
+      <span style="font-size:12px;font-weight:600;color:${statusColor};background:${p.is_active!==false?'rgba(46,125,50,0.08)':'rgba(0,0,0,0.05)'};padding:3px 10px;border-radius:20px;">${statusLabel}</span>
+      ${allTags.map(t=>`<span class="badge" style="background:rgba(201,168,76,0.12);color:#7a5c10;border:1px solid rgba(201,168,76,0.3);">${t}</span>`).join('')}
+    </div>
+
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">info</span>Información general</div>
+      <div class="qv-grid-3">
+        <div class="qv-item"><div class="qv-item-label">Precio</div><div class="qv-item-value price">$${(p.price||0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)"> ${period}</span></div></div>
+        <div class="qv-item"><div class="qv-item-label">Zona</div><div class="qv-item-value">${p.zone||'—'}</div></div>
+        <div class="qv-item"><div class="qv-item-label">Metraje</div><div class="qv-item-value">${p.size ? p.size+' m²' : '—'}</div></div>
+        ${p.rooms>0?`<div class="qv-item"><div class="qv-item-label">Habitaciones</div><div class="qv-item-value">${p.rooms}</div></div>`:''}
+        ${p.baths>0?`<div class="qv-item"><div class="qv-item-label">Baños</div><div class="qv-item-value">${p.baths}</div></div>`:''}
+        ${p.parking>0?`<div class="qv-item"><div class="qv-item-label">Parqueos</div><div class="qv-item-value">${p.parking}</div></div>`:''}
+        ${p.floor?`<div class="qv-item"><div class="qv-item-label">Piso / Unidad</div><div class="qv-item-value">${p.floor}</div></div>`:''}
+        ${p.maintenance_cost?`<div class="qv-item"><div class="qv-item-label">Mantenimiento</div><div class="qv-item-value">$${(p.maintenance_cost).toLocaleString()}/mes</div></div>`:''}
+        ${p.titulado?`<div class="qv-item"><div class="qv-item-label">Titulado</div><div class="qv-item-value">${p.titulado}</div></div>`:''}
+        <div class="qv-item"><div class="qv-item-label">Creado</div><div class="qv-item-value" style="font-size:13px;">${fecha}</div></div>
+        ${p.encuentra24_code?`<div class="qv-item"><div class="qv-item-label">Código E24</div><div class="qv-item-value">${p.encuentra24_code}</div></div>`:''}
+        ${p.latitude?`<div class="qv-item"><div class="qv-item-label">Coordenadas</div><div class="qv-item-value" style="font-size:12px;">${parseFloat(p.latitude).toFixed(5)}, ${parseFloat(p.longitude).toFixed(5)}</div></div>`:''}
+      </div>
+    </div>
+
+    ${(p.location_type?.length||p.lifestyle?.length) ? `
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">landscape</span>Ubicación y estilo de vida</div>
+      <div class="qv-chips">
+        ${(p.location_type||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}
+        ${(p.lifestyle||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}
+      </div>
+    </div>` : ''}
+
+    ${p.features?.length ? `
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">checklist</span>Amenidades</div>
+      <div class="qv-chips">${p.features.map(f=>`<span class="qv-chip">${f}</span>`).join('')}</div>
+    </div>` : ''}
+
+    ${p.description ? `
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">description</span>Descripción</div>
+      <div class="qv-desc">${p.description}</div>
+      ${p.description_en ? `<div class="qv-desc" style="margin-top:8px;"><span style="font-size:10px;font-weight:700;color:var(--text3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">🇺🇸 English</span>${p.description_en}</div>` : ''}
+    </div>` : ''}
+
+    ${p.video_url ? `
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">play_circle</span>Video</div>
+      <a href="${p.video_url}" target="_blank" style="font-size:13px;color:var(--accent);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:14px;">open_in_new</span>${p.video_url}</a>
+    </div>` : ''}
+
+    <hr class="qv-divider">
+
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">person</span>Propietario</div>
+      ${p.owner_name ? `
+      <div class="qv-owner-box">
+        <div class="qv-owner-name">${p.owner_name}</div>
+        ${p.owner_contact ? `<div class="qv-owner-contact"><span class="material-icons" style="font-size:14px;">phone</span>${p.owner_contact}</div>` : ''}
+      </div>` : '<span style="font-size:13px;color:var(--text3);font-style:italic;">Sin propietario registrado</span>'}
+    </div>
+
+    ${p.notes ? `
+    <div class="qv-section">
+      <div class="qv-section-title"><span class="material-icons">sticky_note_2</span>Notas internas</div>
+      <div class="qv-notes">${p.notes}</div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('qvOverlay').classList.add('open');
+}
+
+function closeQV(){
+  document.getElementById('qvOverlay').classList.remove('open');
 }
 function toggleFeature(btn){btn.classList.toggle('selected');}
 
@@ -2854,6 +3018,7 @@ async function saveProperty(){
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
     owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
     encuentra24_code:document.getElementById('fE24Code').value.trim()||null,
+    notes:document.getElementById('fNotes').value.trim()||null,
     latitude:parseFloat(document.getElementById('fLatitude').value)||null,
     longitude:parseFloat(document.getElementById('fLongitude').value)||null
   };
