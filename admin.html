@@ -108,8 +108,6 @@
   tr:last-child td{border-bottom:none;}
   tr:hover td{background:var(--surface2);}
   .prop-thumb{width:64px;height:48px;border-radius:6px;object-fit:cover;}
-  .prop-thumb-link{display:block;width:64px;height:48px;border-radius:6px;overflow:hidden;position:relative;cursor:pointer;}
-  .prop-thumb-link:hover .prop-thumb{transform:scale(1.06);}
   .prop-code{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:1px;background:var(--surface2);padding:3px 8px;border-radius:4px;}
   .prop-title{font-weight:500;color:var(--text);}
   .prop-zone{font-size:12px;color:var(--text3);margin-top:2px;}
@@ -2797,6 +2795,7 @@ async function saveProperty(){
   const editingId=document.getElementById('editingId').value;
 
   // Upload any new files and resolve final ordered arrays
+  const propCode = (document.getElementById('modalCode').textContent || 'sin-codigo').trim().toUpperCase();
   const newItems = photoItems.filter(item=>!item.isExisting);
   if(newItems.length>0){
     document.getElementById('modalProg').classList.add('visible');
@@ -2804,7 +2803,8 @@ async function saveProperty(){
     for(let i=0;i<photoItems.length;i++){
       const item=photoItems[i];
       if(!item.isExisting && item.file){
-        const path=`${Date.now()}_${i}.${item.file.name.split('.').pop()}`;
+        const ext = item.file.name.split('.').pop().toLowerCase();
+        const path=`properties/${propCode}/${Date.now()}_${i}.${ext}`;
         const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,item.file,{upsert:true});
         if(!error){
           const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
