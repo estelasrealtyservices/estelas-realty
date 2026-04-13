@@ -364,9 +364,7 @@
     <button class="admin-tab" onclick="switchTab('site',this)">
       <span class="material-icons">web</span>Editar página principal
     </button>
-    <button class="admin-tab" onclick="switchTab('anuncios',this)">
-      <span class="material-icons">view_list</span>Editar página Anuncios
-    </button>
+
   </div>
 
   <div class="admin-content">
@@ -571,13 +569,13 @@
           <div class="editor-card-icon"><span class="material-icons">auto_awesome_mosaic</span></div>
           <div>
             <div class="editor-card-title">Franja "Encuentra tu lugar"</div>
-            <div class="editor-card-subtitle">Edita el título, subtítulo, foto de fondo y descripción de cada categoría del Bento Grid</div>
+            <div class="editor-card-subtitle">Edita la foto de fondo y la etiqueta de las 3 tarjetas de destinos</div>
           </div>
         </div>
         <div class="editor-card-body">
           <p style="font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.6;">
             <span class="material-icons" style="font-size:14px;vertical-align:middle;color:var(--accent)">info</span>
-            Estas 5 tarjetas aparecen en la sección visual del index. El <strong>Tag</strong> es la etiqueta pequeña, el <strong>Título</strong> es el texto grande y el <strong>Subtítulo</strong> es la línea de zonas que aparece debajo.
+            Solo se editan las primeras 3 tarjetas. El <strong>Tag</strong> es la etiqueta visible sobre la foto de cada destino.
           </p>
           <div class="progress-bar" id="bentoProgress"><div class="progress-fill" id="bentoProgressFill" style="width:0%"></div></div>
           <div class="bento-editor-grid" id="bentoEditorGrid">
@@ -662,60 +660,8 @@
     </div>
   </div>
 
-  <!-- TAB: ANUNCIOS PAGE EDITOR -->
-  <div class="tab-panel" id="tab-anuncios">
-    <div class="site-editor">
 
-      <div class="editor-card">
-        <div class="editor-card-header">
-          <div class="editor-card-icon"><span class="material-icons">image</span></div>
-          <div>
-            <div class="editor-card-title">Imagen de fondo — Encabezado de Anuncios</div>
-            <div class="editor-card-subtitle">Esta imagen aparece detrás del título "Anuncios Inmobiliarios" en la página anuncios.html</div>
-          </div>
-        </div>
-        <div class="editor-card-body">
 
-          <!-- Preview -->
-          <div id="anunciosBgPreview" style="width:100%;height:220px;border-radius:12px;overflow:hidden;background:var(--primary);position:relative;margin-bottom:20px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
-            <div id="anunciosBgImg" style="position:absolute;inset:0;background-size:cover;background-position:center;transition:all 0.4s;"></div>
-            <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.62) 0%,rgba(45,45,82,0.5) 100%);"></div>
-            <div style="position:relative;z-index:1;text-align:center;color:white;">
-              <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:8px;">Vista previa</div>
-              <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;">Anuncios Inmobiliarios</div>
-              <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:6px;">Explora todo nuestro catálogo de propiedades</div>
-            </div>
-          </div>
-
-          <!-- URL input -->
-          <div class="form-group" style="margin-bottom:14px;">
-            <label>URL de la imagen de fondo</label>
-            <input type="url" id="anunciosBgUrl" placeholder="https://..." style="width:100%;" oninput="previewAnunciosBg()">
-          </div>
-
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-            <div style="flex:1;height:1px;background:var(--border);"></div>
-            <span style="font-size:12px;color:var(--text3);font-weight:500;">ó sube una foto</span>
-            <div style="flex:1;height:1px;background:var(--border);"></div>
-          </div>
-
-          <!-- Upload -->
-          <div class="progress-bar" id="anunciosBgProgress"><div class="progress-fill" id="anunciosBgProgressFill" style="width:0%"></div></div>
-          <div class="upload-btn" style="margin-bottom:8px;">
-            <input type="file" accept="image/*" onchange="uploadAnunciosBg(this)">
-            <span class="material-icons">add_photo_alternate</span>
-            Subir imagen de fondo
-          </div>
-          <p style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:20px;">JPG o PNG recomendado horizontal (16:9 o panorámica) · mínimo 1200px de ancho</p>
-
-          <button class="save-config-btn" id="saveAnunciosBgBtn" onclick="saveAnunciosBg()">
-            <span class="material-icons">save</span>Guardar imagen de fondo
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
 <div class="modal-overlay" id="propModal">
   <div class="modal">
@@ -1116,7 +1062,6 @@ function switchTab(name, btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='anuncios') loadAnunciosBg();
 }
 
 // ---- LEADS ----
@@ -2268,7 +2213,9 @@ function renderBentoEditor(){
     grid.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);grid-column:1/-1;">Sin datos</div>';
     return;
   }
-  grid.innerHTML=bentoData.map((c,i)=>`
+  // Solo las primeras 3 tarjetas
+  const visible=bentoData.slice(0,3);
+  grid.innerHTML=visible.map((c,i)=>`
     <div class="bento-editor-card" id="bentoCard${i}">
       ${c.img
         ? `<img class="bento-editor-thumb" src="${c.img}" alt="${c.tag}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="bento-editor-thumb-placeholder" style="display:none"><span class="material-icons">broken_image</span><span style="font-size:12px">Sin imagen</span></div>`
@@ -2279,10 +2226,6 @@ function renderBentoEditor(){
         <div class="bento-editor-label">Categoría: <strong>${c.val}</strong></div>
         <label class="bento-editor-label" style="display:block;margin-top:10px;">Etiqueta (tag)</label>
         <input class="bento-editor-input" id="bTag${i}" value="${c.tag||''}" placeholder="Ej: Playa">
-        <label class="bento-editor-label" style="display:block;">Título (2 líneas con \\n)</label>
-        <input class="bento-editor-input" id="bTitle${i}" value="${(c.title||'').replace(/\n/g,'\\n')}" placeholder="Ej: Vive\\nfrente al mar">
-        <label class="bento-editor-label" style="display:block;">Subtítulo / Zonas</label>
-        <input class="bento-editor-input" id="bSub${i}" value="${c.sub||''}" placeholder="Ej: Coronado · San Carlos">
         <label class="bento-editor-label" style="display:block;">URL de imagen de fondo</label>
         <input class="bento-editor-input" id="bImg${i}" value="${c.img||''}" placeholder="https://..." oninput="previewBentoImg(${i})">
         <div class="bento-editor-upload" style="margin-top:4px;">
@@ -2338,13 +2281,14 @@ async function uploadBentoImg(input,i){
 }
 
 function collectBentoData(){
-  return bentoData.map((c,i)=>({
-    ...c,
-    tag:   document.getElementById('bTag'+i)?.value.trim()   || c.tag,
-    title: (document.getElementById('bTitle'+i)?.value||'').replace(/\\n/g,'\n'),
-    sub:   document.getElementById('bSub'+i)?.value.trim()   || c.sub,
-    img:   document.getElementById('bImg'+i)?.value.trim()   || c.img,
-  }));
+  return bentoData.map((c,i)=>{
+    if(i>=3) return {...c}; // las tarjetas 4 y 5 se preservan sin cambios
+    return {
+      ...c,
+      tag: document.getElementById('bTag'+i)?.value.trim() || c.tag,
+      img: document.getElementById('bImg'+i)?.value.trim() || c.img,
+    };
+  });
 }
 
 async function saveBentoConfig(){
