@@ -316,6 +316,318 @@
     .admin-tabs{padding:0 16px;}
     .bento-editor-grid{grid-template-columns:1fr 1fr;}
   }
+
+  /* ============================================================
+     MOBILE RESPONSIVE — ≤640px
+     ============================================================ */
+  @media(max-width:640px){
+
+    /* --- NAVBAR --- */
+    .admin-nav{
+      height:56px;
+      padding:0 12px;
+    }
+    .admin-nav-title,
+    .nav-divider,
+    .admin-badge-pill{
+      display:none;
+    }
+    .admin-nav-logo{height:30px;}
+    /* Icon-only buttons */
+    .btn-view span.btn-view-text,
+    .btn-logout span.btn-logout-text{display:none;}
+    .btn-view,
+    .btn-logout{
+      padding:7px 9px;
+      min-width:36px;
+      justify-content:center;
+    }
+
+    /* --- TABS --- */
+    .admin-tabs{
+      padding:0 8px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      flex-wrap:nowrap;
+      gap:0;
+    }
+    .admin-tabs::-webkit-scrollbar{display:none;}
+    .admin-tab{
+      padding:12px 12px;
+      font-size:12px;
+      white-space:nowrap;
+      flex-shrink:0;
+      gap:4px;
+    }
+    .admin-tab .material-icons{font-size:16px;}
+
+    /* --- CONTENT --- */
+    .admin-content{padding:12px;}
+
+    /* --- STATS GRID --- */
+    .admin-stats,
+    .leads-stats{
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .stat-card{padding:14px 12px;gap:10px;}
+    .stat-icon{width:38px;height:38px;border-radius:10px;}
+    .stat-icon .material-icons{font-size:20px;}
+    .stat-num{font-size:22px;}
+    .stat-label{font-size:10px;}
+
+    /* --- TOOLBAR PROPERTIES --- */
+    .toolbar{
+      flex-direction:column;
+      align-items:stretch;
+      gap:10px;
+    }
+    .toolbar-left{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .search-wrap{grid-column:1/-1;}
+    .search-input{width:100%;}
+    .filter-sel{width:100%;}
+    .btn-add{width:100%;justify-content:center;padding:11px 16px;}
+
+    /* --- TABLE → hide on mobile --- */
+    .table-wrap table{display:none;}
+    .table-wrap{border-radius:var(--radius);overflow:visible;background:transparent;border:none;}
+    .pagination-bar{border-radius:var(--radius);margin-top:8px;}
+
+    /* --- MOBILE PROPERTY CARDS --- */
+    .mob-card-grid{display:flex;flex-direction:column;gap:10px;}
+    .mob-prop-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      display:flex;
+      flex-direction:row;
+      align-items:stretch;
+      transition:var(--transition);
+    }
+    .mob-prop-card:hover{box-shadow:var(--shadow-hover);}
+    .mob-prop-card.inactive-card{opacity:0.6;}
+    .mob-card-img-wrap{
+      width:88px;
+      min-width:88px;
+      flex-shrink:0;
+      position:relative;
+      overflow:hidden;
+    }
+    .mob-card-img-wrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .mob-card-img-overlay{
+      position:absolute;inset:0;
+      background:rgba(255,255,255,0.45);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .mob-card-img-overlay .material-icons{font-size:20px;color:#888;}
+    .mob-card-body{
+      flex:1;
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+    .mob-card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:6px;
+      margin-bottom:2px;
+    }
+    .mob-card-code{
+      font-size:10px;
+      font-weight:700;
+      color:var(--text3);
+      letter-spacing:0.8px;
+      background:var(--surface2);
+      padding:2px 7px;
+      border-radius:4px;
+    }
+    .mob-card-title{
+      font-size:13px;
+      font-weight:600;
+      color:var(--text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mob-card-meta{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .mob-card-zone{
+      font-size:11px;
+      color:var(--text3);
+      display:flex;
+      align-items:center;
+      gap:2px;
+    }
+    .mob-card-zone .material-icons{font-size:11px;color:var(--accent);}
+    .mob-card-price{
+      font-family:'Playfair Display',serif;
+      font-size:14px;
+      font-weight:700;
+      color:var(--primary);
+    }
+    .mob-card-price-period{font-size:11px;font-weight:400;color:var(--text3);}
+    .mob-card-actions{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-top:6px;
+    }
+    .mob-card-toggle{
+      padding:4px 10px;
+      border-radius:6px;
+      font-size:11px;
+      font-family:inherit;
+      font-weight:600;
+      display:flex;align-items:center;gap:3px;
+      cursor:pointer;
+      border:none;
+      transition:var(--transition);
+      flex:1;
+      justify-content:center;
+    }
+    .mob-card-toggle.active{background:rgba(46,125,50,0.12);color:#2E7D32;}
+    .mob-card-toggle.inactive{background:rgba(229,57,53,0.1);color:#C62828;}
+    .mob-card-toggle .status-dot{width:6px;height:6px;}
+    .mob-card-edit{
+      padding:5px 10px;
+      background:none;
+      border:1px solid var(--border);
+      border-radius:6px;
+      font-size:11px;
+      color:var(--text2);
+      display:flex;align-items:center;gap:3px;
+      transition:var(--transition);
+    }
+    .mob-card-edit:hover{border-color:var(--primary);color:var(--primary);}
+    .mob-card-edit .material-icons{font-size:14px;}
+    .mob-card-del{
+      padding:5px 8px;
+      background:none;
+      border:1px solid rgba(229,57,53,0.3);
+      border-radius:6px;
+      color:#E53935;
+      display:flex;align-items:center;
+      transition:var(--transition);
+    }
+    .mob-card-del:hover{background:rgba(229,57,53,0.08);}
+    .mob-card-del .material-icons{font-size:14px;}
+
+    /* --- MODAL → BOTTOM SHEET --- */
+    .modal-overlay{
+      align-items:flex-end;
+      padding:0;
+    }
+    .modal{
+      border-radius:20px 20px 0 0;
+      max-height:96vh;
+      max-width:100%;
+      width:100%;
+    }
+    .modal-header{padding:16px 20px;}
+    .modal-header h2{font-size:18px;}
+    .modal-body{padding:16px 20px;}
+    .modal-actions{
+      padding:12px 20px;
+      gap:8px;
+    }
+    /* Hide cancel on mobile to save space */
+    .modal-actions .btn-secondary{display:none;}
+    .btn-primary,.btn-danger{flex:1;justify-content:center;}
+
+    /* Lead modal also bottom sheet */
+    .lead-modal-overlay{
+      align-items:flex-end;
+      padding:0;
+    }
+    .lead-modal{
+      border-radius:20px 20px 0 0;
+      max-width:100%;
+      width:100%;
+      max-height:90vh;
+    }
+
+    /* --- LEADS TOOLBAR --- */
+    .leads-toolbar{flex-direction:column;align-items:stretch;}
+    .leads-toolbar-left{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .leads-toolbar-left .search-wrap{grid-column:1/-1;}
+    /* Sort buttons */
+    .leads-toolbar > div:last-child{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:6px;
+      align-items:center;
+    }
+    .leads-toolbar > div:last-child > span{display:none;} /* hide "Ordenar:" label */
+    .sort-btn{
+      padding:7px 6px;
+      font-size:11px;
+      justify-content:center;
+      flex-direction:column;
+      gap:2px;
+      text-align:center;
+    }
+    .sort-btn .material-icons{font-size:14px;}
+    .sort-arrow{display:none;}
+    /* export CSV full width */
+    .leads-toolbar > div:last-child > button:last-child{
+      grid-column:1/-1;
+      justify-content:center;
+    }
+
+    /* Lead cards adapt */
+    .lead-card{padding:14px 16px;}
+    .lead-avatar{width:38px;height:38px;font-size:15px;}
+    .lead-name{font-size:14px;}
+    .lead-contacts{gap:8px;}
+    .lead-contact-item{font-size:12px;}
+    .lead-actions{flex-wrap:wrap;}
+    .btn-lead-wa,.btn-lead-email,.btn-lead-del{font-size:12px;padding:6px 12px;}
+
+    /* --- SITE EDITOR --- */
+    .site-editor{grid-template-columns:1fr;gap:16px;}
+    .editor-card-header{padding:14px 16px;}
+    .editor-card-body{padding:14px 16px;}
+    .editor-card-title{font-size:14px;}
+    .bento-editor-grid{grid-template-columns:1fr;}
+
+    /* --- MAP compact --- */
+    .map-container{height:220px;}
+    .map-search-bar{flex-direction:column;gap:6px;}
+    .map-search-bar input{width:100%;}
+    .map-search-btn{width:100%;justify-content:center;}
+
+    /* --- PAGINATION mobile --- */
+    .pagination-bar{flex-direction:column;align-items:center;gap:8px;padding:12px;}
+    .pagination-info{font-size:12px;text-align:center;}
+    .pg-btn .material-icons{font-size:14px;}
+
+    /* --- TOAST mobile --- */
+    .toast{bottom:12px;right:12px;left:12px;font-size:13px;}
+
+    /* --- FORM GRID mobile --- */
+    .form-grid,.form-grid-3{grid-template-columns:1fr;}
+    .form-group.full{grid-column:span 1;}
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -347,8 +659,8 @@
       <span class="admin-badge-pill">Admin</span>
     </div>
     <div class="admin-nav-right">
-      <a href="index.html" target="_blank" class="btn-view"><span class="material-icons">open_in_new</span>Ver página</a>
-      <button class="btn-logout" onclick="logout()"><span class="material-icons">logout</span>Salir</button>
+      <a href="index.html" target="_blank" class="btn-view"><span class="material-icons">open_in_new</span><span class="btn-view-text">Ver p&aacute;gina</span></a>
+      <button class="btn-logout" onclick="logout()"><span class="material-icons">logout</span><span class="btn-logout-text">Salir</span></button>
     </div>
   </nav>
 
@@ -435,6 +747,13 @@
           <div class="pagination-info" id="paginationInfo"></div>
           <div class="pagination-controls" id="paginationControls"></div>
         </div>
+      </div>
+
+      <!-- MOBILE CARD VIEW -->
+      <div id="mobCardGrid" class="mob-card-grid" style="display:none;"></div>
+      <div class="pagination-bar" id="paginationBarMob" style="display:none;border-radius:var(--radius);margin-top:0;">
+        <div class="pagination-info" id="paginationInfoMob"></div>
+        <div class="pagination-controls" id="paginationControlsMob"></div>
       </div>
     </div>
 
@@ -1680,65 +1999,156 @@ function renderTable(resetPage = true) {
   renderPage();
 }
 
+function isMobile(){ return window.innerWidth <= 640; }
+
 function renderPage() {
-  const body       = document.getElementById('propTableBody');
   const totalItems = filteredList.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
   if (currentPage > totalPages) currentPage = totalPages;
 
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const page  = filteredList.slice(start, start + PAGE_SIZE);
+  const start  = (currentPage - 1) * PAGE_SIZE;
+  const page   = filteredList.slice(start, start + PAGE_SIZE);
+  const mobile = isMobile();
+
+  const body          = document.getElementById('propTableBody');
+  const tableWrap     = document.querySelector('.table-wrap');
+  const mobGrid       = document.getElementById('mobCardGrid');
+  const pagBar        = document.getElementById('paginationBar');
+  const pagBarMob     = document.getElementById('paginationBarMob');
+
+  if (mobile) {
+    tableWrap.style.display   = 'none';
+    pagBar.style.display      = 'none';
+    mobGrid.style.display     = 'flex';
+  } else {
+    tableWrap.style.display   = '';
+    mobGrid.style.display     = 'none';
+    pagBarMob.style.display   = 'none';
+  }
 
   if (!totalItems) {
-    body.innerHTML = `<tr><td colspan="9" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;
-    document.getElementById('paginationBar').style.display = 'none';
+    if (mobile) {
+      mobGrid.innerHTML = `<div class="empty-state" style="width:100%;padding:40px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-align:center;"><span class="material-icons" style="font-size:40px;display:block;margin-bottom:8px;opacity:.4;">search_off</span><p>No se encontraron propiedades.</p></div>`;
+      pagBarMob.style.display = 'none';
+    } else {
+      body.innerHTML = `<tr><td colspan="9" class="empty-state"><span class="material-icons">search_off</span><p>No se encontraron propiedades.</p></td></tr>`;
+      pagBar.style.display = 'none';
+    }
     return;
   }
 
-  body.innerHTML = page.map(p => {
-    const active = p.is_active !== false;
-    const fecha  = p.created_at ? new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-    const hora   = p.created_at ? new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}) : '';
-    return `<tr style="opacity:${active ? 1 : 0.55}">
-      <td style="position:relative">
-        <img src="${p.images?.[0] || PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'">
-        ${!active ? `<div style="position:absolute;inset:0;background:rgba(255,255,255,0.5);border-radius:6px;display:flex;align-items:center;justify-content:center"><span class="material-icons" style="font-size:16px;color:#888">visibility_off</span></div>` : ''}
-      </td>
-      <td><span class="prop-code">${p.code}</span></td>
-      <td>
-        <div class="prop-title">${p.title}</div>
-        <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
-      </td>
-      <td>
-        <span class="badge ${p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale'}">${p.operation}</span>
-        ${p.featured ? '<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>' : ''}
-        ${p.encuentra24_code ? `<br><span style="font-size:10px;color:var(--text3);margin-top:4px;display:inline-block;letter-spacing:0.5px">E24: ${p.encuentra24_code}</span>` : ''}
-      </td>
-      <td class="price-cell">$${(p.price || 0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation === 'Alquiler vacacional' ? ' /noche' : p.operation === 'Alquiler' ? ' /mes' : ''}</span></td>
-      <td style="font-size:13px;color:var(--text2)">
-        ${p.owner_name ? `<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>` : '<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
-        ${p.owner_contact ? `<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>` : ''}
-      </td>
-      <td>
-        <button class="btn-toggle ${active ? 'active' : 'inactive'}" onclick="toggleActive('${p.id}',${active})">
-          <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
-          ${active ? 'Publicada' : 'Oculta'}
-        </button>
-      </td>
-      <td class="date-cell">
-        <div>${fecha}</div>
-        <div style="font-size:11px;color:var(--text3)">${hora}</div>
-      </td>
-      <td>
-        <div class="action-btns">
-          <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button>
-          <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
+  if (!mobile) {
+    // ---- DESKTOP: tabla normal ----
+    body.innerHTML = page.map(p => {
+      const active = p.is_active !== false;
+      const fecha  = p.created_at ? new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+      const hora   = p.created_at ? new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}) : '';
+      return `<tr style="opacity:${active ? 1 : 0.55}">
+        <td style="position:relative">
+          <img src="${p.images?.[0] || PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'">
+          ${!active ? `<div style="position:absolute;inset:0;background:rgba(255,255,255,0.5);border-radius:6px;display:flex;align-items:center;justify-content:center"><span class="material-icons" style="font-size:16px;color:#888">visibility_off</span></div>` : ''}
+        </td>
+        <td><span class="prop-code">${p.code}</span></td>
+        <td>
+          <div class="prop-title">${p.title}</div>
+          <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
+        </td>
+        <td>
+          <span class="badge ${p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale'}">${p.operation}</span>
+          ${p.featured ? '<br><span class="badge badge-featured" style="margin-top:4px;display:inline-block">Destacado</span>' : ''}
+          ${p.encuentra24_code ? `<br><span style="font-size:10px;color:var(--text3);margin-top:4px;display:inline-block;letter-spacing:0.5px">E24: ${p.encuentra24_code}</span>` : ''}
+        </td>
+        <td class="price-cell">$${(p.price || 0).toLocaleString()}<span style="font-size:12px;font-weight:400;color:var(--text3)">${p.operation === 'Alquiler vacacional' ? ' /noche' : p.operation === 'Alquiler' ? ' /mes' : ''}</span></td>
+        <td style="font-size:13px;color:var(--text2)">
+          ${p.owner_name ? `<div style="font-weight:500;color:var(--text)">${p.owner_name}</div>` : '<div style="color:var(--text3);font-style:italic">Sin propietario</div>'}
+          ${p.owner_contact ? `<div style="font-size:12px;color:var(--text3);margin-top:2px"><span class="material-icons" style="font-size:11px;vertical-align:middle">phone</span> ${p.owner_contact}</div>` : ''}
+        </td>
+        <td>
+          <button class="btn-toggle ${active ? 'active' : 'inactive'}" onclick="toggleActive('${p.id}',${active})">
+            <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
+            ${active ? 'Publicada' : 'Oculta'}
+          </button>
+        </td>
+        <td class="date-cell">
+          <div>${fecha}</div>
+          <div style="font-size:11px;color:var(--text3)">${hora}</div>
+        </td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button>
+            <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+    renderPagination(totalItems, totalPages);
 
-  renderPagination(totalItems, totalPages);
+  } else {
+    // ---- MOBILE: tarjetas compactas ----
+    const badgeCls = op => op === 'Alquiler' ? 'badge-rent' : op === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
+    const period   = op => op === 'Alquiler vacacional' ? '/noche' : op === 'Alquiler' ? '/mes' : '';
+
+    mobGrid.innerHTML = page.map(p => {
+      const active = p.is_active !== false;
+      return `<div class="mob-prop-card${active ? '' : ' inactive-card'}">
+        <div class="mob-card-img-wrap">
+          <img src="${p.images?.[0] || PH}" alt="${p.title}" onerror="this.src='${PH}'">
+          ${!active ? `<div class="mob-card-img-overlay"><span class="material-icons">visibility_off</span></div>` : ''}
+        </div>
+        <div class="mob-card-body">
+          <div class="mob-card-top">
+            <span class="mob-card-code">${p.code}</span>
+            <span class="badge ${badgeCls(p.operation)}" style="font-size:10px;padding:2px 7px;">${p.operation}</span>
+          </div>
+          <div class="mob-card-title">${p.title}</div>
+          <div class="mob-card-meta">
+            <span class="mob-card-zone"><span class="material-icons">location_on</span>${p.zone}</span>
+            ${p.featured ? '<span class="badge badge-featured" style="font-size:10px;padding:2px 7px;">⭐ Dest.</span>' : ''}
+          </div>
+          <div class="mob-card-price">$${(p.price||0).toLocaleString()}<span class="mob-card-price-period"> ${period(p.operation)}</span></div>
+          <div class="mob-card-actions">
+            <button class="mob-card-toggle ${active ? 'active' : 'inactive'}" onclick="toggleActive('${p.id}',${active})">
+              <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
+              ${active ? 'Publicada' : 'Oculta'}
+            </button>
+            <button class="mob-card-edit" onclick="openModal('${p.id}')"><span class="material-icons">edit</span>Editar</button>
+            <button class="mob-card-del" onclick="confirmDelete('${p.id}')"><span class="material-icons">delete</span></button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    renderPaginationMob(totalItems, totalPages);
+  }
+}
+
+function renderPaginationMob(totalItems, totalPages) {
+  const bar    = document.getElementById('paginationBarMob');
+  const infoEl = document.getElementById('paginationInfoMob');
+  const ctrlEl = document.getElementById('paginationControlsMob');
+  const start  = (currentPage - 1) * PAGE_SIZE + 1;
+  const end    = Math.min(currentPage * PAGE_SIZE, totalItems);
+
+  bar.style.display = 'flex';
+  infoEl.innerHTML  = `<strong>${start}–${end}</strong> de <strong>${totalItems}</strong>`;
+
+  const pages = [];
+  if (totalPages <= 5) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (currentPage > 3) pages.push('…');
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i);
+    if (currentPage < totalPages - 2) pages.push('…');
+    pages.push(totalPages);
+  }
+
+  let html = `<button class="pg-btn" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}><span class="material-icons">chevron_left</span></button>`;
+  pages.forEach(p => {
+    if (p === '…') html += `<span class="pg-ellipsis">…</span>`;
+    else html += `<button class="pg-btn ${p===currentPage?'active':''}" onclick="goToPage(${p})">${p}</button>`;
+  });
+  html += `<button class="pg-btn" onclick="goToPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}><span class="material-icons">chevron_right</span></button>`;
+  ctrlEl.innerHTML = html;
 }
 
 function renderPagination(totalItems, totalPages) {
@@ -2404,6 +2814,13 @@ function showToast(msg,isError=false){
 }
 
 document.getElementById('propModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// Re-render on resize so table↔cards switch works when rotating device
+let _resizeTimer;
+window.addEventListener('resize', function(){
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(function(){ renderTable(false); }, 180);
+});
 document.getElementById('leadModal').addEventListener('click',function(e){if(e.target===this)closeLeadModal();});
 </script>
 </body>
