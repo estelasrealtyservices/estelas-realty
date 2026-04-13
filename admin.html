@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root{
     --primary:#1A1A2E;--accent:#C9A84C;--accent-light:#F0DFA0;
@@ -681,6 +682,55 @@
     .type-chip{padding:5px 11px;font-size:12px;}
     .type-chip .chip-icon{font-size:13px;}
   }
+
+  /* ── STATS TAB ─────────────────────────────── */
+  .stats-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+  .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;flex-direction:column;gap:4px;transition:var(--transition);}
+  .kpi-card:hover{box-shadow:var(--shadow-hover);}
+  .kpi-top{display:flex;align-items:center;justify-content:space-between;}
+  .kpi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .kpi-icon .material-icons{font-size:17px;}
+  .kpi-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--primary);line-height:1;margin-top:6px;}
+  .kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
+  .kpi-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+
+  .stats-section-title{font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .stats-section-title .material-icons{font-size:16px;color:var(--accent);}
+
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;}
+  .chart-wrap{position:relative;height:200px;}
+
+  .interact-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;}
+  .interact-table-wrap table{width:100%;border-collapse:collapse;}
+  .interact-table-wrap th{background:var(--surface2);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border);}
+  .interact-table-wrap td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  .interact-table-wrap tr:last-child td{border-bottom:none;}
+  .interact-table-wrap tr:hover td{background:var(--surface2);}
+  .interact-thumb{width:52px;height:40px;border-radius:6px;object-fit:cover;}
+  .interact-title{font-weight:500;color:var(--text);font-size:13px;}
+  .interact-code{font-size:10px;color:var(--text3);letter-spacing:0.8px;background:var(--surface2);padding:2px 6px;border-radius:4px;display:inline-block;margin-top:2px;}
+  .interact-num{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--primary);}
+  .interact-sub{font-size:11px;color:var(--text3);}
+  .bar-mini{height:4px;border-radius:2px;background:var(--border);margin-top:4px;overflow:hidden;}
+  .bar-mini-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease;}
+  .conversion-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+  .conversion-badge.high{background:rgba(46,125,50,0.12);color:#2E7D32;}
+  .conversion-badge.mid{background:rgba(201,168,76,0.15);color:#7a5c10;}
+  .conversion-badge.low{background:rgba(229,57,53,0.1);color:#C62828;}
+  .stats-empty{text-align:center;padding:60px 20px;color:var(--text3);}
+  .stats-empty .material-icons{font-size:44px;display:block;margin-bottom:10px;opacity:0.35;}
+  .sql-hint{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
+  .sql-hint-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .sql-hint-title .material-icons{font-size:15px;color:var(--accent);}
+  .sql-hint pre{font-size:11px;color:var(--text);white-space:pre-wrap;line-height:1.8;margin:0;}
+  @media(max-width:900px){.stats-kpi-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:640px){
+    .stats-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+    .kpi-num{font-size:20px;}
+    .chart-card{padding:14px 12px;}
+    .interact-table-wrap th,.interact-table-wrap td{padding:10px 10px;font-size:12px;}
+    .interact-thumb{width:40px;height:32px;}
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -729,6 +779,9 @@
     <button class="admin-tab" onclick="switchTab('site',this)">
       <span class="material-icons">web</span>Editar página principal
     </button>
+    <button class="admin-tab" onclick="switchTab('stats',this);loadStats();">
+      <span class="material-icons">bar_chart</span>Estadísticas
+    </button>
 
   </div>
 
@@ -736,13 +789,6 @@
 
     <!-- TAB: PROPERTIES -->
     <div class="tab-panel active" id="tab-properties">
-      <div class="admin-stats">
-        <div class="stat-card"><div class="stat-icon gold"><span class="material-icons">home_work</span></div><div class="stat-info"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div></div>
-        <div class="stat-card"><div class="stat-icon blue"><span class="material-icons">vpn_key</span></div><div class="stat-info"><div class="stat-num" id="statRent">—</div><div class="stat-label">Alquiler</div></div></div>
-        <div class="stat-card"><div class="stat-icon green"><span class="material-icons">sell</span></div><div class="stat-info"><div class="stat-num" id="statSale">—</div><div class="stat-label">Venta</div></div></div>
-        <div class="stat-card"><div class="stat-icon red"><span class="material-icons">star</span></div><div class="stat-info"><div class="stat-num" id="statFeatured">—</div><div class="stat-label">Destacadas</div></div></div>
-      </div>
-
       <div class="toolbar">
         <div class="toolbar-left">
           <div class="search-wrap">
@@ -1062,6 +1108,79 @@
           </button>
         </div>
       </div>
+
+    <!-- TAB: ESTADÍSTICAS -->
+    <div class="tab-panel" id="tab-stats">
+
+      <!-- SQL hint si no existe la tabla property_views todavía -->
+      <div class="sql-hint" id="statsViewsHint" style="display:none;">
+        <div class="sql-hint-title"><span class="material-icons">info</span>Falta crear la tabla de visitas en Supabase</div>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:10px;line-height:1.6;">
+          El tracking ya está integrado en <code>index.html</code>. Solo debes ejecutar este SQL una vez en tu Supabase SQL Editor y los datos empezarán a llegar automáticamente:
+        </p>
+        <pre>CREATE TABLE property_views (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  property_id uuid REFERENCES properties(id) ON DELETE CASCADE,
+  viewed_at timestamptz DEFAULT now(),
+  referrer text
+);
+ALTER TABLE property_views ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can insert view" ON property_views FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role() = 'authenticated');</pre>
+      </div>
+
+      <!-- KPIs generales -->
+      <div class="stats-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-label">Propiedades activas</div>
+            <div class="kpi-icon" style="background:rgba(201,168,76,0.12);"><span class="material-icons" style="color:var(--accent)">home_work</span></div>
+          </div>
+          <div class="kpi-num" id="kpiActive">—</div>
+          <div class="kpi-sub" id="kpiActiveBreak">— alquiler · — venta</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-label">Total leads</div>
+            <div class="kpi-icon" style="background:rgba(26,26,46,0.08);"><span class="material-icons" style="color:var(--primary)">contact_mail</span></div>
+          </div>
+          <div class="kpi-num" id="kpiLeads">—</div>
+          <div class="kpi-sub" id="kpiLeadsSub">— esta semana</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-label">Visitas totales</div>
+            <div class="kpi-icon" style="background:rgba(46,125,50,0.1);"><span class="material-icons" style="color:#2E7D32">visibility</span></div>
+          </div>
+          <div class="kpi-num" id="kpiViews">—</div>
+          <div class="kpi-sub" id="kpiViewsSub">— últimos 30 días</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-label">Tasa de contacto</div>
+            <div class="kpi-icon" style="background:rgba(229,57,53,0.1);"><span class="material-icons" style="color:#E53935">trending_up</span></div>
+          </div>
+          <div class="kpi-num" id="kpiConversion">—</div>
+          <div class="kpi-sub">leads / visitas totales</div>
+        </div>
+      </div>
+
+      <!-- Gráfica visitas últimos 30 días -->
+      <div class="chart-card">
+        <div class="stats-section-title"><span class="material-icons">show_chart</span>Visitas por día — últimos 30 días</div>
+        <div class="chart-wrap"><canvas id="viewsChart"></canvas></div>
+      </div>
+
+      <!-- Tabla interacciones por propiedad -->
+      <div class="stats-section-title" style="margin-top:4px;"><span class="material-icons">swap_vert</span>Interacciones por propiedad</div>
+      <div class="interact-table-wrap" id="interactTable">
+        <div class="stats-empty">
+          <span class="material-icons" style="animation:spin 1s linear infinite">sync</span>
+          <p>Cargando estadísticas...</p>
+        </div>
+      </div>
+
+    </div>
 
     </div>
   </div>
@@ -2033,10 +2152,8 @@ async function loadProperties(){
 }
 
 function updateStats(){
-  document.getElementById('statTotal').textContent=allProperties.length;
-  document.getElementById('statRent').textContent=allProperties.filter(p=>p.operation==='Alquiler'&&p.is_active!==false).length;
-  document.getElementById('statSale').textContent=allProperties.filter(p=>p.operation==='Venta'&&p.is_active!==false).length;
-  document.getElementById('statFeatured').textContent=allProperties.filter(p=>p.featured&&p.is_active!==false).length;
+  // KPIs moved to Estadísticas tab — reset so it reloads fresh if user switches
+  statsLoaded = false;
 }
 
 async function toggleActive(id, currentActive){
@@ -2905,6 +3022,181 @@ function showToast(msg,isError=false){
   t.querySelector('.material-icons').textContent=isError?'error':'check_circle';
   t.classList.toggle('error',isError);
   t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+
+// ─────────────────────────────────────────
+// ESTADÍSTICAS
+// ─────────────────────────────────────────
+let statsLoaded = false;
+let viewsChartInstance = null;
+
+async function loadStats(){
+  if(statsLoaded){ return; }
+
+  // KPIs from allProperties (already loaded)
+  const active = allProperties.filter(p => p.is_active !== false);
+  const rent   = active.filter(p => p.operation === 'Alquiler').length;
+  const vac    = active.filter(p => p.operation === 'Alquiler vacacional').length;
+  const sale   = active.filter(p => p.operation === 'Venta').length;
+  document.getElementById('kpiActive').textContent = active.length;
+  document.getElementById('kpiActiveBreak').textContent = `${rent+vac} alquiler · ${sale} venta`;
+
+  // Leads KPI
+  const leadsData = allLeads.length ? allLeads : [];
+  document.getElementById('kpiLeads').textContent = leadsData.length;
+  const weekAgo = new Date(Date.now() - 7*86400000);
+  const newLeads = leadsData.filter(l => new Date(l.created_at) > weekAgo).length;
+  document.getElementById('kpiLeadsSub').textContent = `${newLeads} esta semana`;
+
+  // Build leads-per-property map
+  const leadsByProp = {};
+  leadsData.forEach(l => {
+    if(!l.property_id) return;
+    leadsByProp[l.property_id] = (leadsByProp[l.property_id]||0) + 1;
+  });
+
+  // Try loading views from Supabase
+  let viewsData = [];
+  let hasViewsTable = false;
+  try {
+    const { data, error } = await sb.from('property_views').select('property_id, viewed_at');
+    if(!error){
+      viewsData = data || [];
+      hasViewsTable = true;
+    }
+  } catch(e){}
+
+  if(!hasViewsTable){
+    document.getElementById('statsViewsHint').style.display = 'block';
+  }
+
+  // Views KPI
+  const totalViews = viewsData.length;
+  document.getElementById('kpiViews').textContent = totalViews || '—';
+  const ago30 = new Date(Date.now() - 30*86400000);
+  const views30 = viewsData.filter(v => new Date(v.viewed_at) > ago30).length;
+  document.getElementById('kpiViewsSub').textContent = hasViewsTable ? `${views30} últimos 30 días` : 'Activa el tracking';
+
+  // Conversion rate
+  const convRate = totalViews > 0 ? ((leadsData.length / totalViews)*100).toFixed(1)+'%' : '—';
+  document.getElementById('kpiConversion').textContent = convRate;
+
+  // Chart: views per day last 30 days
+  const days = [];
+  const dayCounts = {};
+  for(let i = 29; i >= 0; i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    days.push(key);
+    dayCounts[key] = 0;
+  }
+  viewsData.forEach(v => {
+    const key = v.viewed_at?.slice(0,10);
+    if(dayCounts[key] !== undefined) dayCounts[key]++;
+  });
+
+  const ctx = document.getElementById('viewsChart').getContext('2d');
+  if(viewsChartInstance) viewsChartInstance.destroy();
+  viewsChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days.map(d => { const dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('es-PA',{day:'numeric',month:'short'}); }),
+      datasets:[{
+        label:'Visitas',
+        data: days.map(d => dayCounts[d]),
+        borderColor:'#1A1A2E',
+        backgroundColor:'rgba(26,26,46,0.06)',
+        borderWidth:2,
+        pointBackgroundColor:'#C9A84C',
+        pointRadius:3,
+        pointHoverRadius:5,
+        tension:0.4,
+        fill:true
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{
+        callbacks:{ title: items => items[0].label, label: i => ` ${i.raw} visitas` }
+      }},
+      scales:{
+        x:{ grid:{display:false}, ticks:{font:{size:10}, maxTicksLimit:10, color:'#888'} },
+        y:{ grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:10}, color:'#888', stepSize:1, precision:0}, beginAtZero:true }
+      }
+    }
+  });
+
+  // Build views-per-property map
+  const viewsByProp = {};
+  viewsData.forEach(v => {
+    if(!v.property_id) return;
+    viewsByProp[v.property_id] = (viewsByProp[v.property_id]||0) + 1;
+  });
+
+  // Render interaction table
+  const maxViews = Math.max(1, ...Object.values(viewsByProp));
+  const sorted = [...allProperties].sort((a,b)=>{
+    const va = (viewsByProp[a.id]||0)+(leadsByProp[a.id]||0)*5;
+    const vb = (viewsByProp[b.id]||0)+(leadsByProp[b.id]||0)*5;
+    return vb - va;
+  });
+
+  const table = document.getElementById('interactTable');
+  if(!sorted.length){
+    table.innerHTML = '<div class="stats-empty"><span class="material-icons">home_work</span><p>No hay propiedades aún.</p></div>';
+    statsLoaded = true;
+    return;
+  }
+
+  table.innerHTML = `<table>
+    <thead><tr>
+      <th>Propiedad</th>
+      <th style="text-align:center;">Visitas</th>
+      <th style="text-align:center;">Contactos</th>
+      <th style="text-align:center;">Conversión</th>
+      <th>Última visita</th>
+    </tr></thead>
+    <tbody>
+    ${sorted.map(p => {
+      const views   = viewsByProp[p.id]||0;
+      const contacts= leadsByProp[p.id]||0;
+      const conv    = views>0 ? ((contacts/views)*100).toFixed(1) : null;
+      const convClass = conv===null ? '' : parseFloat(conv)>=10 ? 'high' : parseFloat(conv)>=3 ? 'mid' : 'low';
+      const barW    = views>0 ? Math.round((views/maxViews)*100) : 0;
+
+      // Last view
+      const propViews = viewsData.filter(v=>v.property_id===p.id).sort((a,b)=>new Date(b.viewed_at)-new Date(a.viewed_at));
+      const lastView  = propViews[0]?.viewed_at ? new Date(propViews[0].viewed_at).toLocaleDateString('es-PA',{day:'numeric',month:'short',year:'numeric'}) : '—';
+
+      return `<tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${p.images?.[0]||'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&q=60'}" class="interact-thumb" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&q=60'">
+            <div>
+              <div class="interact-title">${esc(p.title)}</div>
+              <div class="interact-code">${esc(p.code)}</div>
+            </div>
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <div class="interact-num">${views||'—'}</div>
+          ${hasViewsTable ? `<div class="bar-mini"><div class="bar-mini-fill" style="width:${barW}%"></div></div>` : '<div class="interact-sub" style="font-size:10px;">sin datos</div>'}
+        </td>
+        <td style="text-align:center;">
+          <div class="interact-num" style="${contacts>0?'color:#2E7D32':''}">${contacts||'—'}</div>
+          <div class="interact-sub">leads</div>
+        </td>
+        <td style="text-align:center;">
+          ${conv!==null ? `<span class="conversion-badge ${convClass}">${conv}%</span>` : '<span style="font-size:12px;color:var(--text3)">—</span>'}
+        </td>
+        <td><span class="interact-sub">${lastView}</span></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+
+  statsLoaded = true;
 }
 
 document.getElementById('propModal').addEventListener('click',function(e){if(e.target===this)closeModal();});

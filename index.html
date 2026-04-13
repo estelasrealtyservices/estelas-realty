@@ -1262,6 +1262,8 @@ function renderProperties(list){
 function openDetail(id){
   const p=allProperties.find(x=>x.id===id);
   if(!p) return;
+  // Tracking de visita — fire & forget, no bloquea la UI
+  sb.from('property_views').insert({ property_id: p.id, referrer: document.referrer||null }).then(()=>{}).catch(()=>{});
   document.getElementById('detailCode').textContent=p.code;
   document.getElementById('detailTitle').textContent=p.title;
   // Usa images[] (full) para el modal; fallback a image_thumbs si no hay full
