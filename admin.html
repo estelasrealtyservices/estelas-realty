@@ -1937,7 +1937,10 @@ function renderPage() {
     card.className = 'm-prop-card';
     card.style.opacity = active ? '1' : '0.55';
     card.innerHTML = `
-      <img class="m-prop-thumb" src="${p.images?.[0] || PH}" alt="" onerror="this.src='${PH}'">
+      <a href="propiedad.html?code=${encodeURIComponent(p.code)}" target="_blank" style="flex-shrink:0;display:block;position:relative;">
+        <img class="m-prop-thumb" src="${p.images?.[0] || PH}" alt="" onerror="this.src='${PH}'" style="cursor:pointer;">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25);border-radius:8px;opacity:0;transition:opacity 0.2s;" class="m-thumb-overlay"><span class="material-icons" style="color:white;font-size:18px;">open_in_new</span></span>
+      </a>
       <div class="m-prop-info">
         <div class="m-prop-title">${p.title}</div>
         <div class="m-prop-meta">
@@ -1946,6 +1949,7 @@ function renderPage() {
           ${p.featured ? '<span class="badge badge-featured" style="font-size:10px;padding:2px 7px;">★</span>' : ''}
         </div>
         <div class="m-prop-zone"><span class="material-icons" style="font-size:11px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
+        ${p.owner_name ? `<div style="font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span class="material-icons" style="font-size:11px;vertical-align:middle;">person</span> ${p.owner_name}</div>` : ''}
         <div class="m-prop-status">
           <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
           <span style="color:${active ? '#2E7D32' : '#C62828'};font-size:11px;">${active ? 'Publicada' : 'Oculta'}</span>
@@ -1957,6 +1961,13 @@ function renderPage() {
         <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
       </div>`;
     tableWrap.insertBefore(card, paginationBar);
+    // Hover effect en la foto
+    const thumbLink = card.querySelector('a');
+    const overlay = card.querySelector('.m-thumb-overlay');
+    if(thumbLink && overlay){
+      thumbLink.addEventListener('mouseenter', () => overlay.style.opacity = '1');
+      thumbLink.addEventListener('mouseleave', () => overlay.style.opacity = '0');
+    }
   });
 
   renderPagination(totalItems, totalPages);
