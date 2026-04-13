@@ -2296,7 +2296,7 @@ function renderPage() {
       const hora   = p.created_at ? new Date(p.created_at).toLocaleTimeString('es-PA',{hour:'2-digit',minute:'2-digit'}) : '';
       return `<tr style="opacity:${active ? 1 : 0.55}">
         <td style="position:relative">
-          <a href="propiedad.html?id=${p.id}" target="_blank" rel="noopener" title="Ver página de la propiedad" style="display:block;position:relative;width:64px;height:48px;border-radius:6px;overflow:hidden;flex-shrink:0;">
+          <a href="propiedad.html?code=${p.code}" target="_blank" rel="noopener" title="Ver página de la propiedad" style="display:block;position:relative;width:64px;height:48px;border-radius:6px;overflow:hidden;flex-shrink:0;">
             <img src="${p.images?.[0] || PH}" alt="" class="prop-thumb" onerror="this.src='${PH}'" style="display:block;transition:transform 0.2s ease;width:64px;height:48px;">
             <div style="position:absolute;inset:0;background:rgba(26,26,46,0);display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;" onmouseover="this.style.background='rgba(26,26,46,0.55)';this.querySelector('.thumb-eye').style.opacity='1'" onmouseout="this.style.background='rgba(26,26,46,0)';this.querySelector('.thumb-eye').style.opacity='0'">
               <span class="material-icons thumb-eye" style="font-size:16px;color:white;opacity:0;transition:opacity 0.2s ease;">open_in_new</span>
@@ -2347,7 +2347,7 @@ function renderPage() {
     mobGrid.innerHTML = page.map(p => {
       const active = p.is_active !== false;
       return `<div class="mob-prop-card${active ? '' : ' inactive-card'}">
-        <a href="propiedad.html?id=${p.id}" target="_blank" rel="noopener" title="Ver página de la propiedad" style="display:block;text-decoration:none;position:relative;">
+        <a href="propiedad.html?code=${p.code}" target="_blank" rel="noopener" title="Ver página de la propiedad" style="display:block;text-decoration:none;position:relative;">
           <div class="mob-card-img-wrap">
             <img src="${p.images?.[0] || PH}" alt="${p.title}" onerror="this.src='${PH}'">
             ${!active ? `<div class="mob-card-img-overlay"><span class="material-icons">visibility_off</span></div>` : ''}
