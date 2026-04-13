@@ -291,6 +291,30 @@
   .toast .material-icons{color:var(--accent);font-size:18px;}
   .toast.error .material-icons{color:#ff8a80;}
 
+  /* ============================================================
+     ZONE AUTOCOMPLETE
+     ============================================================ */
+  .zone-autocomplete-wrap{position:relative;width:100%;}
+  .zone-autocomplete-input{width:100%;padding:10px 36px 10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);}
+  .zone-autocomplete-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,0.06);}
+  .zone-autocomplete-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:none;padding:2px;line-height:1;}
+  .zone-autocomplete-clear .material-icons{font-size:16px;}
+  .zone-autocomplete-clear.visible{display:flex;align-items:center;}
+  .zone-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:500;max-height:220px;overflow-y:auto;display:none;}
+  .zone-dropdown.open{display:block;animation:fadeIn 0.15s ease;}
+  .zone-option{padding:10px 14px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 0.1s;}
+  .zone-option:hover,.zone-option.highlighted{background:var(--surface2);}
+  .zone-option-icon{font-size:16px;color:var(--accent);flex-shrink:0;}
+  .zone-option-main{flex:1;min-width:0;}
+  .zone-option-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .zone-option-meta{font-size:11px;color:var(--text3);margin-top:1px;}
+  .zone-option-mark{color:var(--accent);font-weight:700;}
+  .zone-dropdown-empty{padding:12px 14px;font-size:13px;color:var(--text3);text-align:center;}
+  .zone-add-btn{display:flex;align-items:center;gap:8px;width:100%;padding:11px 14px;background:none;border:none;border-top:1px solid var(--border);font-family:inherit;font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;text-align:left;transition:background 0.1s;}
+  .zone-add-btn:hover{background:rgba(201,168,76,0.08);}
+  .zone-add-btn .material-icons{font-size:18px;color:var(--accent);}
+  .zone-saving-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-left:6px;}
+
   /* BENTO EDITOR */
   .bento-editor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
   .bento-editor-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:var(--transition);}
@@ -1210,7 +1234,11 @@ CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role(
           <div class="form-group"><label>Tipo</label><select id="fType" onchange="updateTypeFields()"><option>Apartamento</option><option>Casa</option><option>Local</option><option>Oficina</option><option>Penthouse</option><option>Galera</option><option>Terreno</option><option>Lote</option><option>Bodega</option></select></div>
           <div class="form-group full"><label>Título <span style="color:#E53935;">*</span></label><input type="text" id="fTitle" placeholder="Ej: Apartamento moderno en San Francisco"></div>
           <div class="form-group"><label>Zona</label>
-            <select id="fZone"><option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option><option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option><option>Buenaventura</option><option>Boquete</option><option>San Carlos</option></select>
+            <div class="zone-autocomplete-wrap" id="zoneAutocompleteWrap">
+              <input type="text" id="fZone" class="zone-autocomplete-input" placeholder="Escribe para buscar zona..." autocomplete="off" oninput="zoneACInput()" onfocus="zoneACFocus()" onkeydown="zoneACKeydown(event)">
+              <button type="button" class="zone-autocomplete-clear" id="zoneACClear" onclick="zoneACClear()" title="Limpiar"><span class="material-icons">close</span></button>
+              <div class="zone-dropdown" id="zoneDropdown"></div>
+            </div>
           </div>
           <div class="form-group"><label>Precio (USD) <span style="color:#E53935;">*</span></label><input type="number" id="fPrice" placeholder="1500"></div>
           <div class="form-group" style="align-self:flex-end;padding-bottom:2px;">
@@ -1863,7 +1891,7 @@ async function preloadLeadsBadge(){
 
 // ---- LOAD ALL ----
 async function loadAll(){
-  await Promise.all([loadProperties(), loadSiteConfig(), preloadLeadsBadge()]);
+  await Promise.all([loadProperties(), loadSiteConfig(), preloadLeadsBadge(), loadZonesCatalog()]);
 }
 
 // ---- SITE CONFIG ----
@@ -2057,23 +2085,22 @@ function removeZone(i){
   showToast('Zona eliminada. Recuerda guardar los cambios.');
 }
 
-// Sync zone selects in toolbar and property form
+// Sync zone filter select in toolbar (fZone is now autocomplete, not a select)
 function syncZoneSelects(){
   const zoneNames=zoneData.map(z=>z.name).filter(n=>n&&n.trim());
-  ['adminZoneFilter','fZone'].forEach(selId=>{
-    const sel=document.getElementById(selId);
-    if(!sel) return;
-    const current=sel.value;
-    const firstOpt=sel.options[0]; // "Todas las zonas" or first option
-    sel.innerHTML='';
-    sel.appendChild(firstOpt.cloneNode?firstOpt.cloneNode(true):firstOpt);
-    zoneNames.forEach(name=>{
-      const opt=document.createElement('option');
-      opt.value=name;opt.textContent=name;
-      sel.appendChild(opt);
-    });
-    if(zoneNames.includes(current)) sel.value=current;
+  // Update toolbar filter dropdown only
+  const sel=document.getElementById('adminZoneFilter');
+  if(!sel) return;
+  const current=sel.value;
+  const firstOpt=sel.options[0];
+  sel.innerHTML='';
+  sel.appendChild(firstOpt.cloneNode?firstOpt.cloneNode(true):firstOpt);
+  zoneNames.forEach(name=>{
+    const opt=document.createElement('option');
+    opt.value=name;opt.textContent=name;
+    sel.appendChild(opt);
   });
+  if(zoneNames.includes(current)) sel.value=current;
 }
 
 async function changeZoneImage(i, input){
@@ -2528,7 +2555,9 @@ function openModal(id=null){
     document.getElementById('fType').value=p.type;
     updateTypeFields();
     document.getElementById('fTitle').value=p.title;
-    document.getElementById('fZone').value=p.zone;
+    // Zone autocomplete: set value and update clear button
+    document.getElementById('fZone').value=p.zone||'';
+    zoneACUpdateClear();
     document.getElementById('fPrice').value=p.price;
     document.getElementById('fMaintenance').value=p.maintenance_cost||'';
     document.getElementById('fTitulado').value=p.titulado||'';
@@ -2568,6 +2597,9 @@ function openModal(id=null){
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
     ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
+    // Clear zone autocomplete
+    document.getElementById('fZone').value='';
+    zoneACUpdateClear();
     document.getElementById('fTitulado').value='';
     document.getElementById('fLatitude').value='';
     document.getElementById('fLongitude').value='';
@@ -3208,6 +3240,166 @@ window.addEventListener('resize', function(){
   _resizeTimer = setTimeout(function(){ renderTable(false); }, 180);
 });
 document.getElementById('leadModal').addEventListener('click',function(e){if(e.target===this)closeLeadModal();});
+
+// ============================================================
+// ZONE AUTOCOMPLETE ENGINE — v2.9
+// ============================================================
+let zonesCatalog = [];
+let zoneACHighlightIdx = -1;
+
+// Carga el catálogo desde Supabase (cache por sesión)
+async function loadZonesCatalog(){
+  if(zonesCatalog.length) return;
+  const {data, error} = await sb.from('zones_catalog')
+    .select('zona,ciudad,pais')
+    .order('zona',{ascending:true});
+  if(!error && data && data.length){
+    zonesCatalog = data;
+  } else {
+    // Fallback: usa nombres del site editor
+    zonesCatalog = zoneData.map(z=>({zona:z.name, ciudad:'Ciudad de Panamá', pais:'Panamá'}));
+  }
+}
+
+function _escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _highlightMatch(text, query){
+  if(!query) return _escHtml(text);
+  const i = text.toLowerCase().indexOf(query.toLowerCase());
+  if(i<0) return _escHtml(text);
+  return _escHtml(text.slice(0,i))
+    + '<span class="zone-option-mark">'+_escHtml(text.slice(i,i+query.length))+'</span>'
+    + _escHtml(text.slice(i+query.length));
+}
+
+function zoneACRender(query){
+  const dd = document.getElementById('zoneDropdown');
+  zoneACHighlightIdx = -1;
+  const q = (query||'').trim().toLowerCase();
+  const results = q
+    ? zonesCatalog.filter(z=>
+        z.zona.toLowerCase().includes(q) || z.ciudad.toLowerCase().includes(q)
+      )
+    : zonesCatalog.slice(0,12);
+
+  let html = '';
+
+  if(results.length){
+    html += results.map((z,i)=>`
+      <div class="zone-option" data-idx="${i}" data-zona="${_escHtml(z.zona)}"
+           onmousedown="zoneACSelect('${_escHtml(z.zona)}')"
+           onmouseover="zoneACSetHL(${i})">
+        <span class="material-icons zone-option-icon">location_on</span>
+        <div class="zone-option-main">
+          <div class="zone-option-name">${_highlightMatch(z.zona,q)}</div>
+          <div class="zone-option-meta">${_escHtml(z.ciudad)}, ${_escHtml(z.pais)}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    html += `<div class="zone-dropdown-empty"><span class="material-icons" style="font-size:20px;display:block;margin-bottom:6px;opacity:.4;">search_off</span>No se encontró "${_escHtml(q)}"</div>`;
+  }
+
+  const prefill = (query||'').trim();
+  html += `<button type="button" class="zone-add-btn" onmousedown="zoneACAddNew('${_escHtml(prefill)}')">
+    <span class="material-icons">add_circle_outline</span>
+    ${prefill ? `Agregar "<strong>${_escHtml(prefill)}</strong>" como nueva zona` : 'Agregar nueva zona'}
+  </button>`;
+
+  dd.innerHTML = html;
+  dd.classList.add('open');
+}
+
+function zoneACInput(){
+  zoneACUpdateClear();
+  zoneACRender(document.getElementById('fZone').value);
+}
+
+async function zoneACFocus(){
+  await loadZonesCatalog();
+  zoneACRender(document.getElementById('fZone').value);
+}
+
+function zoneACClose(){
+  document.getElementById('zoneDropdown').classList.remove('open');
+  zoneACHighlightIdx = -1;
+}
+
+function zoneACSelect(zona){
+  document.getElementById('fZone').value = zona;
+  zoneACUpdateClear();
+  zoneACClose();
+}
+
+function zoneACClear(){
+  document.getElementById('fZone').value = '';
+  document.getElementById('fZone').focus();
+  zoneACUpdateClear();
+  zoneACRender('');
+}
+
+function zoneACUpdateClear(){
+  const val = document.getElementById('fZone').value;
+  document.getElementById('zoneACClear').classList.toggle('visible', val.length > 0);
+}
+
+function zoneACSetHL(i){
+  const opts = document.getElementById('zoneDropdown').querySelectorAll('.zone-option');
+  opts.forEach((el,idx)=>el.classList.toggle('highlighted', idx===i));
+  zoneACHighlightIdx = i;
+}
+
+function zoneACKeydown(e){
+  const dd = document.getElementById('zoneDropdown');
+  if(!dd.classList.contains('open')) return;
+  const opts = dd.querySelectorAll('.zone-option');
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    zoneACSetHL(Math.min(zoneACHighlightIdx+1, opts.length-1));
+  } else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    zoneACSetHL(Math.max(zoneACHighlightIdx-1, 0));
+  } else if(e.key==='Enter'){
+    e.preventDefault();
+    if(zoneACHighlightIdx>=0 && opts[zoneACHighlightIdx]){
+      zoneACSelect(opts[zoneACHighlightIdx].dataset.zona);
+    }
+  } else if(e.key==='Escape'){
+    zoneACClose();
+  }
+}
+
+async function zoneACAddNew(prefill){
+  const zona = prompt('Nombre de la nueva zona:', prefill||'');
+  if(!zona||!zona.trim()) return;
+  const ciudad = prompt('Ciudad / Provincia:', 'Ciudad de Panamá')||'Ciudad de Panamá';
+  const pais = prompt('País:', 'Panamá')||'Panamá';
+
+  const {error} = await sb.from('zones_catalog').insert([{
+    zona: zona.trim(), ciudad: ciudad.trim(), pais: pais.trim()
+  }]);
+
+  if(error){
+    if(error.code==='23505'){
+      showToast('Esa zona ya existe en el catálogo.',true);
+    } else {
+      showToast('Error al guardar zona: '+error.message,true);
+    }
+    return;
+  }
+
+  zonesCatalog = []; // Forzar recarga del cache
+  await loadZonesCatalog();
+  zoneACSelect(zona.trim());
+  showToast('✅ Zona "'+zona.trim()+'" agregada al catálogo.');
+}
+
+// Cerrar dropdown al hacer clic fuera
+document.addEventListener('click', function(e){
+  const wrap = document.getElementById('zoneAutocompleteWrap');
+  if(wrap && !wrap.contains(e.target)) zoneACClose();
+});
 </script>
 </body>
 </html>
