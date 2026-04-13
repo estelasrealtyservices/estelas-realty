@@ -297,10 +297,21 @@
   .zone-autocomplete-wrap{position:relative;width:100%;}
   .zone-autocomplete-input{width:100%;padding:10px 36px 10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);}
   .zone-autocomplete-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,0.06);}
-  .zone-autocomplete-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:none;padding:2px;line-height:1;}
+  .zone-autocomplete-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);display:none;padding:2px;line-height:1;z-index:1;}
   .zone-autocomplete-clear .material-icons{font-size:16px;}
   .zone-autocomplete-clear.visible{display:flex;align-items:center;}
-  .zone-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:500;max-height:220px;overflow-y:auto;display:none;}
+  /* Dropdown usa position:fixed para escapar del overflow:auto del modal/bottom-sheet */
+  .zone-dropdown{
+    position:fixed;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18);
+    z-index:9999;
+    max-height:220px;
+    overflow-y:auto;
+    display:none;
+  }
   .zone-dropdown.open{display:block;animation:fadeIn 0.15s ease;}
   .zone-option{padding:10px 14px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 0.1s;}
   .zone-option:hover,.zone-option.highlighted{background:var(--surface2);}
@@ -309,7 +320,7 @@
   .zone-option-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .zone-option-meta{font-size:11px;color:var(--text3);margin-top:1px;}
   .zone-option-mark{color:var(--accent);font-weight:700;}
-  .zone-dropdown-empty{padding:12px 14px;font-size:13px;color:var(--text3);text-align:center;}
+  .zone-dropdown-empty{padding:16px 14px;font-size:13px;color:var(--text3);text-align:center;}
   .zone-add-btn{display:flex;align-items:center;gap:8px;width:100%;padding:11px 14px;background:none;border:none;border-top:1px solid var(--border);font-family:inherit;font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;text-align:left;transition:background 0.1s;}
   .zone-add-btn:hover{background:rgba(201,168,76,0.08);}
   .zone-add-btn .material-icons{font-size:18px;color:var(--accent);}
@@ -3274,6 +3285,31 @@ function _highlightMatch(text, query){
     + _escHtml(text.slice(i+query.length));
 }
 
+function zoneACPositionDropdown(){
+  const input = document.getElementById('fZone');
+  const dd = document.getElementById('zoneDropdown');
+  const rect = input.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const spaceAbove = rect.top;
+  const ddH = Math.min(220, dd.scrollHeight);
+
+  // Move dropdown to body to escape any overflow clipping
+  if(dd.parentElement !== document.body) document.body.appendChild(dd);
+
+  dd.style.width = rect.width + 'px';
+  dd.style.left  = rect.left + 'px';
+
+  if(spaceBelow >= ddH + 8 || spaceBelow >= spaceAbove){
+    // Show below
+    dd.style.top    = (rect.bottom + 4) + 'px';
+    dd.style.bottom = 'auto';
+  } else {
+    // Show above
+    dd.style.top    = 'auto';
+    dd.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+  }
+}
+
 function zoneACRender(query){
   const dd = document.getElementById('zoneDropdown');
   zoneACHighlightIdx = -1;
@@ -3309,6 +3345,7 @@ function zoneACRender(query){
 
   dd.innerHTML = html;
   dd.classList.add('open');
+  zoneACPositionDropdown();
 }
 
 function zoneACInput(){
@@ -3322,7 +3359,12 @@ async function zoneACFocus(){
 }
 
 function zoneACClose(){
-  document.getElementById('zoneDropdown').classList.remove('open');
+  const dd = document.getElementById('zoneDropdown');
+  dd.classList.remove('open');
+  dd.style.top = '';
+  dd.style.bottom = '';
+  dd.style.left = '';
+  dd.style.width = '';
   zoneACHighlightIdx = -1;
 }
 
@@ -3398,7 +3440,22 @@ async function zoneACAddNew(prefill){
 // Cerrar dropdown al hacer clic fuera
 document.addEventListener('click', function(e){
   const wrap = document.getElementById('zoneAutocompleteWrap');
-  if(wrap && !wrap.contains(e.target)) zoneACClose();
+  if(wrap && !wrap.contains(e.target)){
+    const dd = document.getElementById('zoneDropdown');
+    if(!dd.contains(e.target)) zoneACClose();
+  }
+});
+
+// Reposicionar dropdown al hacer scroll dentro del modal (bottom sheet móvil)
+document.getElementById('propModal').addEventListener('scroll', function(){
+  const dd = document.getElementById('zoneDropdown');
+  if(dd.classList.contains('open')) zoneACPositionDropdown();
+}, true);
+
+// También reposicionar si cambia el tamaño de ventana
+window.addEventListener('resize', function(){
+  const dd = document.getElementById('zoneDropdown');
+  if(dd.classList.contains('open')) zoneACPositionDropdown();
 });
 </script>
 </body>
