@@ -232,7 +232,7 @@
   .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border-radius:16px;width:100%;max-width:900px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:fadeIn 0.2s ease;}
-  .modal-header{position:sticky;top:0;background:var(--surface);padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:1;}
+  .modal-header{position:sticky;top:0;background:var(--surface);padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10;}
   .modal-header h2{font-family:'Playfair Display', serif;font-size:22px;font-weight:600;color:var(--primary);}
   .modal-code{font-size:12px;color:var(--accent);font-weight:600;letter-spacing:1px;background:rgba(201,168,76,0.1);padding:4px 10px;border-radius:6px;margin-top:4px;}
   .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
@@ -275,7 +275,7 @@
   .featured-toggle{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:var(--transition);}
   .featured-toggle:hover{border-color:var(--accent);}
   .featured-toggle input{width:18px;height:18px;cursor:pointer;accent-color:var(--primary);}
-  .modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:20px 28px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface);}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:20px 28px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface);z-index:10;}
   .btn-secondary{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:none;font-family:inherit;font-size:14px;font-weight:500;color:var(--text2);transition:var(--transition);}
   .btn-secondary:hover{background:var(--surface2);}
   .btn-primary{padding:10px 24px;border-radius:8px;border:none;background:var(--primary);color:white;font-family:inherit;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;transition:var(--transition);}
@@ -628,6 +628,49 @@
     .form-grid,.form-grid-3{grid-template-columns:1fr;}
     .form-group.full{grid-column:span 1;}
   }
+
+  /* ---- TYPE CHIPS (mobile quick-filter) ---- */
+  .type-chips-bar{
+    display:none; /* solo visible en móvil */
+  }
+  @media(max-width:640px){
+    .type-chips-bar{
+      display:flex;
+      gap:6px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding:0 0 2px 0;
+      margin-bottom:10px;
+    }
+    .type-chips-bar::-webkit-scrollbar{display:none;}
+    .type-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      white-space:nowrap;
+      padding:6px 12px;
+      border-radius:20px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      font-family:'DM Sans',sans-serif;
+      font-size:12px;
+      font-weight:500;
+      color:var(--text2);
+      cursor:pointer;
+      transition:var(--transition);
+      flex-shrink:0;
+    }
+    .type-chip:hover{border-color:var(--accent);color:var(--primary);}
+    .type-chip.active{
+      background:var(--primary);
+      color:white;
+      border-color:var(--primary);
+      font-weight:600;
+    }
+    .type-chip .chip-icon{font-size:13px;line-height:1;}
+  }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
@@ -730,6 +773,40 @@
           </select>
         </div>
         <button class="btn-add" onclick="openModal()"><span class="material-icons">add</span>Agregar propiedad</button>
+      </div>
+
+      <!-- CHIPS DE TIPO — solo visibles en móvil -->
+      <div class="type-chips-bar" id="typeChipsBar">
+        <button class="type-chip active" data-type="" onclick="setTypeChip(this)">
+          <span class="chip-icon">🏠</span>Todos
+        </button>
+        <button class="type-chip" data-type="Apartamento" onclick="setTypeChip(this)">
+          <span class="chip-icon">🏢</span>Apto
+        </button>
+        <button class="type-chip" data-type="Casa" onclick="setTypeChip(this)">
+          <span class="chip-icon">🏡</span>Casa
+        </button>
+        <button class="type-chip" data-type="Local" onclick="setTypeChip(this)">
+          <span class="chip-icon">🏪</span>Local
+        </button>
+        <button class="type-chip" data-type="Oficina" onclick="setTypeChip(this)">
+          <span class="chip-icon">💼</span>Oficina
+        </button>
+        <button class="type-chip" data-type="Penthouse" onclick="setTypeChip(this)">
+          <span class="chip-icon">✨</span>PH
+        </button>
+        <button class="type-chip" data-type="Galera" onclick="setTypeChip(this)">
+          <span class="chip-icon">🏭</span>Galera
+        </button>
+        <button class="type-chip" data-type="Terreno" onclick="setTypeChip(this)">
+          <span class="chip-icon">🌳</span>Terreno
+        </button>
+        <button class="type-chip" data-type="Lote" onclick="setTypeChip(this)">
+          <span class="chip-icon">📐</span>Lote
+        </button>
+        <button class="type-chip" data-type="Bodega" onclick="setTypeChip(this)">
+          <span class="chip-icon">📦</span>Bodega
+        </button>
       </div>
 
       <div class="table-wrap">
@@ -1046,7 +1123,7 @@
           <div class="form-group"><label>Habitaciones</label><select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
           <div class="form-group"><label>Baños</label><select id="fBaths"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
           <div class="form-group"><label>Parqueos</label><select id="fParking"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-          <div class="form-group"><label>Piso</label><input type="text" id="fFloor" placeholder="Ej: 12, PH, Planta baja"></div>
+          <div class="form-group"><label>Piso / Unidad</label><input type="text" id="fFloor" placeholder="Ej: 12-B, PH, Planta baja, Casa 4"></div>
         </div>
       </div>
       <div class="modal-section">
@@ -1196,10 +1273,7 @@
             <label>Contacto del propietario</label>
             <input type="text" id="fOwnerContact" placeholder="Ej: +507 6000-0000 / email">
           </div>
-          <div class="form-group">
-            <label>Unidad / Apto</label>
-            <input type="text" id="fOwnerUnit" placeholder="Ej: Apto 12-B, Casa 4">
-          </div>
+
         </div>
       </div>
       <div class="modal-section">
@@ -1317,6 +1391,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let allProperties=[];
 let selectedFiles=[];
 let codeCounter=1;
+let activeTypeChip='';
 let heroImages=[];
 let zoneData=[];
 let adminMap=null;
@@ -1969,6 +2044,13 @@ const PAGE_SIZE = 50;
 let currentPage = 1;
 let filteredList = [];
 
+function setTypeChip(btn){
+  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  activeTypeChip = btn.dataset.type;
+  renderTable();
+}
+
 function renderTable(resetPage = true) {
   if (resetPage) currentPage = 1;
   const s      = document.getElementById('adminSearch').value.toLowerCase();
@@ -1995,6 +2077,7 @@ function renderTable(resetPage = true) {
   if (status === 'inactive') filteredList = filteredList.filter(p => p.is_active === false);
   if (locType) filteredList = filteredList.filter(p => (p.location_type || []).includes(locType));
   if (life)    filteredList = filteredList.filter(p => (p.lifestyle || []).includes(life));
+  if (activeTypeChip) filteredList = filteredList.filter(p => p.type === activeTypeChip);
 
   renderPage();
 }
@@ -2324,7 +2407,7 @@ function openModal(id=null){
     document.getElementById('fRooms').value=p.rooms;
     document.getElementById('fBaths').value=p.baths;
     document.getElementById('fParking').value=p.parking;
-    document.getElementById('fFloor').value=p.floor||'';
+    document.getElementById('fFloor').value=p.floor||p.owner_unit||'';
     document.getElementById('fDesc').value=p.description||'';
     document.getElementById('fDescEn').value=p.description_en||'';
     document.getElementById('fVideo').value=p.video_url||'';
@@ -2335,7 +2418,6 @@ function openModal(id=null){
     document.getElementById('fUrgente').checked=(p.tags||[]).includes('Urgente');
     document.getElementById('fOwnerName').value=p.owner_name||'';
     document.getElementById('fOwnerContact').value=p.owner_contact||'';
-    document.getElementById('fOwnerUnit').value=p.owner_unit||'';
     document.getElementById('fE24Code').value=p.encuentra24_code||'';
     document.getElementById('fLatitude').value=p.latitude||'';
     document.getElementById('fLongitude').value=p.longitude||'';
@@ -2356,7 +2438,7 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fOwnerUnit','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fTitulado').value='';
     document.getElementById('fLatitude').value='';
     document.getElementById('fLongitude').value='';
@@ -2568,6 +2650,7 @@ async function saveProperty(){
     baths:parseInt(document.getElementById('fBaths').value)||1,
     parking:parseInt(document.getElementById('fParking').value)||0,
     floor:document.getElementById('fFloor').value||'',
+    owner_unit:document.getElementById('fFloor').value||null,
     description:document.getElementById('fDesc').value,
     description_en:document.getElementById('fDescEn').value.trim()||null,
     features:[...document.querySelectorAll('.feature-toggle.selected:not(.loc-type-btn):not(.lifestyle-btn)')].map(b=>b.textContent.trim()),
@@ -2585,7 +2668,6 @@ async function saveProperty(){
     ].filter(Boolean),
     owner_name:document.getElementById('fOwnerName').value.trim()||null,
     owner_contact:document.getElementById('fOwnerContact').value.trim()||null,
-    owner_unit:document.getElementById('fOwnerUnit').value.trim()||null,
     encuentra24_code:document.getElementById('fE24Code').value.trim()||null,
     latitude:parseFloat(document.getElementById('fLatitude').value)||null,
     longitude:parseFloat(document.getElementById('fLongitude').value)||null
