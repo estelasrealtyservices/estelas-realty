@@ -629,47 +629,50 @@
     .form-group.full{grid-column:span 1;}
   }
 
-  /* ---- TYPE CHIPS (mobile quick-filter) ---- */
+  /* ---- TYPE CHIPS (quick-filter, siempre visible) ---- */
   .type-chips-bar{
-    display:none; /* solo visible en móvil */
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:0 0 4px 0;
+    margin-bottom:16px;
+    flex-wrap:nowrap;
   }
+  .type-chips-bar::-webkit-scrollbar{display:none;}
+  .type-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    white-space:nowrap;
+    padding:6px 14px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    font-family:'DM Sans',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    color:var(--text2);
+    cursor:pointer;
+    transition:var(--transition);
+    flex-shrink:0;
+    box-shadow:var(--shadow);
+  }
+  .type-chip:hover{border-color:var(--accent);color:var(--primary);background:var(--surface2);}
+  .type-chip.active{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+    font-weight:600;
+    box-shadow:0 4px 12px rgba(26,26,46,0.18);
+  }
+  .type-chip .chip-icon{font-size:14px;line-height:1;}
   @media(max-width:640px){
-    .type-chips-bar{
-      display:flex;
-      gap:6px;
-      overflow-x:auto;
-      overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none;
-      padding:0 0 2px 0;
-      margin-bottom:10px;
-    }
-    .type-chips-bar::-webkit-scrollbar{display:none;}
-    .type-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:4px;
-      white-space:nowrap;
-      padding:6px 12px;
-      border-radius:20px;
-      border:1px solid var(--border);
-      background:var(--surface);
-      font-family:'DM Sans',sans-serif;
-      font-size:12px;
-      font-weight:500;
-      color:var(--text2);
-      cursor:pointer;
-      transition:var(--transition);
-      flex-shrink:0;
-    }
-    .type-chip:hover{border-color:var(--accent);color:var(--primary);}
-    .type-chip.active{
-      background:var(--primary);
-      color:white;
-      border-color:var(--primary);
-      font-weight:600;
-    }
-    .type-chip .chip-icon{font-size:13px;line-height:1;}
+    .type-chips-bar{margin-bottom:10px;padding:0 0 2px 0;}
+    .type-chip{padding:5px 11px;font-size:12px;}
+    .type-chip .chip-icon{font-size:13px;}
   }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
