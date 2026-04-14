@@ -490,7 +490,7 @@
   .destinos-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    height:520px;
+    min-height:520px;
   }
 
   /* Bloque izquierdo con color sólido */
@@ -503,7 +503,7 @@
   }
   .destinos-heading{
     font-family:'DM Sans',sans-serif;
-    font-size:48px;
+    font-size:clamp(28px,4vw,52px);
     font-weight:200;
     color:#fff;
     line-height:1.15;
@@ -572,8 +572,10 @@
     .destinos-left{
       padding:36px 28px;
       justify-content:center;
+      min-height:220px;
+      display:flex;
+      align-items:center;
     }
-    .destinos-heading{font-size:32px;}
   }
   @media(max-width:540px){
     .destinos-grid{grid-template-rows:auto 260px;}
