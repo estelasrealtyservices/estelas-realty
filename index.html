@@ -1309,7 +1309,7 @@ function openDetail(id){
           <div class="detail-spec"><span class="material-icons">shower</span><strong>${p.baths}</strong> baños</div>
           <div class="detail-spec"><span class="material-icons">square_foot</span><strong>${p.size} m²</strong></div>
           <div class="detail-spec"><span class="material-icons">directions_car</span><strong>${p.parking}</strong> parqueo(s)</div>
-          ${p.floor?`<div class="detail-spec"><span class="material-icons">apartment</span>Piso <strong>${p.floor}</strong></div>`:''}
+          
         </div>
         <p style="font-size:14px;color:var(--text2);line-height:1.7">${p.description||''}</p>
         ${p.features?.length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Características</div><div style="display:flex;flex-wrap:wrap;gap:8px">${p.features.map(f=>`<span class="feature-pill">${f}</span>`).join('')}</div></div>`:''}
