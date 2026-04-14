@@ -724,7 +724,6 @@ function renderProperty(p) {
   if (p.baths > 0) specs.push({ svg: SVG.bath,   val: p.baths,         label: 'Baños' });
   if (p.size  > 0) specs.push({ svg: SVG.size,   val: p.size + ' m²',  label: 'Metraje' });
   if (p.parking>0) specs.push({ svg: SVG.car,    val: p.parking,       label: 'Parqueos' });
-  if (p.floor)     specs.push({ svg: SVG.floor,  val: p.floor,         label: 'Piso' });
   const specsHTML = specs.map(s => `
     <div class="spec-pill">
       <span class="spec-svg">${s.svg}</span>
