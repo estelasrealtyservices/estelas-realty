@@ -125,8 +125,6 @@
   .btn-view-info{padding:6px 12px;background:none;border:1px solid rgba(201,168,76,0.4);border-radius:6px;font-size:12px;color:var(--accent);display:flex;align-items:center;gap:4px;transition:var(--transition);}
   .btn-view-info:hover{background:rgba(201,168,76,0.1);border-color:var(--accent);}
   .btn-view-info .material-icons{font-size:14px;}
-
-  /* QUICK-VIEW MODAL */
   .qv-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1100;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
   .qv-overlay.open{display:flex;}
   .qv-modal{background:var(--surface);border-radius:16px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.25);animation:fadeIn 0.2s ease;}
@@ -466,28 +464,34 @@
     .filter-sel{width:100%;}
     .btn-add{width:100%;justify-content:center;padding:11px 16px;}
 
-    /* --- TABLE → hide on mobile --- */
+    /* --- CARDS: single column on phone --- */
+    .mob-card-grid{grid-template-columns:1fr;}
+    .mob-card-img-wrap{height:120px;}
+    .mob-prop-card{flex-direction:row;}
+    .mob-card-img-wrap{width:90px;height:auto;min-height:110px;}
+
+    /* --- TABLE → hide on tablet/mobile --- */
     .table-wrap table{display:none;}
     .table-wrap{border-radius:var(--radius);overflow:visible;background:transparent;border:none;}
     .pagination-bar{border-radius:var(--radius);margin-top:8px;}
 
-    /* --- MOBILE PROPERTY CARDS --- */
-    .mob-card-grid{display:flex;flex-direction:column;gap:10px;}
+    /* --- PROPERTY CARDS (tablet + mobile) --- */
+    .mob-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     .mob-prop-card{
       background:var(--surface);
       border:1px solid var(--border);
       border-radius:var(--radius);
       overflow:hidden;
       display:flex;
-      flex-direction:row;
+      flex-direction:column;
       align-items:stretch;
       transition:var(--transition);
     }
     .mob-prop-card:hover{box-shadow:var(--shadow-hover);}
     .mob-prop-card.inactive-card{opacity:0.6;}
     .mob-card-img-wrap{
-      width:88px;
-      min-width:88px;
+      width:100%;
+      height:160px;
       flex-shrink:0;
       position:relative;
       overflow:hidden;
@@ -506,10 +510,10 @@
     .mob-card-img-overlay .material-icons{font-size:20px;color:#888;}
     .mob-card-body{
       flex:1;
-      padding:10px 12px;
+      padding:12px 14px;
       display:flex;
       flex-direction:column;
-      gap:4px;
+      gap:5px;
       min-width:0;
     }
     .mob-card-top{
@@ -529,7 +533,7 @@
       border-radius:4px;
     }
     .mob-card-title{
-      font-size:13px;
+      font-size:14px;
       font-weight:600;
       color:var(--text);
       white-space:nowrap;
@@ -543,35 +547,36 @@
       flex-wrap:wrap;
     }
     .mob-card-zone{
-      font-size:11px;
+      font-size:12px;
       color:var(--text3);
       display:flex;
       align-items:center;
       gap:2px;
     }
-    .mob-card-zone .material-icons{font-size:11px;color:var(--accent);}
+    .mob-card-zone .material-icons{font-size:12px;color:var(--accent);}
     .mob-card-price{
       font-family:'Playfair Display',serif;
-      font-size:14px;
+      font-size:16px;
       font-weight:700;
       color:var(--primary);
     }
-    .mob-card-price-period{font-size:11px;font-weight:400;color:var(--text3);}
+    .mob-card-price-period{font-size:12px;font-weight:400;color:var(--text3);}
     .mob-card-owner{
       display:flex;align-items:center;gap:3px;
-      font-size:11px;color:var(--text3);
+      font-size:12px;color:var(--text3);
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .mob-card-owner .material-icons{font-size:12px;color:var(--accent);flex-shrink:0;}
+    .mob-card-owner .material-icons{font-size:13px;color:var(--accent);flex-shrink:0;}
     .mob-card-owner-contact{color:var(--text3);opacity:0.8;}
     .mob-card-actions{
       display:flex;
       align-items:center;
       gap:6px;
-      margin-top:6px;
+      margin-top:8px;
+      flex-wrap:wrap;
     }
     .mob-card-toggle{
-      padding:4px 10px;
+      padding:5px 10px;
       border-radius:6px;
       font-size:11px;
       font-family:inherit;
@@ -587,11 +592,11 @@
     .mob-card-toggle.inactive{background:rgba(229,57,53,0.1);color:#C62828;}
     .mob-card-toggle .status-dot{width:6px;height:6px;}
     .mob-card-edit{
-      padding:5px 10px;
+      padding:6px 11px;
       background:none;
       border:1px solid var(--border);
       border-radius:6px;
-      font-size:11px;
+      font-size:12px;
       color:var(--text2);
       display:flex;align-items:center;gap:3px;
       transition:var(--transition);
@@ -599,7 +604,7 @@
     .mob-card-edit:hover{border-color:var(--primary);color:var(--primary);}
     .mob-card-edit .material-icons{font-size:14px;}
     .mob-card-del{
-      padding:5px 8px;
+      padding:6px 9px;
       background:none;
       border:1px solid rgba(229,57,53,0.3);
       border-radius:6px;
@@ -1593,7 +1598,7 @@ CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role(
     <div class="qv-body" id="qvBody"></div>
     <div class="qv-footer">
       <button class="btn-secondary" onclick="closeQV()">Cerrar</button>
-      <button class="btn-primary" id="qvEditBtn" onclick="closeQV()"><span class="material-icons" style="font-size:16px">edit</span>Editar</button>
+      <button class="btn-primary" id="qvEditBtn"><span class="material-icons" style="font-size:16px">edit</span>Editar</button>
     </div>
   </div>
 </div>
@@ -2312,7 +2317,7 @@ function renderTable(resetPage = true) {
   renderPage();
 }
 
-function isMobile(){ return window.innerWidth <= 640; }
+function isMobile(){ return window.innerWidth <= 1024; }
 
 function renderPage() {
   const totalItems = filteredList.length;
@@ -2725,18 +2730,12 @@ function openQV(id){
   document.getElementById('qvCode').textContent = p.code;
   document.getElementById('qvTitle').textContent = p.title;
   document.getElementById('qvEditBtn').onclick = ()=>{ closeQV(); openModal(id); };
-
   const period = p.operation==='Alquiler vacacional' ? '/noche' : p.operation==='Alquiler' ? '/mes' : '';
   const badgeCls = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   const statusColor = p.is_active!==false ? '#2E7D32' : '#888';
   const statusLabel = p.is_active!==false ? '● Publicada' : '○ Oculta';
   const fecha = p.created_at ? new Date(p.created_at).toLocaleDateString('es-PA',{day:'2-digit',month:'long',year:'numeric'}) : '—';
-
-  const allTags = [
-    p.featured ? '⭐ Destacado' : null,
-    ...(p.tags||[]).map(t=>t==='Exclusivo'?'🏅 Exclusivo':t==='Ganga'?'🔥 Ganga':t==='Oportunidad'?'💡 Oportunidad':t==='Urgente'?'⚡ Urgente':t),
-  ].filter(Boolean);
-
+  const allTags = [p.featured ? '⭐ Destacado' : null,...(p.tags||[]).map(t=>t==='Exclusivo'?'🏅 Exclusivo':t==='Ganga'?'🔥 Ganga':t==='Oportunidad'?'💡 Oportunidad':t==='Urgente'?'⚡ Urgente':t)].filter(Boolean);
   document.getElementById('qvBody').innerHTML = `
     <div class="qv-badges">
       <span class="badge ${badgeCls}">${p.operation}</span>
@@ -2744,7 +2743,6 @@ function openQV(id){
       <span style="font-size:12px;font-weight:600;color:${statusColor};background:${p.is_active!==false?'rgba(46,125,50,0.08)':'rgba(0,0,0,0.05)'};padding:3px 10px;border-radius:20px;">${statusLabel}</span>
       ${allTags.map(t=>`<span class="badge" style="background:rgba(201,168,76,0.12);color:#7a5c10;border:1px solid rgba(201,168,76,0.3);">${t}</span>`).join('')}
     </div>
-
     <div class="qv-section">
       <div class="qv-section-title"><span class="material-icons">info</span>Información general</div>
       <div class="qv-grid-3">
@@ -2762,56 +2760,18 @@ function openQV(id){
         ${p.latitude?`<div class="qv-item"><div class="qv-item-label">Coordenadas</div><div class="qv-item-value" style="font-size:12px;">${parseFloat(p.latitude).toFixed(5)}, ${parseFloat(p.longitude).toFixed(5)}</div></div>`:''}
       </div>
     </div>
-
-    ${(p.location_type?.length||p.lifestyle?.length) ? `
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">landscape</span>Ubicación y estilo de vida</div>
-      <div class="qv-chips">
-        ${(p.location_type||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}
-        ${(p.lifestyle||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}
-      </div>
-    </div>` : ''}
-
-    ${p.features?.length ? `
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">checklist</span>Amenidades</div>
-      <div class="qv-chips">${p.features.map(f=>`<span class="qv-chip">${f}</span>`).join('')}</div>
-    </div>` : ''}
-
-    ${p.description ? `
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">description</span>Descripción</div>
-      <div class="qv-desc">${p.description}</div>
-      ${p.description_en ? `<div class="qv-desc" style="margin-top:8px;"><span style="font-size:10px;font-weight:700;color:var(--text3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">🇺🇸 English</span>${p.description_en}</div>` : ''}
-    </div>` : ''}
-
-    ${p.video_url ? `
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">play_circle</span>Video</div>
-      <a href="${p.video_url}" target="_blank" style="font-size:13px;color:var(--accent);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:14px;">open_in_new</span>${p.video_url}</a>
-    </div>` : ''}
-
-    <hr class="qv-divider">
-
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">person</span>Propietario</div>
-      ${p.owner_name ? `
-      <div class="qv-owner-box">
-        <div class="qv-owner-name">${p.owner_name}</div>
-        ${p.owner_contact ? `<div class="qv-owner-contact"><span class="material-icons" style="font-size:14px;">phone</span>${p.owner_contact}</div>` : ''}
-      </div>` : '<span style="font-size:13px;color:var(--text3);font-style:italic;">Sin propietario registrado</span>'}
+    ${(p.location_type?.length||p.lifestyle?.length)?`<div class="qv-section"><div class="qv-section-title"><span class="material-icons">landscape</span>Ubicación y estilo de vida</div><div class="qv-chips">${(p.location_type||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}${(p.lifestyle||[]).map(t=>`<span class="qv-chip">${t}</span>`).join('')}</div></div>`:''}
+    ${p.features?.length?`<div class="qv-section"><div class="qv-section-title"><span class="material-icons">checklist</span>Amenidades</div><div class="qv-chips">${p.features.map(f=>`<span class="qv-chip">${f}</span>`).join('')}</div></div>`:''}
+    ${p.description?`<div class="qv-section"><div class="qv-section-title"><span class="material-icons">description</span>Descripción</div><div class="qv-desc">${p.description}</div>${p.description_en?`<div class="qv-desc" style="margin-top:8px;"><span style="font-size:10px;font-weight:700;color:var(--text3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">🇺🇸 English</span>${p.description_en}</div>`:''}</div>`:''}
+    ${p.video_url?`<div class="qv-section"><div class="qv-section-title"><span class="material-icons">play_circle</span>Video</div><a href="${p.video_url}" target="_blank" style="font-size:13px;color:var(--accent);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:14px;">open_in_new</span>${p.video_url}</a></div>`:''}
+    <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+    <div class="qv-section"><div class="qv-section-title"><span class="material-icons">person</span>Propietario</div>
+      ${p.owner_name?`<div class="qv-owner-box"><div class="qv-owner-name">${p.owner_name}</div>${p.owner_contact?`<div class="qv-owner-contact"><span class="material-icons" style="font-size:14px;">phone</span>${p.owner_contact}</div>`:''}</div>`:'<span style="font-size:13px;color:var(--text3);font-style:italic;">Sin propietario registrado</span>'}
     </div>
-
-    ${p.notes ? `
-    <div class="qv-section">
-      <div class="qv-section-title"><span class="material-icons">sticky_note_2</span>Notas internas</div>
-      <div class="qv-notes">${p.notes}</div>
-    </div>` : ''}
+    ${p.notes?`<div class="qv-section"><div class="qv-section-title"><span class="material-icons">sticky_note_2</span>Notas internas</div><div class="qv-notes">${p.notes}</div></div>`:''}
   `;
-
   document.getElementById('qvOverlay').classList.add('open');
 }
-
 function closeQV(){
   document.getElementById('qvOverlay').classList.remove('open');
 }
