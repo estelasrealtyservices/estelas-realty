@@ -324,12 +324,12 @@
   .modal-close{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .modal-close .material-icons{font-size:20px;color:var(--text2);}
   .modal-body{padding:28px;}
-  .detail-gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;}
-  .detail-main{aspect-ratio:4/3;overflow:hidden;}
-  .detail-main img{width:100%;height:100%;object-fit:cover;}
-  .detail-thumbs{display:grid;gap:8px;}
+  .detail-gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:480px;gap:8px;border-radius:12px;overflow:hidden;margin-bottom:28px;}
+  .detail-main{overflow:hidden;}
+  .detail-main img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-thumbs{display:grid;grid-template-rows:1fr 1fr;gap:8px;overflow:hidden;}
+  .detail-thumb{overflow:hidden;}
   .detail-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-  .modal img{max-width:100%;max-height:90vh;width:auto;height:auto;object-fit:contain;}
   .detail-info{display:grid;grid-template-columns:1fr 300px;gap:28px;}
   .detail-specs{display:flex;gap:20px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0;}
   .detail-spec{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text2);}
@@ -404,8 +404,8 @@
     .admin-stats{grid-template-columns:1fr 1fr;}
     .property-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
     .zones-grid{grid-template-columns:1fr 1fr;}
-    .detail-gallery{grid-template-columns:1fr;}
-    .detail-thumbs{grid-template-columns:1fr 1fr;display:grid;}
+    .detail-gallery{grid-template-columns:1fr;grid-template-rows:auto;}
+    .detail-thumbs{grid-template-columns:1fr 1fr;grid-template-rows:200px;display:grid;}
     .detail-info{grid-template-columns:1fr;}
     .contact-box{margin-top:20px;}
   }
@@ -459,7 +459,7 @@
     .modal-body{padding:20px;}
     .modal-header{padding:16px 20px;}
     .modal-actions{padding:14px 20px;}
-    .detail-gallery{grid-template-columns:1fr;}
+    .detail-gallery{grid-template-columns:1fr;grid-template-rows:auto;}
     .detail-thumbs{grid-template-columns:1fr 1fr;}
     .detail-info{grid-template-columns:1fr;}
     .detail-specs{gap:12px;}
