@@ -44,7 +44,7 @@
   .nav-cta:hover{background:#e6a800;}
 
   /* HERO SLIDESHOW */
-  .hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:26px 32px 58px;}
+  .hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:26px 32px 65px;}
   .hero-slides{position:absolute;inset:0;z-index:0;}
   .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
   .hero-slide.active{opacity:1;}
@@ -748,8 +748,16 @@
         <span class="material-icons">location_on</span>
         <div style="flex:1">
           <label id="zoneLabel">Zona</label>
-          <input type="text" id="zoneInput" placeholder="Todas las zonas" autocomplete="off" style="border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;">
+          <!-- Desktop: text autocomplete -->
+          <input type="text" id="zoneInput" placeholder="Todas las zonas" autocomplete="off"
+            style="border:none;outline:none;font-family:inherit;font-size:16px;color:var(--text);background:transparent;width:100%;">
           <input type="hidden" id="zoneFilter" value="">
+          <!-- Mobile: native select, populated by JS -->
+          <select id="zoneMobileSelect"
+            style="display:none;border:none;outline:none;font-family:inherit;font-size:16px;color:var(--text);background:transparent;width:100%;cursor:pointer;"
+            onchange="onZoneMobileChange(this.value)">
+            <option value="">Todas las zonas</option>
+          </select>
         </div>
         <div id="zoneDropdown" style="display:none;position:fixed;background:white;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.15);z-index:500;max-height:220px;overflow-y:auto;border:1px solid var(--border);"></div>
       </div>
@@ -1188,6 +1196,7 @@ function resetFilters(){
   document.getElementById('typeFilter').value='';
   document.getElementById('zoneFilter').value='';
   const zi=document.getElementById('zoneInput');if(zi){zi.value='';zi.dataset.selected='';}
+  const zms=document.getElementById('zoneMobileSelect');if(zms)zms.value='';
   document.getElementById('priceFilter').value='';
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
@@ -1223,6 +1232,7 @@ function setTab(btn,val){
 function setZone(z){
   document.getElementById('zoneFilter').value=z;
   const zi=document.getElementById('zoneInput');if(zi)zi.value=z;
+  const zms=document.getElementById('zoneMobileSelect');if(zms)zms.value=z;
   document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
   filterProperties();
 }
@@ -1754,16 +1764,43 @@ function loadLeafletThen(cb){
 
 // ---- ZONE AUTOCOMPLETE ----
 let allZones = [];
+function onZoneMobileChange(val){
+  document.getElementById('zoneFilter').value = val;
+  filterProperties();
+}
+
 function initZoneAutocomplete(){
   const input  = document.getElementById('zoneInput');
   const hidden = document.getElementById('zoneFilter');
   const drop   = document.getElementById('zoneDropdown');
+  const mSel   = document.getElementById('zoneMobileSelect');
   if(!input||!drop) return;
+
+  const isMobile = ()=> window.innerWidth <= 768;
+
+  // Show/hide correct control based on viewport
+  function applyMode(){
+    if(isMobile()){
+      input.style.display  = 'none';
+      mSel.style.display   = '';
+      drop.style.display   = 'none';
+    } else {
+      input.style.display  = '';
+      mSel.style.display   = 'none';
+    }
+  }
+  applyMode();
+  window.addEventListener('resize', applyMode, {passive:true});
 
   // Build zone list from loaded properties (unique, sorted)
   function buildZones(){
     const set = new Set(allProperties.map(p=>p.zone).filter(Boolean));
     allZones = [...set].sort((a,b)=>a.localeCompare(b,'es'));
+    // Populate mobile select
+    const lang = currentLang==='en'?'All zones':'Todas las zonas';
+    mSel.innerHTML = `<option value="">${lang}</option>` +
+      allZones.map(z=>`<option value="${z}">${z}</option>`).join('');
+    if(hidden.value) mSel.value = hidden.value;
   }
 
   function highlight(text, q){
@@ -1775,12 +1812,13 @@ function initZoneAutocomplete(){
 
   function positionDrop(){
     const rect = input.getBoundingClientRect();
-    drop.style.top    = (rect.bottom + 8) + 'px';
-    drop.style.left   = rect.left + 'px';
-    drop.style.width  = rect.width + 'px';
+    drop.style.top   = (rect.bottom + 8) + 'px';
+    drop.style.left  = rect.left + 'px';
+    drop.style.width = rect.width + 'px';
   }
 
   function renderDrop(q){
+    if(isMobile()){ drop.style.display='none'; return; }
     const matches = q
       ? allZones.filter(z=>z.toLowerCase().includes(q.toLowerCase()))
       : allZones;
@@ -1819,8 +1857,9 @@ function initZoneAutocomplete(){
     filterProperties();
   }
 
-  input.addEventListener('input', ()=>{ renderDrop(input.value.trim()); });
-  input.addEventListener('focus', ()=>{ buildZones(); renderDrop(input.value.trim()); });
+  // Desktop only events
+  input.addEventListener('input', ()=>{ if(!isMobile()) renderDrop(input.value.trim()); });
+  input.addEventListener('focus', ()=>{ if(!isMobile()){ buildZones(); renderDrop(input.value.trim()); } });
   input.addEventListener('blur',  ()=>{ setTimeout(()=>{ drop.style.display='none'; }, 150); });
   input.addEventListener('keydown', e=>{
     if(e.key==='Escape'){ drop.style.display='none'; input.blur(); }
