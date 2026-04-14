@@ -751,7 +751,7 @@
           <input type="text" id="zoneInput" placeholder="Todas las zonas" autocomplete="off" style="border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;">
           <input type="hidden" id="zoneFilter" value="">
         </div>
-        <div id="zoneDropdown" style="display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:white;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.15);z-index:50;max-height:220px;overflow-y:auto;border:1px solid var(--border);"></div>
+        <div id="zoneDropdown" style="display:none;position:fixed;background:white;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.15);z-index:500;max-height:220px;overflow-y:auto;border:1px solid var(--border);"></div>
       </div>
       <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span><span id="searchBtnText">Buscar</span></button>
     </div>
@@ -853,7 +853,7 @@
       <button onclick="resetFilters()" style="margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer;">Ver todas</button>
     </div>
     <!-- VER MÁS BUTTON -->
-    <div id="verMasWrap" style="display:none;text-align:center;margin-top:36px;">
+    <div id="verMasWrap" style="text-align:center;margin-top:36px;">
       <a href="anuncios.html" class="ver-mas-btn">
         <span id="verMasBtnText">Ver más propiedades</span>
         <span class="material-icons" style="font-size:18px">arrow_forward</span>
@@ -1231,11 +1231,10 @@ function renderProperties(list){
   const grid=document.getElementById('propertyGrid');
   const empty=document.getElementById('emptyState');
   const verMasWrap=document.getElementById('verMasWrap');
-  if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';if(verMasWrap)verMasWrap.style.display='none';return;}
+  if(verMasWrap)verMasWrap.style.display='block'; // always visible
+  if(!list.length){grid.innerHTML='';empty.style.display=allProperties.length?'block':'none';return;}
   empty.style.display='none';
-  const hasMore=list.length>3;
   const displayed=list.slice(0,3);
-  if(verMasWrap)verMasWrap.style.display=hasMore?'block':'none';
   const t=TI[currentLang];
   grid.innerHTML=displayed.map(p=>{
     // Usa thumbnail (300-400px) para tarjeta; fallback a imagen completa si no hay thumbs
@@ -1774,6 +1773,13 @@ function initZoneAutocomplete(){
     return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+q.length)+'</mark>'+text.slice(idx+q.length);
   }
 
+  function positionDrop(){
+    const rect = input.getBoundingClientRect();
+    drop.style.top    = (rect.bottom + 8) + 'px';
+    drop.style.left   = rect.left + 'px';
+    drop.style.width  = rect.width + 'px';
+  }
+
   function renderDrop(q){
     const matches = q
       ? allZones.filter(z=>z.toLowerCase().includes(q.toLowerCase()))
@@ -1786,6 +1792,7 @@ function initZoneAutocomplete(){
       html += `<div class="zone-clear"><span class="material-icons" style="font-size:15px">close</span>${currentLang==='en'?'Clear zone':'Borrar zona'}</div>`;
     }
     drop.innerHTML = html;
+    positionDrop();
     drop.style.display = 'block';
 
     drop.querySelectorAll('.zone-option').forEach(opt=>{
@@ -1819,6 +1826,8 @@ function initZoneAutocomplete(){
     if(e.key==='Escape'){ drop.style.display='none'; input.blur(); }
     if(e.key==='Enter'){ drop.style.display='none'; doSearch(); }
   });
+  window.addEventListener('scroll', ()=>{ if(drop.style.display!=='none') positionDrop(); }, {passive:true});
+  window.addEventListener('resize', ()=>{ if(drop.style.display!=='none') positionDrop(); }, {passive:true});
 
   // Rebuild zones list each time properties load
   document.addEventListener('propertiesLoaded', buildZones);
