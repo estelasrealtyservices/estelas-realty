@@ -77,6 +77,13 @@
   .search-field label{display:block;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
   .search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
   .search-btn:hover{background:#e6a800;}
+  /* ZONE AUTOCOMPLETE */
+  #zoneDropdown .zone-option{padding:10px 16px;font-size:14px;color:var(--text);cursor:pointer;transition:background 0.15s;}
+  #zoneDropdown .zone-option:hover,#zoneDropdown .zone-option.active{background:var(--surface2);}
+  #zoneDropdown .zone-option mark{background:transparent;color:var(--accent);font-weight:600;}
+  #zoneDropdown .zone-clear{padding:10px 16px;font-size:13px;color:var(--text3);cursor:pointer;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;transition:background 0.15s;}
+  #zoneDropdown .zone-clear:hover{background:var(--surface2);color:var(--text);}
+  .search-field:has(#zoneInput){min-width:180px;}
 
   /* TRUST BAND */
   .trust-band{background:var(--primary);border-top:1px solid rgba(255,255,255,0.08);padding:96px 32px 104px;}
@@ -719,27 +726,32 @@
     <p id="heroP" style="display:none"></p>
     <div class="search-bar">
       <div class="search-field">
-        <span class="material-icons">search</span>
-        <div style="flex:1"><label id="searchLabel">Buscar</label><input type="text" placeholder="" id="searchInput"></div>
+        <span class="material-icons">sell</span>
+        <div style="flex:1"><label id="operLabel">Operación</label>
+          <select id="operFilter">
+            <option value="">Todas</option>
+            <option value="Venta">Venta</option>
+            <option value="Alquiler">Alquiler</option>
+            <option value="Alquiler vacacional">Vacacional</option>
+          </select>
+        </div>
       </div>
       <div class="search-field">
         <span class="material-icons">home</span>
         <div style="flex:1"><label id="typeLabel">Tipo</label>
           <select id="typeFilter">
-            <option value="">Todos</option><option>Casa</option><option>Apartamento</option><option>Local</option><option>Oficina</option>
+            <option value="">Todos</option><option>Casa</option><option>Apartamento</option><option>Local</option><option>Oficina</option><option>Galera</option><option>Terreno</option><option>Lote</option><option>Bodega</option>
           </select>
         </div>
       </div>
-      <div class="search-field">
+      <div class="search-field" style="position:relative;">
         <span class="material-icons">location_on</span>
-        <div style="flex:1"><label id="zoneLabel">Zona</label>
-          <select id="zoneFilter">
-            <option value="">Todas</option>
-            <option>San Francisco</option><option>Costa del Este</option><option>Punta Pacífica</option>
-            <option>Bella Vista</option><option>Santa Maria</option><option>Coronado</option>
-            <option>Buenaventura</option><option>Boquete</option><option>San Carlos</option>
-          </select>
+        <div style="flex:1">
+          <label id="zoneLabel">Zona</label>
+          <input type="text" id="zoneInput" placeholder="Todas las zonas" autocomplete="off" style="border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);background:transparent;width:100%;">
+          <input type="hidden" id="zoneFilter" value="">
         </div>
+        <div id="zoneDropdown" style="display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:white;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.15);z-index:50;max-height:220px;overflow-y:auto;border:1px solid var(--border);"></div>
       </div>
       <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span><span id="searchBtnText">Buscar</span></button>
     </div>
@@ -1121,6 +1133,7 @@ async function loadProperties() {
     const {data,error}=await sb.from('properties').select('*').eq('is_active',true).order('created_at',{ascending:false});
     if(error) throw error;
     allProperties=data||[];
+    document.dispatchEvent(new Event('propertiesLoaded'));
     updateStats();
     renderExperiences();
     renderProperties(applyFilters());
@@ -1137,9 +1150,9 @@ function updateStats() {
 
 function applyFilters() {
   let list=[...allProperties];
-  const s=document.getElementById('searchInput').value.toLowerCase().trim();
   const type=document.getElementById('typeFilter').value;
   const zone=document.getElementById('zoneFilter').value;
+  const oper=document.getElementById('operFilter')?.value||'';
   const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
@@ -1147,14 +1160,7 @@ function applyFilters() {
   const lifestyle=document.getElementById('lifestyleFilter')?.value||'';
   if(activeTab==='Alquiler') list=list.filter(p=>p.operation==='Alquiler'||p.operation==='Alquiler vacacional');
   else if(activeTab) list=list.filter(p=>p.operation===activeTab);
-  if(s) list=list.filter(p=>
-    p.title?.toLowerCase().includes(s)||
-    p.zone?.toLowerCase().includes(s)||
-    p.code?.toLowerCase().includes(s)||
-    p.description?.toLowerCase().includes(s)||
-    p.type?.toLowerCase().includes(s)||
-    p.encuentra24_code?.toLowerCase().includes(s)
-  );
+  if(oper) list=list.filter(p=>p.operation===oper);
   if(type) list=list.filter(p=>p.type===type);
   if(zone) list=list.filter(p=>p.zone===zone);
   if(locType) list=list.filter(p=>(p.location_type||[]).includes(locType));
@@ -1178,9 +1184,10 @@ function doSearch(){
 }
 
 function resetFilters(){
-  document.getElementById('searchInput').value='';
+  const oper=document.getElementById('operFilter');if(oper)oper.value='';
   document.getElementById('typeFilter').value='';
   document.getElementById('zoneFilter').value='';
+  const zi=document.getElementById('zoneInput');if(zi){zi.value='';zi.dataset.selected='';}
   document.getElementById('priceFilter').value='';
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
@@ -1215,6 +1222,7 @@ function setTab(btn,val){
 
 function setZone(z){
   document.getElementById('zoneFilter').value=z;
+  const zi=document.getElementById('zoneInput');if(zi)zi.value=z;
   document.getElementById('propiedades').scrollIntoView({behavior:'smooth'});
   filterProperties();
 }
@@ -1437,7 +1445,7 @@ document.addEventListener('click',function(e){
   if(menu&&menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();
 });
 document.getElementById('detailModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
-document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+document.getElementById('operFilter')?.addEventListener('change', filterProperties);
 
 
 // ============================================================
@@ -1566,13 +1574,14 @@ function setLang(lang){
   if(heroPEl){ heroPEl.textContent = t.heroP; heroPEl.style.display = t.heroP ? '' : 'none'; }
 
   // Search bar labels
-  setEl('searchLabel', t.searchLabel);
-  setAttr('searchInput','placeholder', t.searchPh);
+  setEl('operLabel', t.operLabel||'Operación');
   setEl('typeLabel', t.typeLabel);
   setEl('zoneLabel', t.zoneLabel);
   setEl('searchBtnText', t.searchBtn);
+  setOptionText('operFilter', 0, t.operAll||'Todas');
   setOptionText('typeFilter', 0, t.typeAll);
-  setOptionText('zoneFilter', 0, t.zoneAll);
+  const zi=document.getElementById('zoneInput');
+  if(zi&&!zi.value) zi.placeholder=t.zonePh||(currentLang==='en'?'All zones':'Todas las zonas');
 
   // Stats labels
   setEl('statLabelTotal', t.statTotal);
@@ -1722,7 +1731,10 @@ function initLazyBg(){
   }
   els.forEach(el => bgObserver.observe(el));
 }
-document.addEventListener('DOMContentLoaded', initLazyBg);
+document.addEventListener('DOMContentLoaded', ()=>{
+  initLazyBg();
+  initZoneAutocomplete();
+});
 
 // ---- LEAFLET — carga dinámica solo al abrir el modal ----
 let leafletLoaded = false;
@@ -1740,6 +1752,77 @@ function loadLeafletThen(cb){
 
 // detect lang
 (function(){const saved=localStorage.getItem('ers_lang');const browser=navigator.language?.startsWith('en')?'en':'es';const lang=saved||browser;currentLang=lang;})();
+
+// ---- ZONE AUTOCOMPLETE ----
+let allZones = [];
+function initZoneAutocomplete(){
+  const input  = document.getElementById('zoneInput');
+  const hidden = document.getElementById('zoneFilter');
+  const drop   = document.getElementById('zoneDropdown');
+  if(!input||!drop) return;
+
+  // Build zone list from loaded properties (unique, sorted)
+  function buildZones(){
+    const set = new Set(allProperties.map(p=>p.zone).filter(Boolean));
+    allZones = [...set].sort((a,b)=>a.localeCompare(b,'es'));
+  }
+
+  function highlight(text, q){
+    if(!q) return text;
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if(idx<0) return text;
+    return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+q.length)+'</mark>'+text.slice(idx+q.length);
+  }
+
+  function renderDrop(q){
+    const matches = q
+      ? allZones.filter(z=>z.toLowerCase().includes(q.toLowerCase()))
+      : allZones;
+    if(!matches.length){ drop.style.display='none'; return; }
+    let html = matches.map(z=>
+      `<div class="zone-option" data-val="${z}">${highlight(z,q)}</div>`
+    ).join('');
+    if(hidden.value){
+      html += `<div class="zone-clear"><span class="material-icons" style="font-size:15px">close</span>${currentLang==='en'?'Clear zone':'Borrar zona'}</div>`;
+    }
+    drop.innerHTML = html;
+    drop.style.display = 'block';
+
+    drop.querySelectorAll('.zone-option').forEach(opt=>{
+      opt.addEventListener('mousedown', e=>{
+        e.preventDefault();
+        selectZone(opt.dataset.val);
+      });
+    });
+    const clr = drop.querySelector('.zone-clear');
+    if(clr) clr.addEventListener('mousedown', e=>{ e.preventDefault(); clearZone(); });
+  }
+
+  function selectZone(val){
+    input.value  = val;
+    hidden.value = val;
+    drop.style.display = 'none';
+    filterProperties();
+  }
+
+  function clearZone(){
+    input.value  = '';
+    hidden.value = '';
+    drop.style.display = 'none';
+    filterProperties();
+  }
+
+  input.addEventListener('input', ()=>{ renderDrop(input.value.trim()); });
+  input.addEventListener('focus', ()=>{ buildZones(); renderDrop(input.value.trim()); });
+  input.addEventListener('blur',  ()=>{ setTimeout(()=>{ drop.style.display='none'; }, 150); });
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){ drop.style.display='none'; input.blur(); }
+    if(e.key==='Enter'){ drop.style.display='none'; doSearch(); }
+  });
+
+  // Rebuild zones list each time properties load
+  document.addEventListener('propertiesLoaded', buildZones);
+}
 
 init();
 
