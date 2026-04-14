@@ -387,6 +387,45 @@
   }
 
   /* ============================================================
+     TABLET RESPONSIVE — ≤1024px  (tarjetas en lugar de tabla)
+     ============================================================ */
+  @media(max-width:1024px){
+
+    /* --- TABLE → hide, show cards instead --- */
+    .table-wrap table{display:none;}
+    .table-wrap{border-radius:var(--radius);overflow:visible;background:transparent;border:none;}
+    .pagination-bar{border-radius:var(--radius);margin-top:8px;}
+
+    /* --- PROPERTY CARDS --- */
+    .mob-card-grid{display:flex;flex-direction:column;gap:10px;}
+    .mob-prop-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      display:flex;
+      flex-direction:row;
+      align-items:stretch;
+      transition:var(--transition);
+    }
+    .mob-prop-card:hover{box-shadow:var(--shadow-hover);}
+    .mob-prop-card.inactive-card{opacity:0.6;}
+    .mob-card-img-wrap{
+      width:88px;
+      min-width:88px;
+      flex-shrink:0;
+      position:relative;
+      overflow:hidden;
+    }
+    .mob-card-img-wrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+  }
+
+  /* ============================================================
      MOBILE RESPONSIVE — ≤640px
      ============================================================ */
   @media(max-width:640px){
@@ -464,44 +503,6 @@
     .filter-sel{width:100%;}
     .btn-add{width:100%;justify-content:center;padding:11px 16px;}
 
-    /* --- CARDS: single column on phone --- */
-    .mob-card-grid{grid-template-columns:1fr;}
-    .mob-card-img-wrap{height:120px;}
-    .mob-prop-card{flex-direction:row;}
-    .mob-card-img-wrap{width:90px;height:auto;min-height:110px;}
-
-    /* --- TABLE → hide on tablet/mobile --- */
-    .table-wrap table{display:none;}
-    .table-wrap{border-radius:var(--radius);overflow:visible;background:transparent;border:none;}
-    .pagination-bar{border-radius:var(--radius);margin-top:8px;}
-
-    /* --- PROPERTY CARDS (tablet + mobile) --- */
-    .mob-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .mob-prop-card{
-      background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      transition:var(--transition);
-    }
-    .mob-prop-card:hover{box-shadow:var(--shadow-hover);}
-    .mob-prop-card.inactive-card{opacity:0.6;}
-    .mob-card-img-wrap{
-      width:100%;
-      height:160px;
-      flex-shrink:0;
-      position:relative;
-      overflow:hidden;
-    }
-    .mob-card-img-wrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
     .mob-card-img-overlay{
       position:absolute;inset:0;
       background:rgba(255,255,255,0.45);
@@ -510,10 +511,10 @@
     .mob-card-img-overlay .material-icons{font-size:20px;color:#888;}
     .mob-card-body{
       flex:1;
-      padding:12px 14px;
+      padding:10px 12px;
       display:flex;
       flex-direction:column;
-      gap:5px;
+      gap:4px;
       min-width:0;
     }
     .mob-card-top{
@@ -533,7 +534,7 @@
       border-radius:4px;
     }
     .mob-card-title{
-      font-size:14px;
+      font-size:13px;
       font-weight:600;
       color:var(--text);
       white-space:nowrap;
@@ -547,36 +548,35 @@
       flex-wrap:wrap;
     }
     .mob-card-zone{
-      font-size:12px;
+      font-size:11px;
       color:var(--text3);
       display:flex;
       align-items:center;
       gap:2px;
     }
-    .mob-card-zone .material-icons{font-size:12px;color:var(--accent);}
+    .mob-card-zone .material-icons{font-size:11px;color:var(--accent);}
     .mob-card-price{
       font-family:'Playfair Display',serif;
-      font-size:16px;
+      font-size:14px;
       font-weight:700;
       color:var(--primary);
     }
-    .mob-card-price-period{font-size:12px;font-weight:400;color:var(--text3);}
+    .mob-card-price-period{font-size:11px;font-weight:400;color:var(--text3);}
     .mob-card-owner{
       display:flex;align-items:center;gap:3px;
-      font-size:12px;color:var(--text3);
+      font-size:11px;color:var(--text3);
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .mob-card-owner .material-icons{font-size:13px;color:var(--accent);flex-shrink:0;}
+    .mob-card-owner .material-icons{font-size:12px;color:var(--accent);flex-shrink:0;}
     .mob-card-owner-contact{color:var(--text3);opacity:0.8;}
     .mob-card-actions{
       display:flex;
       align-items:center;
       gap:6px;
-      margin-top:8px;
-      flex-wrap:wrap;
+      margin-top:6px;
     }
     .mob-card-toggle{
-      padding:5px 10px;
+      padding:4px 10px;
       border-radius:6px;
       font-size:11px;
       font-family:inherit;
@@ -592,11 +592,11 @@
     .mob-card-toggle.inactive{background:rgba(229,57,53,0.1);color:#C62828;}
     .mob-card-toggle .status-dot{width:6px;height:6px;}
     .mob-card-edit{
-      padding:6px 11px;
+      padding:5px 10px;
       background:none;
       border:1px solid var(--border);
       border-radius:6px;
-      font-size:12px;
+      font-size:11px;
       color:var(--text2);
       display:flex;align-items:center;gap:3px;
       transition:var(--transition);
@@ -604,7 +604,7 @@
     .mob-card-edit:hover{border-color:var(--primary);color:var(--primary);}
     .mob-card-edit .material-icons{font-size:14px;}
     .mob-card-del{
-      padding:6px 9px;
+      padding:5px 8px;
       background:none;
       border:1px solid rgba(229,57,53,0.3);
       border-radius:6px;
@@ -2723,7 +2723,6 @@ function closeModal(){
     if(el){el.style.borderColor='';el.style.boxShadow='';}
   });
 }
-
 // ---- QUICK VIEW ----
 function openQV(id){
   const p = allProperties.find(x=>x.id===id); if(!p) return;
