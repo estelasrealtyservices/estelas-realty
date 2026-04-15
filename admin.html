@@ -800,6 +800,76 @@
   .sql-hint-title .material-icons{font-size:15px;color:var(--accent);}
   .sql-hint pre{font-size:11px;color:var(--text);white-space:pre-wrap;line-height:1.8;margin:0;}
   @media(max-width:900px){.stats-kpi-grid{grid-template-columns:1fr 1fr;}}
+
+  /* ═══ MULTI-AGENT SYSTEM ═══ */
+  .role-pill-admin{background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.4);color:var(--accent-light);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+  .role-pill-agent{background:rgba(46,125,50,0.2);border:1px solid rgba(46,125,50,0.4);color:#a5d6a7;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+  .nav-user-info{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+  .nav-user-name{font-size:12px;color:rgba(255,255,255,0.85);font-weight:500;}
+  .nav-user-email{font-size:10px;color:rgba(255,255,255,0.5);}
+
+  /* Agents tab */
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:4px;}
+  .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:var(--transition);position:relative;}
+  .agent-card:hover{box-shadow:var(--shadow-hover);}
+  .agent-card-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .agent-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;}
+  .agent-avatar.av-admin{background:linear-gradient(135deg,var(--primary),#3d3d7a);}
+  .agent-avatar.av-agent{background:linear-gradient(135deg,#2E7D32,#43A047);}
+  .agent-info{flex:1;}
+  .agent-name{font-weight:600;color:var(--primary);font-size:15px;}
+  .agent-email{font-size:12px;color:var(--text3);margin-top:2px;}
+  .agent-role-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:4px;}
+  .agent-role-badge.admin{background:rgba(201,168,76,0.15);color:#7a5c10;}
+  .agent-role-badge.agent{background:rgba(46,125,50,0.12);color:#1B5E20;}
+  .agent-stats-row{display:flex;gap:8px;margin-bottom:14px;}
+  .agent-stat-mini{flex:1;background:var(--surface2);border-radius:8px;padding:8px 10px;text-align:center;}
+  .agent-stat-mini .num{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--primary);display:block;}
+  .agent-stat-mini .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-top:1px;}
+  .agent-card-actions{display:flex;gap:6px;}
+  .btn-agent-action{flex:1;padding:7px 10px;border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:var(--transition);}
+  .btn-agent-view{background:rgba(26,26,46,0.07);border:1px solid rgba(26,26,46,0.2);color:var(--primary);}
+  .btn-agent-view:hover{background:rgba(26,26,46,0.13);}
+  .btn-agent-del{background:rgba(229,57,53,0.07);border:1px solid rgba(229,57,53,0.25);color:#E53935;}
+  .btn-agent-del:hover{background:rgba(229,57,53,0.14);}
+  .btn-agent-reset{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.35);color:#7a5c10;}
+  .btn-agent-reset:hover{background:rgba(201,168,76,0.2);}
+  .agent-card.is-you{border-color:var(--accent);box-shadow:0 0 0 2px rgba(201,168,76,0.15);}
+  .agent-you-tag{position:absolute;top:12px;right:12px;background:var(--accent);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px;}
+
+  /* Add agent modal */
+  .agent-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s ease;}
+  .agent-modal-overlay.open{opacity:1;pointer-events:all;}
+  .agent-modal{background:var(--surface);border-radius:16px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.25);animation:fadeIn 0.2s ease;overflow:hidden;}
+  .agent-modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .agent-modal-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--primary);font-weight:600;}
+  .agent-modal-body{padding:20px 24px;}
+  .agent-modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;}
+  .form-group{margin-bottom:14px;}
+  .form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+  .form-input-modal{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:var(--transition);}
+  .form-input-modal:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,26,46,0.06);}
+  .form-select-modal{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;cursor:pointer;}
+  .form-hint{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.5;}
+  .btn-modal-primary{flex:1;padding:10px 16px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px;}
+  .btn-modal-primary:hover{background:#2d2d4a;}
+  .btn-modal-cancel{padding:10px 16px;background:none;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text2);cursor:pointer;transition:var(--transition);}
+  .btn-modal-cancel:hover{border-color:var(--text2);}
+
+  /* Agent filter notice */
+  .agent-filter-notice{background:rgba(46,125,50,0.08);border:1px solid rgba(46,125,50,0.25);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;font-size:13px;color:#1B5E20;}
+  .agent-filter-notice .material-icons{font-size:18px;color:#2E7D32;}
+
+  /* SQL setup panel */
+  .setup-panel{background:#FFFBEB;border:1px solid #F0DFA0;border-radius:12px;padding:20px 24px;margin-bottom:24px;}
+  .setup-panel h3{font-size:15px;font-weight:600;color:#7a5c10;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+  .setup-panel pre{font-size:11px;background:white;border:1px solid #F0DFA0;border-radius:8px;padding:12px;overflow-x:auto;line-height:1.7;color:var(--text);}
+  .setup-panel p{font-size:13px;color:#7a5c10;line-height:1.6;margin-bottom:10px;}
+
+  @media(max-width:640px){
+    .agents-grid{grid-template-columns:1fr;}
+    .agent-card-actions{flex-wrap:wrap;}
+  }
   @media(max-width:640px){
     .stats-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
     .kpi-num{font-size:20px;}
@@ -835,7 +905,11 @@
       <img src="logo.png" alt="Estela's Realty" class="admin-nav-logo" style="height:36px;width:auto;object-fit:contain;filter:none;opacity:1;background:white;border-radius:6px;padding:3px 8px;">
       <div class="nav-divider"></div>
       <span class="admin-nav-title">Panel de administración</span>
-      <span class="admin-badge-pill">Admin</span>
+      <span id="adminRolePill" class="admin-badge-pill">Admin</span>
+      <div class="nav-user-info">
+        <span class="nav-user-name" id="navUserName"></span>
+        <span class="nav-user-email" id="navUserEmail"></span>
+      </div>
     </div>
     <div class="admin-nav-right">
       <a href="index.html" target="_blank" class="btn-view"><span class="material-icons">open_in_new</span><span class="btn-view-text">Ver p&aacute;gina</span></a>
@@ -844,7 +918,7 @@
   </nav>
 
   <!-- TAB NAVIGATION -->
-  <div class="admin-tabs">
+  <div class="admin-tabs" id="adminTabsBar">
     <button class="admin-tab active" onclick="switchTab('properties',this)">
       <span class="material-icons">home_work</span>Propiedades
     </button>
@@ -852,13 +926,16 @@
       <span class="material-icons">contact_mail</span>Clientes interesados
       <span id="leadsTabBadge" style="display:none;background:#E53935;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px;line-height:1.4;">0</span>
     </button>
-    <button class="admin-tab" onclick="switchTab('site',this)">
+    <button class="admin-tab admin-only-tab" onclick="switchTab('site',this)">
       <span class="material-icons">web</span>Editar página principal
     </button>
     <button class="admin-tab" onclick="switchTab('stats',this);loadStats();">
       <span class="material-icons">bar_chart</span>Estadísticas
     </button>
-
+    <button class="admin-tab admin-only-tab" onclick="switchTab('agents',this);loadAgents();">
+      <span class="material-icons">group</span>Agentes
+      <span id="agentsTabBadge" style="display:none;background:var(--accent);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px;line-height:1.4;">0</span>
+    </button>
   </div>
 
   <div class="admin-content">
@@ -902,6 +979,10 @@
             <option value="Vacacional">🌴 Vacacional</option>
             <option value="Retiro">🌅 Retiro</option>
             <option value="Ejecutivo">💼 Ejecutivo</option>
+          </select>
+          <!-- Admin-only: filter by agent -->
+          <select class="filter-sel admin-only-el" id="adminAgentFilter" onchange="renderTable()" style="display:none;">
+            <option value="">Todos los agentes</option>
           </select>
         </div>
         <button class="btn-add" onclick="openModal()"><span class="material-icons">add</span>Agregar propiedad</button>
@@ -1258,6 +1339,73 @@ CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role(
 
     </div>
 
+    <!-- TAB: AGENTES (solo admin) -->
+    <div class="tab-panel" id="tab-agents">
+      <div class="setup-panel" id="agentsSetupHint" style="display:none;">
+        <h3><span class="material-icons">info</span> Configuración inicial requerida</h3>
+        <p>Para activar el sistema multi-agente necesitas ejecutar este SQL en tu <strong>Supabase SQL Editor</strong> una sola vez:</p>
+        <pre>-- 1. Tabla de perfiles con roles
+CREATE TABLE profiles (
+  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name text NOT NULL,
+  role text NOT NULL DEFAULT 'agent' CHECK (role IN ('admin','agent')),
+  is_active boolean DEFAULT true,
+  created_at timestamptz DEFAULT now()
+);
+-- 2. Función para crear perfil automáticamente al registrar usuario
+CREATE OR REPLACE FUNCTION handle_new_user() RETURNS trigger AS $$
+BEGIN
+  INSERT INTO profiles (id, full_name, role)
+  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email,'@',1)), COALESCE(NEW.raw_user_meta_data->>'role','agent'));
+  RETURN NEW;
+END; $$ LANGUAGE plpgsql SECURITY DEFINER;
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+-- 3. RLS en profiles
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Auth can read profiles" ON profiles FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin can update profiles" ON profiles FOR UPDATE USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+-- 4. Columna agent_id en properties y leads
+ALTER TABLE properties ADD COLUMN IF NOT EXISTS agent_id uuid REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS agent_id uuid REFERENCES auth.users(id) ON DELETE SET NULL;
+-- 5. Hacerte admin (busca tu user ID en Authentication > Users)
+INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', 'admin') ON CONFLICT (id) DO UPDATE SET role='admin';</pre>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--primary);margin-bottom:4px;">Gestión de Agentes</h2>
+          <p style="font-size:13px;color:var(--text3);">Administra el equipo de agentes y sus permisos de acceso.</p>
+        </div>
+        <button class="btn-add" onclick="openAgentModal()">
+          <span class="material-icons">person_add</span> Nuevo agente
+        </button>
+      </div>
+
+      <!-- Summary row -->
+      <div class="admin-stats" style="margin-bottom:24px;" id="agentsSummary">
+        <div class="stat-card">
+          <div class="stat-icon blue"><span class="material-icons">group</span></div>
+          <div class="stat-info"><div class="stat-num" id="agStatTotal">—</div><div class="stat-label">Total agentes</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><span class="material-icons">check_circle</span></div>
+          <div class="stat-info"><div class="stat-num" id="agStatActive">—</div><div class="stat-label">Activos</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon gold"><span class="material-icons">home_work</span></div>
+          <div class="stat-info"><div class="stat-num" id="agStatProps">—</div><div class="stat-label">Propiedades gestionadas</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><span class="material-icons">contact_mail</span></div>
+          <div class="stat-info"><div class="stat-num" id="agStatLeads">—</div><div class="stat-label">Leads del equipo</div></div>
+        </div>
+      </div>
+
+      <div class="agents-grid" id="agentsGrid">
+        <div class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite;">sync</span><p>Cargando agentes...</p></div>
+      </div>
+    </div>
+
     </div>
   </div>
 
@@ -1589,6 +1737,46 @@ CREATE POLICY "Admin reads views" ON property_views FOR SELECT USING (auth.role(
   </div>
 </div>
 
+<!-- AGENT MODAL -->
+<div class="agent-modal-overlay" id="agentModal">
+  <div class="agent-modal">
+    <div class="agent-modal-header">
+      <span class="agent-modal-title">Nuevo Agente</span>
+      <button class="detail-close" onclick="closeAgentModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="agent-modal-body">
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-input-modal" id="agentFullName" placeholder="Ej: María González">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input-modal" id="agentEmail" placeholder="agente@correo.com">
+        <p class="form-hint">⚠️ El agente recibirá un correo para establecer su contraseña (si tienes Email Auth activado en Supabase). Si no, establece la contraseña manualmente en Supabase Authentication > Users.</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña inicial</label>
+        <input type="password" class="form-input-modal" id="agentPassword" placeholder="Mínimo 6 caracteres">
+        <p class="form-hint">El agente podrá cambiarla luego. Compártela de forma segura.</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rol</label>
+        <select class="form-select-modal" id="agentRole">
+          <option value="agent">Agente — Acceso solo a sus propiedades y clientes</option>
+          <option value="admin">Admin — Acceso completo</option>
+        </select>
+      </div>
+      <div id="agentModalError" style="display:none;color:#E53935;font-size:13px;margin-top:8px;padding:8px 12px;background:rgba(229,57,53,0.07);border-radius:8px;"></div>
+    </div>
+    <div class="agent-modal-footer">
+      <button class="btn-modal-cancel" onclick="closeAgentModal()">Cancelar</button>
+      <button class="btn-modal-primary" id="agentSaveBtn" onclick="createAgent()">
+        <span class="material-icons">person_add</span>Crear agente
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastMsg"></span></div>
 
 <script>
@@ -1605,6 +1793,13 @@ let heroImages=[];
 let zoneData=[];
 let adminMap=null;
 let adminMarker=null;
+
+// ── MULTI-AGENT SYSTEM ──
+let currentUser = null;        // auth.users record
+let currentProfile = null;     // profiles record {id, full_name, role, is_active}
+let isAdmin = false;           // shortcut
+let allAgents = [];            // profiles list (admin only)
+let agentsLoaded = false;
 const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
 
 const DEFAULT_ZONES=[
@@ -1636,25 +1831,106 @@ async function doLogin(){
     document.getElementById('loginPassword').value='';
     return;
   }
+  await initSession();
+}
+
+async function initSession(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session) return;
+  currentUser = session.user;
+
+  // Load profile (role info)
+  try{
+    const{data,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+    if(!error && data){
+      currentProfile = data;
+      isAdmin = data.role === 'admin';
+    } else {
+      // profiles table may not exist yet — treat as admin (first run / setup)
+      currentProfile = {id:currentUser.id, full_name: currentUser.email, role:'admin'};
+      isAdmin = true;
+    }
+  }catch(e){
+    currentProfile = {id:currentUser.id, full_name: currentUser.email, role:'admin'};
+    isAdmin = true;
+  }
   showAdmin();
 }
+
 async function logout(){
   await sb.auth.signOut();
+  currentUser=null; currentProfile=null; isAdmin=false;
   document.getElementById('adminLayout').classList.remove('visible');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginPassword').value='';
   document.getElementById('loginError').style.display='none';
 }
+
 function showAdmin(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('adminLayout').classList.add('visible');
+  applyRoleUI();
   loadAll();
 }
-// Verificar sesión activa al cargar la página
+
+function applyRoleUI(){
+  // Nav badge and user info
+  const pill = document.getElementById('adminRolePill');
+  if(isAdmin){
+    pill.textContent='Admin';
+    pill.className='admin-badge-pill';
+  } else {
+    pill.textContent='Agente';
+    pill.className='role-pill-agent';
+  }
+  document.getElementById('navUserName').textContent = currentProfile?.full_name || '';
+  document.getElementById('navUserEmail').textContent = currentUser?.email || '';
+
+  // Hide admin-only tabs for agents
+  document.querySelectorAll('.admin-only-tab').forEach(t=>{
+    t.style.display = isAdmin ? '' : 'none';
+  });
+  // Show/hide admin-only UI elements (e.g. agent filter dropdown)
+  document.querySelectorAll('.admin-only-el').forEach(el=>{
+    el.style.display = isAdmin ? '' : 'none';
+  });
+
+  // Inject agent filter notice in properties tab if agent
+  const existingNotice = document.getElementById('agentFilterNotice');
+  if(!isAdmin && !existingNotice){
+    const toolbar = document.querySelector('#tab-properties .toolbar');
+    if(toolbar){
+      const notice = document.createElement('div');
+      notice.id='agentFilterNotice';
+      notice.className='agent-filter-notice';
+      notice.innerHTML=`<span class="material-icons">filter_alt</span><span>Ves únicamente las propiedades que tú has registrado. El administrador puede ver todas.</span>`;
+      toolbar.parentNode.insertBefore(notice, toolbar);
+    }
+  }
+
+  // Inject agent filter notice in leads tab if agent
+  const existingLeadNotice = document.getElementById('agentLeadFilterNotice');
+  if(!isAdmin && !existingLeadNotice){
+    const leadContent = document.getElementById('tab-leads');
+    if(leadContent){
+      const notice = document.createElement('div');
+      notice.id='agentLeadFilterNotice';
+      notice.className='agent-filter-notice';
+      notice.style.margin='0 0 16px 0';
+      notice.innerHTML=`<span class="material-icons">filter_alt</span><span>Ves únicamente los clientes interesados en tus propiedades.</span>`;
+      leadContent.insertBefore(notice, leadContent.firstChild);
+    }
+  }
+
+  // Hide add property button for read-only check (agents can add, just filtered)
+  // (agents can still add properties — they'll be tagged with their agent_id)
+}
+
+// Verify active session on page load
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session) showAdmin();
+  if(session){ currentUser=session.user; await initSession(); }
 })();
 
 // ---- TABS ----
@@ -1675,7 +1951,12 @@ async function loadLeads(){
   if(leadsLoaded) { renderLeads(); return; }
   document.getElementById('leadsContainer').innerHTML = `<div class="leads-loading"><span class="material-icons" style="animation:spin 1s linear infinite;font-size:32px;display:block;margin-bottom:12px;">sync</span>Cargando clientes...</div>`;
   try{
-    const { data, error } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+    let query = sb.from('leads').select('*').order('created_at', { ascending: false });
+    // Agents only see their own leads
+    if(!isAdmin && currentUser){
+      query = query.eq('agent_id', currentUser.id);
+    }
+    const { data, error } = await query;
     if(error) throw error;
     allLeads = data || [];
     leadsLoaded = true;
@@ -1943,6 +2224,15 @@ async function preloadLeadsBadge(){
 
 // ---- LOAD ALL ----
 async function loadAll(){
+  if(isAdmin){
+    // Pre-load agents so names show in property rows
+    try{
+      const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:true});
+      allAgents = data || [];
+      agentsLoaded = true;
+      updateAgentsSummary && updateAgentsSummary();
+    }catch(e){ allAgents=[]; }
+  }
   await Promise.all([loadProperties(), loadSiteConfig(), preloadLeadsBadge(), loadZonesCatalog()]);
 }
 
@@ -2220,14 +2510,40 @@ async function saveZoneImages(){
 // ---- PROPERTIES ----
 async function loadProperties(){
   try{
-    const{data,error}=await sb.from('properties').select('*').order('created_at',{ascending:false});
+    let query = sb.from('properties').select('*').order('created_at',{ascending:false});
+    // Agents only see their own properties
+    if(!isAdmin && currentUser){
+      query = query.eq('agent_id', currentUser.id);
+    }
+    const{data,error}=await query;
     if(error) throw error;
     allProperties=data||[];
     codeCounter=allProperties.length+1;
-    updateStats();renderTable();
+    updateStats();
+
+    // If admin, also populate the agent filter dropdown
+    if(isAdmin) populateAdminAgentFilter();
+    renderTable();
   }catch(e){
     document.getElementById('propTableBody').innerHTML=`<tr><td colspan="7" class="empty-state"><span class="material-icons">cloud_off</span><p>Error al conectar con Supabase.</p></td></tr>`;
   }
+}
+
+function populateAdminAgentFilter(){
+  const sel = document.getElementById('adminAgentFilter');
+  if(!sel) return;
+  const seen = new Set();
+  const opts = ['<option value="">Todos los agentes</option>'];
+  allProperties.forEach(p => {
+    if(p.agent_id && !seen.has(p.agent_id)){
+      seen.add(p.agent_id);
+      // Try to get name from allAgents, fallback to ID
+      const ag = allAgents.find(a=>a.id===p.agent_id);
+      const label = ag ? ag.full_name : p.agent_id.slice(0,8)+'...';
+      opts.push(`<option value="${p.agent_id}">${label}</option>`);
+    }
+  });
+  sel.innerHTML = opts.join('');
 }
 
 function updateStats(){
@@ -2265,6 +2581,7 @@ function renderTable(resetPage = true) {
   const status = document.getElementById('adminStatusFilter').value;
   const locType= document.getElementById('adminLocTypeFilter').value;
   const life   = document.getElementById('adminLifestyleFilter').value;
+  const agentF = isAdmin ? (document.getElementById('adminAgentFilter')?.value || '') : '';
 
   filteredList = [...allProperties];
   if (s)       filteredList = filteredList.filter(p =>
@@ -2285,6 +2602,7 @@ function renderTable(resetPage = true) {
   if (locType) filteredList = filteredList.filter(p => (p.location_type || []).includes(locType));
   if (life)    filteredList = filteredList.filter(p => (p.lifestyle || []).includes(life));
   if (activeTypeChip) filteredList = filteredList.filter(p => p.type === activeTypeChip);
+  if (agentF) filteredList = filteredList.filter(p => p.agent_id === agentF);
 
   renderPage();
 }
@@ -2342,6 +2660,7 @@ function renderPage() {
         <td>
           <div class="prop-title">${p.title}</div>
           <div class="prop-zone"><span class="material-icons" style="font-size:12px;vertical-align:middle;color:var(--accent)">location_on</span> ${p.zone}</div>
+          ${isAdmin && p.agent_id ? (() => { const ag=allAgents.find(a=>a.id===p.agent_id); return ag ? `<div style="font-size:10px;color:#2E7D32;margin-top:3px;display:flex;align-items:center;gap:3px;"><span class="material-icons" style="font-size:11px;">person</span>${esc(ag.full_name)}</div>` : ''; })() : ''}
         </td>
         <td>
           <span class="badge ${p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale'}">${p.operation}</span>
@@ -2892,6 +3211,12 @@ async function saveProperty(){
     latitude:parseFloat(document.getElementById('fLatitude').value)||null,
     longitude:parseFloat(document.getElementById('fLongitude').value)||null
   };
+
+  // Tag with agent_id on new properties
+  if(!editingId && currentUser){
+    payload.agent_id = currentUser.id;
+  }
+
   const{error}=editingId
     ?await sb.from('properties').update(payload).eq('id',editingId)
     :await sb.from('properties').insert([payload]);
@@ -3117,6 +3442,190 @@ function showToast(msg,isError=false){
 
 
 // ─────────────────────────────────────────
+// AGENT MANAGEMENT (admin only)
+// ─────────────────────────────────────────
+
+function openAgentModal(){
+  document.getElementById('agentFullName').value='';
+  document.getElementById('agentEmail').value='';
+  document.getElementById('agentPassword').value='';
+  document.getElementById('agentRole').value='agent';
+  document.getElementById('agentModalError').style.display='none';
+  document.getElementById('agentModal').classList.add('open');
+}
+function closeAgentModal(){
+  document.getElementById('agentModal').classList.remove('open');
+}
+
+async function createAgent(){
+  const name = document.getElementById('agentFullName').value.trim();
+  const email = document.getElementById('agentEmail').value.trim();
+  const password = document.getElementById('agentPassword').value;
+  const role = document.getElementById('agentRole').value;
+  const errEl = document.getElementById('agentModalError');
+  const btn = document.getElementById('agentSaveBtn');
+
+  errEl.style.display='none';
+  if(!name||!email||!password){ errEl.textContent='Completa todos los campos.'; errEl.style.display='block'; return; }
+  if(password.length<6){ errEl.textContent='La contraseña debe tener al menos 6 caracteres.'; errEl.style.display='block'; return; }
+
+  btn.disabled=true; btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite;font-size:18px;">refresh</span>Creando...';
+
+  try{
+    // Create user in Supabase Auth (Admin API via service role is preferred,
+    // but with anon key we use signUp — agent gets confirmation email)
+    const { data: signUpData, error: signUpError } = await sb.auth.admin
+      ? await sb.auth.admin.createUser({ email, password, email_confirm: true, user_metadata:{ full_name: name, role } })
+      : await sb.auth.signUp({ email, password, options:{ data:{ full_name: name, role } } });
+
+    if(signUpError) throw signUpError;
+
+    const newUserId = signUpData?.user?.id;
+    if(!newUserId) throw new Error('No se pudo obtener el ID del nuevo usuario.');
+
+    // Upsert profile with correct role
+    const { error: profileError } = await sb.from('profiles').upsert({
+      id: newUserId,
+      full_name: name,
+      role: role,
+      is_active: true
+    });
+    if(profileError) throw profileError;
+
+    closeAgentModal();
+    agentsLoaded = false;
+    await loadAgents();
+    showToast(`Agente ${name} creado exitosamente.`);
+  } catch(e){
+    errEl.textContent = e.message || 'Error al crear el agente.';
+    errEl.style.display='block';
+  }
+  btn.disabled=false; btn.innerHTML='<span class="material-icons">person_add</span>Crear agente';
+}
+
+async function loadAgents(){
+  if(agentsLoaded){ renderAgents(); return; }
+  document.getElementById('agentsGrid').innerHTML=`<div class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite;">sync</span><p>Cargando agentes...</p></div>`;
+
+  try{
+    const{ data, error } = await sb.from('profiles').select('*').order('created_at',{ascending:true});
+    if(error) throw error;
+    allAgents = data || [];
+    agentsLoaded = true;
+
+    // Hide setup hint if profiles table exists
+    document.getElementById('agentsSetupHint').style.display='none';
+    updateAgentsSummary();
+    renderAgents();
+    // Refresh agent filter dropdown in properties tab
+    populateAdminAgentFilter();
+  } catch(e){
+    document.getElementById('agentsSetupHint').style.display='block';
+    document.getElementById('agentsGrid').innerHTML=`<div class="empty-state"><span class="material-icons">group_off</span><p>La tabla <strong>profiles</strong> no existe aún.<br>Ejecuta el SQL del panel amarillo de arriba.</p></div>`;
+  }
+}
+
+function updateAgentsSummary(){
+  const active = allAgents.filter(a=>a.is_active!==false);
+  document.getElementById('agStatTotal').textContent = allAgents.filter(a=>a.role==='agent').length;
+  document.getElementById('agStatActive').textContent = active.filter(a=>a.role==='agent').length;
+  document.getElementById('agStatProps').textContent = allProperties.length;
+  document.getElementById('agStatLeads').textContent = allLeads.length;
+  // Update tab badge (agent count)
+  const badge = document.getElementById('agentsTabBadge');
+  const count = allAgents.filter(a=>a.role==='agent').length;
+  if(count>0){ badge.textContent=count; badge.style.display='inline-block'; } else { badge.style.display='none'; }
+}
+
+function renderAgents(){
+  const grid = document.getElementById('agentsGrid');
+  if(!allAgents.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;"><span class="material-icons">group_add</span><p>No hay agentes aún. Crea el primero.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = allAgents.map(ag => {
+    const isMe = ag.id === currentUser?.id;
+    const initials = (ag.full_name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const propCount = allProperties.filter(p=>p.agent_id===ag.id).length;
+    const leadCount = allLeads.filter(l=>l.agent_id===ag.id).length;
+    const avatarClass = ag.role==='admin' ? 'av-admin' : 'av-agent';
+    const joinDate = ag.created_at ? new Date(ag.created_at).toLocaleDateString('es-PA',{month:'short',year:'numeric'}) : '—';
+
+    return `<div class="agent-card${isMe?' is-you':''}">
+      ${isMe?'<span class="agent-you-tag">Tú</span>':''}
+      <div class="agent-card-header">
+        <div class="agent-avatar ${avatarClass}">${initials}</div>
+        <div class="agent-info">
+          <div class="agent-name">${esc(ag.full_name||'Sin nombre')}</div>
+          <div class="agent-email">${esc(ag.id.slice(0,8))}... · desde ${joinDate}</div>
+          <span class="agent-role-badge ${ag.role}">${ag.role==='admin'?'👑 Admin':'🏠 Agente'}</span>
+        </div>
+      </div>
+      <div class="agent-stats-row">
+        <div class="agent-stat-mini">
+          <span class="num">${propCount}</span>
+          <span class="lbl">Propiedades</span>
+        </div>
+        <div class="agent-stat-mini">
+          <span class="num">${leadCount}</span>
+          <span class="lbl">Clientes</span>
+        </div>
+        <div class="agent-stat-mini">
+          <span class="num">${ag.is_active!==false?'<span style="color:#2E7D32">●</span>':'<span style="color:#E53935">●</span>'}</span>
+          <span class="lbl">${ag.is_active!==false?'Activo':'Inactivo'}</span>
+        </div>
+      </div>
+      <div class="agent-card-actions">
+        <button class="btn-agent-action btn-agent-view" onclick="viewAgentProperties('${ag.id}','${esc(ag.full_name)}')">
+          <span class="material-icons" style="font-size:15px;">home_work</span>Ver propiedades
+        </button>
+        ${!isMe ? `
+        <button class="btn-agent-action btn-agent-reset" onclick="toggleAgentRole('${ag.id}','${ag.role}')" title="Cambiar rol">
+          <span class="material-icons" style="font-size:15px;">swap_horiz</span>${ag.role==='admin'?'→ Agente':'→ Admin'}
+        </button>
+        <button class="btn-agent-action btn-agent-del" onclick="disableAgent('${ag.id}','${esc(ag.full_name)}')" title="${ag.is_active!==false?'Desactivar':'Activar'}">
+          <span class="material-icons" style="font-size:15px;">${ag.is_active!==false?'person_off':'person'}</span>${ag.is_active!==false?'Desactivar':'Activar'}
+        </button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewAgentProperties(agentId, agentName){
+  // Switch to properties tab and filter by agent
+  const propsTab = document.querySelector('.admin-tab');
+  switchTab('properties', propsTab);
+  const agentFilter = document.getElementById('adminAgentFilter');
+  if(agentFilter){
+    agentFilter.value = agentId;
+    renderTable();
+    showToast(`Mostrando propiedades de ${agentName}`);
+  }
+}
+
+async function toggleAgentRole(agentId, currentRole){
+  const newRole = currentRole === 'admin' ? 'agent' : 'admin';
+  const confirm = window.confirm(`¿Cambiar rol a ${newRole==='admin'?'Admin':'Agente'}?`);
+  if(!confirm) return;
+  const{ error } = await sb.from('profiles').update({ role: newRole }).eq('id', agentId);
+  if(error){ showToast('Error al cambiar rol: '+error.message, true); return; }
+  agentsLoaded=false; await loadAgents();
+  showToast(`Rol actualizado a ${newRole}.`);
+}
+
+async function disableAgent(agentId, agentName){
+  const ag = allAgents.find(a=>a.id===agentId);
+  const newActive = !(ag?.is_active!==false);
+  const action = newActive ? 'activar' : 'desactivar';
+  if(!window.confirm(`¿${action.charAt(0).toUpperCase()+action.slice(1)} al agente ${agentName}?`)) return;
+  const{ error } = await sb.from('profiles').update({ is_active: newActive }).eq('id', agentId);
+  if(error){ showToast('Error: '+error.message, true); return; }
+  agentsLoaded=false; await loadAgents();
+  showToast(`Agente ${newActive?'activado':'desactivado'}.`);
+}
+
+// ─────────────────────────────────────────
 // ESTADÍSTICAS
 // ─────────────────────────────────────────
 let statsLoaded = false;
@@ -3124,6 +3633,20 @@ let viewsChartInstance = null;
 
 async function loadStats(){
   if(statsLoaded){ return; }
+
+  // Show scope notice for agents
+  const statsScope = document.getElementById('statsAgentScope');
+  if(!statsScope){
+    const kpiGrid = document.querySelector('.stats-kpi-grid');
+    if(kpiGrid && !isAdmin){
+      const notice = document.createElement('div');
+      notice.id='statsAgentScope';
+      notice.className='agent-filter-notice';
+      notice.style.marginBottom='16px';
+      notice.innerHTML=`<span class="material-icons">filter_alt</span><span>Estadísticas basadas únicamente en tus propiedades y clientes.</span>`;
+      kpiGrid.parentNode.insertBefore(notice, kpiGrid);
+    }
+  }
 
   // KPIs from allProperties (already loaded)
   const active = allProperties.filter(p => p.is_active !== false);
@@ -3634,6 +4157,9 @@ function closeDetailModal(){
 // Close on overlay click
 document.getElementById('detailModal').addEventListener('click', function(e){
   if(e.target === this) closeDetailModal();
+});
+document.getElementById('agentModal').addEventListener('click', function(e){
+  if(e.target === this) closeAgentModal();
 });
 </script>
 <!-- ═══ MODAL DETALLE ═══ -->
