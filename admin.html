@@ -1363,6 +1363,7 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 -- 3. RLS en profiles
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Auth can read profiles" ON profiles FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Auth can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Admin can update profiles" ON profiles FOR UPDATE USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 -- 4. Columna agent_id en properties y leads
 ALTER TABLE properties ADD COLUMN IF NOT EXISTS agent_id uuid REFERENCES auth.users(id) ON DELETE SET NULL;
@@ -3458,36 +3459,49 @@ function closeAgentModal(){
 }
 
 async function createAgent(){
-  const name = document.getElementById('agentFullName').value.trim();
-  const email = document.getElementById('agentEmail').value.trim();
+  const name     = document.getElementById('agentFullName').value.trim();
+  const email    = document.getElementById('agentEmail').value.trim();
   const password = document.getElementById('agentPassword').value;
-  const role = document.getElementById('agentRole').value;
-  const errEl = document.getElementById('agentModalError');
-  const btn = document.getElementById('agentSaveBtn');
+  const role     = document.getElementById('agentRole').value;
+  const errEl    = document.getElementById('agentModalError');
+  const btn      = document.getElementById('agentSaveBtn');
 
   errEl.style.display='none';
   if(!name||!email||!password){ errEl.textContent='Completa todos los campos.'; errEl.style.display='block'; return; }
   if(password.length<6){ errEl.textContent='La contraseña debe tener al menos 6 caracteres.'; errEl.style.display='block'; return; }
 
-  btn.disabled=true; btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite;font-size:18px;">refresh</span>Creando...';
+  btn.disabled=true;
+  btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite;font-size:18px;">refresh</span>Creando...';
 
   try{
-    // Create user in Supabase Auth (Admin API via service role is preferred,
-    // but with anon key we use signUp — agent gets confirmation email)
-    const { data: signUpData, error: signUpError } = await sb.auth.admin
-      ? await sb.auth.admin.createUser({ email, password, email_confirm: true, user_metadata:{ full_name: name, role } })
-      : await sb.auth.signUp({ email, password, options:{ data:{ full_name: name, role } } });
+    // ── PASO 1: registrar el usuario con signUp (funciona con anon key) ──
+    // Guardamos la sesión actual del admin para restaurarla después
+    const { data:{ session: adminSession } } = await sb.auth.getSession();
+
+    const { data: signUpData, error: signUpError } = await sb.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: name, role } }
+    });
 
     if(signUpError) throw signUpError;
 
     const newUserId = signUpData?.user?.id;
-    if(!newUserId) throw new Error('No se pudo obtener el ID del nuevo usuario.');
+    if(!newUserId) throw new Error('No se pudo crear el usuario. Verifica que el email no esté en uso.');
 
-    // Upsert profile with correct role
+    // ── PASO 2: restaurar sesión del admin (signUp puede sobrescribirla) ──
+    if(adminSession){
+      await sb.auth.setSession({
+        access_token:  adminSession.access_token,
+        refresh_token: adminSession.refresh_token
+      });
+    }
+
+    // ── PASO 3: insertar/actualizar perfil con el rol correcto ──
     const { error: profileError } = await sb.from('profiles').upsert({
-      id: newUserId,
+      id:        newUserId,
       full_name: name,
-      role: role,
+      role:      role,
       is_active: true
     });
     if(profileError) throw profileError;
@@ -3495,12 +3509,24 @@ async function createAgent(){
     closeAgentModal();
     agentsLoaded = false;
     await loadAgents();
-    showToast(`Agente ${name} creado exitosamente.`);
+    showToast(`✅ Agente "${name}" creado. Ya puede ingresar con su email y contraseña.`);
+
   } catch(e){
-    errEl.textContent = e.message || 'Error al crear el agente.';
+    // Mensajes de error más amigables
+    let msg = e.message || 'Error al crear el agente.';
+    if(msg.includes('already registered') || msg.includes('already been registered')){
+      msg = 'Este correo ya está registrado. Usa uno diferente o gestiona el usuario en Supabase → Authentication → Users.';
+    } else if(msg.includes('email')){
+      msg = 'Correo inválido. Verifica el formato.';
+    } else if(msg.includes('password')){
+      msg = 'La contraseña no cumple los requisitos mínimos de Supabase.';
+    }
+    errEl.textContent = msg;
     errEl.style.display='block';
   }
-  btn.disabled=false; btn.innerHTML='<span class="material-icons">person_add</span>Crear agente';
+
+  btn.disabled=false;
+  btn.innerHTML='<span class="material-icons">person_add</span>Crear agente';
 }
 
 async function loadAgents(){
