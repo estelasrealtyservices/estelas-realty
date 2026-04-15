@@ -117,11 +117,52 @@
   .badge-vacation{background:rgba(46,125,50,0.12);color:#1B5E20;}
   .badge-featured{background:rgba(229,57,53,0.1);color:#C62828;}
   .price-cell{font-family:'Playfair Display', serif;font-weight:600;color:var(--primary);}
-  .action-btns{display:flex;gap:6px;}
-  .btn-edit{padding:6px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;transition:var(--transition);}
+  .action-btns{display:flex;flex-direction:column;gap:5px;align-items:stretch;min-width:134px;}
+  .action-btns-row{display:flex;gap:5px;}
+  .btn-detail{padding:5px 10px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.4);border-radius:6px;font-size:12px;color:#9a7a20;display:flex;align-items:center;gap:4px;transition:var(--transition);width:100%;justify-content:center;font-weight:500;}
+  .btn-detail:hover{background:rgba(201,168,76,0.22);border-color:var(--accent);color:#7a5e10;}
+  .btn-anuncio{padding:5px 10px;background:rgba(26,26,46,0.07);border:1px solid rgba(26,26,46,0.2);border-radius:6px;font-size:12px;color:var(--primary);display:flex;align-items:center;gap:4px;transition:var(--transition);width:100%;justify-content:center;font-weight:500;}
+  .btn-anuncio:hover{background:rgba(26,26,46,0.13);border-color:var(--primary);}
+  .btn-edit{padding:5px 12px;background:none;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;transition:var(--transition);flex:1;justify-content:center;}
   .btn-edit:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2);}
-  .btn-del{padding:6px 10px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;font-size:12px;color:#E53935;display:flex;align-items:center;transition:var(--transition);}
+  .btn-del{padding:5px 10px;background:none;border:1px solid rgba(229,57,53,0.3);border-radius:6px;font-size:12px;color:#E53935;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
   .btn-del:hover{background:rgba(229,57,53,0.08);}
+  /* DETAIL MODAL */
+  .detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s ease;}
+  .detail-overlay.open{opacity:1;pointer-events:all;}
+  .detail-panel{background:var(--surface);border-radius:16px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.25);animation:fadeIn 0.2s ease;}
+  .detail-header{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;border-radius:16px 16px 0 0;}
+  .detail-header-left{display:flex;flex-direction:column;gap:4px;}
+  .detail-code-pill{background:var(--primary);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;display:inline-block;width:fit-content;}
+  .detail-title-h{font-family:'Playfair Display',serif;font-size:17px;color:var(--primary);font-weight:600;line-height:1.3;}
+  .detail-close{background:none;border:1.5px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);flex-shrink:0;}
+  .detail-close:hover{background:var(--surface2);}
+  .detail-close .material-icons{font-size:18px;color:var(--text2);}
+  .detail-body{padding:20px 24px 0;}
+  .detail-section{margin-bottom:18px;}
+  .detail-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+  .detail-section-title .material-icons{font-size:14px;color:var(--accent);}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .detail-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .detail-field{background:var(--surface2);border-radius:8px;padding:8px 12px;}
+  .detail-field-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+  .detail-field-val{font-size:13px;color:var(--text);font-weight:500;}
+  .detail-field-val.price{font-family:'Playfair Display',serif;font-size:16px;color:var(--primary);font-weight:700;}
+  .detail-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .detail-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--text2);}
+  .detail-desc{font-size:13px;color:var(--text2);line-height:1.7;background:var(--surface2);border-radius:8px;padding:12px 14px;white-space:pre-wrap;}
+  .detail-notes-box{font-size:13px;color:#7a5e10;line-height:1.7;background:#FFFBEB;border:1px solid #F0DFA0;border-radius:8px;padding:12px 14px;white-space:pre-wrap;}
+  .detail-divider{border:none;border-top:1px solid var(--border);margin:4px 0 18px;}
+  .detail-footer{display:flex;gap:8px;padding:16px 24px 20px;border-top:1px solid var(--border);margin-top:4px;}
+  .detail-footer .btn-anuncio,.detail-footer .btn-edit-lg{flex:1;padding:10px 14px;font-size:13px;justify-content:center;border-radius:8px;display:flex;align-items:center;gap:6px;font-weight:600;transition:var(--transition);}
+  .detail-footer .btn-edit-lg{background:var(--primary);color:white;border:none;cursor:pointer;font-family:inherit;}
+  .detail-footer .btn-edit-lg:hover{background:#2d2d4a;}
+  .detail-footer .btn-anuncio{cursor:pointer;font-family:inherit;}
+  @media(max-width:640px){
+    .detail-overlay{align-items:flex-end;padding:0;}
+    .detail-panel{border-radius:16px 16px 0 0;max-height:92vh;}
+    .detail-grid-3{grid-template-columns:1fr 1fr;}
+  }
   .btn-toggle{padding:5px 10px;border-radius:6px;font-size:12px;font-family:inherit;display:flex;align-items:center;gap:4px;cursor:pointer;transition:var(--transition);border:none;font-weight:500;}
   .btn-toggle.active{background:rgba(46,125,50,0.12);color:#2E7D32;}
   .btn-toggle.active:hover{background:rgba(46,125,50,0.2);}
@@ -2324,8 +2365,12 @@ function renderPage() {
         </td>
         <td>
           <div class="action-btns">
-            <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:14px">edit</span>Editar</button>
-            <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:14px">delete</span></button>
+            <button class="btn-detail" onclick="openDetailModal('${p.id}')"><span class="material-icons" style="font-size:13px">info</span>Detalle</button>
+            <button class="btn-anuncio" onclick="window.open('propiedad.html?code=${p.code}','_blank')"><span class="material-icons" style="font-size:13px">open_in_new</span>Anuncio</button>
+            <div class="action-btns-row">
+              <button class="btn-edit" onclick="openModal('${p.id}')"><span class="material-icons" style="font-size:13px">edit</span>Editar</button>
+              <button class="btn-del" onclick="confirmDelete('${p.id}')"><span class="material-icons" style="font-size:13px">delete</span></button>
+            </div>
           </div>
         </td>
       </tr>`;
@@ -2361,7 +2406,9 @@ function renderPage() {
               <span class="status-dot ${active ? 'active' : 'inactive'}"></span>
               ${active ? 'Publicada' : 'Oculta'}
             </button>
-            <button class="mob-card-edit" onclick="openModal('${p.id}')"><span class="material-icons">edit</span>Editar</button>
+            <button class="mob-card-edit" onclick="openDetailModal('${p.id}')"><span class="material-icons">info</span>Detalle</button>
+            <button class="mob-card-edit" style="background:rgba(26,26,46,0.07);border-color:rgba(26,26,46,0.2);color:var(--primary);" onclick="window.open('propiedad.html?code=${p.code}','_blank')"><span class="material-icons">open_in_new</span></button>
+            <button class="mob-card-edit" onclick="openModal('${p.id}')"><span class="material-icons">edit</span></button>
             <button class="mob-card-del" onclick="confirmDelete('${p.id}')"><span class="material-icons">delete</span></button>
           </div>
         </div>
@@ -3458,6 +3505,156 @@ window.addEventListener('resize', function(){
   const dd = document.getElementById('zoneDropdown');
   if(dd.classList.contains('open')) zoneACPositionDropdown();
 });
+
+/* ═══════════════════════════════════════════════
+   MODAL DETALLE — sin fotos
+═══════════════════════════════════════════════ */
+function openDetailModal(id){
+  const p = allProperties.find(x => x.id === id);
+  if(!p) return;
+
+  const period = p.operation === 'Alquiler vacacional' ? '/noche' : p.operation === 'Alquiler' ? '/mes' : '';
+  const badgeCls = p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
+  const active = p.is_active !== false;
+
+  const specs = [
+    p.rooms    ? `<div class="detail-field"><div class="detail-field-label">Habitaciones</div><div class="detail-field-val">${p.rooms}</div></div>` : '',
+    p.baths    ? `<div class="detail-field"><div class="detail-field-label">Baños</div><div class="detail-field-val">${p.baths}</div></div>` : '',
+    p.size     ? `<div class="detail-field"><div class="detail-field-label">Metraje</div><div class="detail-field-val">${p.size} m²</div></div>` : '',
+    p.parking  ? `<div class="detail-field"><div class="detail-field-label">Parqueos</div><div class="detail-field-val">${p.parking}</div></div>` : '',
+    p.floor    ? `<div class="detail-field"><div class="detail-field-label">Piso / Unidad</div><div class="detail-field-val">${p.floor}</div></div>` : '',
+    p.maintenance_cost ? `<div class="detail-field"><div class="detail-field-label">Mantenimiento</div><div class="detail-field-val">$${p.maintenance_cost.toLocaleString()}/mes</div></div>` : '',
+  ].filter(Boolean).join('');
+
+  const dm = document.getElementById('detailModal');
+  dm.querySelector('.detail-code-pill').textContent = p.code;
+  dm.querySelector('.detail-title-h').textContent   = p.title;
+  dm.querySelector('#dmContent').innerHTML = `
+    <!-- Estado + operación -->
+    <div class="detail-grid" style="margin-bottom:18px;">
+      <div class="detail-field">
+        <div class="detail-field-label">Operación</div>
+        <div class="detail-field-val"><span class="badge ${badgeCls}">${p.operation}</span></div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">Tipo</div>
+        <div class="detail-field-val">${p.type || '—'}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">Zona</div>
+        <div class="detail-field-val">📍 ${p.zone || '—'}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">Estado</div>
+        <div class="detail-field-val">${active ? '🟢 Publicada' : '🔴 Oculta'}</div>
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">attach_money</span>Precio</div>
+      <div class="detail-field" style="display:inline-block;min-width:180px;">
+        <div class="detail-field-label">Precio</div>
+        <div class="detail-field-val price">$${(p.price||0).toLocaleString()}${period ? `<span style="font-size:12px;font-weight:400;color:var(--text3)"> ${period}</span>` : ''}</div>
+      </div>
+    </div>
+    <hr class="detail-divider">
+
+    <!-- Specs -->
+    ${specs ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">straighten</span>Características</div>
+      <div class="detail-grid-3">${specs}</div>
+    </div><hr class="detail-divider">` : ''}
+
+    <!-- Propietario -->
+    ${p.owner_name ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">person</span>Propietario</div>
+      <div class="detail-grid">
+        <div class="detail-field"><div class="detail-field-label">Nombre</div><div class="detail-field-val">${p.owner_name}</div></div>
+        ${p.owner_contact ? `<div class="detail-field"><div class="detail-field-label">Contacto</div><div class="detail-field-val">${p.owner_contact}</div></div>` : ''}
+        ${p.owner_unit ? `<div class="detail-field"><div class="detail-field-label">Unidad</div><div class="detail-field-val">${p.owner_unit}</div></div>` : ''}
+        ${p.encuentra24_code ? `<div class="detail-field"><div class="detail-field-label">Código E24</div><div class="detail-field-val">${p.encuentra24_code}</div></div>` : ''}
+      </div>
+    </div><hr class="detail-divider">` : ''}
+
+    <!-- Amenidades -->
+    ${p.features?.length ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">star</span>Amenidades</div>
+      <div class="detail-chips">${p.features.map(f=>`<span class="detail-chip">${f}</span>`).join('')}</div>
+    </div><hr class="detail-divider">` : ''}
+
+    <!-- Tags / lifestyle / location -->
+    ${(p.tags?.length || p.lifestyle?.length || p.location_type?.length) ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">label</span>Etiquetas</div>
+      <div class="detail-chips">
+        ${(p.tags||[]).map(t=>`<span class="detail-chip" style="background:rgba(229,57,53,0.08);border-color:rgba(229,57,53,0.25);color:#C62828;">${t}</span>`).join('')}
+        ${(p.lifestyle||[]).map(t=>`<span class="detail-chip">${t}</span>`).join('')}
+        ${(p.location_type||[]).map(t=>`<span class="detail-chip">${t}</span>`).join('')}
+        ${p.featured ? `<span class="detail-chip" style="background:rgba(229,57,53,0.08);border-color:rgba(229,57,53,0.25);color:#C62828;">⭐ Destacado</span>` : ''}
+        ${p.titulado ? `<span class="detail-chip">Titulado: ${p.titulado}</span>` : ''}
+      </div>
+    </div><hr class="detail-divider">` : ''}
+
+    <!-- Descripción -->
+    ${p.description ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">description</span>Descripción (ES)</div>
+      <div class="detail-desc">${p.description}</div>
+    </div>` : ''}
+    ${p.description_en ? `<div class="detail-section" style="margin-top:10px;">
+      <div class="detail-section-title"><span class="material-icons">translate</span>Description (EN)</div>
+      <div class="detail-desc">${p.description_en}</div>
+    </div>` : ''}
+    ${(p.description || p.description_en) ? `<hr class="detail-divider">` : ''}
+
+    <!-- Notas internas -->
+    ${p.notes ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">sticky_note_2</span>Notas internas</div>
+      <div class="detail-notes-box">${p.notes}</div>
+    </div>` : ''}
+
+    <!-- Mapa coordenadas -->
+    ${(p.latitude && p.longitude) ? `<div class="detail-section">
+      <div class="detail-section-title"><span class="material-icons">map</span>Ubicación</div>
+      <div class="detail-field"><div class="detail-field-label">Coordenadas</div><div class="detail-field-val" style="font-size:12px;font-family:monospace;">${p.latitude}, ${p.longitude}</div></div>
+    </div>` : ''}
+  `;
+
+  // Footer buttons
+  dm.querySelector('#dmBtnAnuncio').onclick  = () => window.open(`propiedad.html?code=${p.code}`, '_blank');
+  dm.querySelector('#dmBtnEditar').onclick   = () => { closeDetailModal(); openModal(id); };
+
+  dm.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetailModal(){
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close on overlay click
+document.getElementById('detailModal').addEventListener('click', function(e){
+  if(e.target === this) closeDetailModal();
+});
 </script>
+<!-- ═══ MODAL DETALLE ═══ -->
+<div class="detail-overlay" id="detailModal">
+  <div class="detail-panel">
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <span class="detail-code-pill"></span>
+        <span class="detail-title-h"></span>
+      </div>
+      <button class="detail-close" onclick="closeDetailModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="detail-body">
+      <div id="dmContent"></div>
+    </div>
+    <div class="detail-footer">
+      <button class="btn-anuncio" id="dmBtnAnuncio"><span class="material-icons" style="font-size:15px">open_in_new</span>Ver anuncio</button>
+      <button class="btn-edit-lg" id="dmBtnEditar"><span class="material-icons" style="font-size:15px">edit</span>Editar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
