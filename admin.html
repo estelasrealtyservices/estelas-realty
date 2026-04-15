@@ -2226,12 +2226,10 @@ async function preloadLeadsBadge(){
 // ---- LOAD ALL ----
 async function loadAll(){
   if(isAdmin){
-    // Pre-load agents so names show in property rows
+    // Pre-load agent names so they appear in property rows (don't mark agentsLoaded)
     try{
       const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:true});
       allAgents = data || [];
-      agentsLoaded = true;
-      updateAgentsSummary && updateAgentsSummary();
     }catch(e){ allAgents=[]; }
   }
   await Promise.all([loadProperties(), loadSiteConfig(), preloadLeadsBadge(), loadZonesCatalog()]);
@@ -3530,8 +3528,8 @@ async function createAgent(){
 }
 
 async function loadAgents(){
-  if(agentsLoaded){ renderAgents(); return; }
-  document.getElementById('agentsGrid').innerHTML=`<div class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite;">sync</span><p>Cargando agentes...</p></div>`;
+  const grid = document.getElementById('agentsGrid');
+  grid.innerHTML=`<div class="empty-state"><span class="material-icons" style="animation:spin 1s linear infinite;">sync</span><p>Cargando agentes...</p></div>`;
 
   try{
     const{ data, error } = await sb.from('profiles').select('*').order('created_at',{ascending:true});
@@ -3546,8 +3544,17 @@ async function loadAgents(){
     // Refresh agent filter dropdown in properties tab
     populateAdminAgentFilter();
   } catch(e){
-    document.getElementById('agentsSetupHint').style.display='block';
-    document.getElementById('agentsGrid').innerHTML=`<div class="empty-state"><span class="material-icons">group_off</span><p>La tabla <strong>profiles</strong> no existe aún.<br>Ejecuta el SQL del panel amarillo de arriba.</p></div>`;
+    const msg = e?.message || JSON.stringify(e) || 'Error desconocido';
+    const isNoTable = msg.includes('does not exist') || msg.includes('relation') || msg.includes('42P01');
+    document.getElementById('agentsSetupHint').style.display = isNoTable ? 'block' : 'none';
+    grid.innerHTML=`
+      <div class="empty-state" style="grid-column:1/-1;">
+        <span class="material-icons" style="font-size:40px;color:#E53935;">error_outline</span>
+        <p style="margin-top:8px;">${isNoTable
+          ? 'La tabla <strong>profiles</strong> no existe aún.<br>Ejecuta el SQL del panel amarillo de arriba.'
+          : 'Error al cargar agentes: <code style="font-size:11px;">' + msg + '</code>'
+        }</p>
+      </div>`;
   }
 }
 
