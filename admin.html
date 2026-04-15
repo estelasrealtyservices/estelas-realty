@@ -4187,12 +4187,16 @@ function closeDetailModal(){
   document.getElementById('detailModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-// Close on overlay click
-document.getElementById('detailModal').addEventListener('click', function(e){
-  if(e.target === this) closeDetailModal();
-});
-document.getElementById('agentModal').addEventListener('click', function(e){
-  if(e.target === this) closeAgentModal();
+// Close modals on overlay click — wrapped in DOMContentLoaded so elements exist
+document.addEventListener('DOMContentLoaded', function(){
+  const detailModal = document.getElementById('detailModal');
+  if(detailModal) detailModal.addEventListener('click', function(e){
+    if(e.target === this) closeDetailModal();
+  });
+  const agentModal = document.getElementById('agentModal');
+  if(agentModal) agentModal.addEventListener('click', function(e){
+    if(e.target === this) closeAgentModal();
+  });
 });
 </script>
 <!-- ═══ MODAL DETALLE ═══ -->
