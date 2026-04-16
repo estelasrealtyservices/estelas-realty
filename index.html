@@ -8,9 +8,15 @@
 <link rel="shortcut icon" href="favicon.png">
 <!-- LCP PRELOAD: dispara al parsear HTML, antes que cualquier JS o CSS externo.
      Garantiza que la imagen hero principal llega al browser con maxima prioridad. -->
-<link rel="preload" as="image"
-  href="/cdn-cgi/image/width=1200,quality=80,format=webp,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg"
-  imagesrcset="/cdn-cgi/image/width=768,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 768w,/cdn-cgi/image/width=1200,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1200w,/cdn-cgi/image/width=1920,quality=78,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1920w"
+<link
+  rel="preload"
+  as="image"
+  href="/cdn-cgi/image/width=1280,quality=70,format=auto,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg"
+  imagesrcset="
+    /cdn-cgi/image/width=480,quality=70,format=auto/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg  480w,
+    /cdn-cgi/image/width=768,quality=70,format=auto/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg  768w,
+    /cdn-cgi/image/width=1280,quality=70,format=auto/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1280w,
+    /cdn-cgi/image/width=1920,quality=68,format=auto/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1920w"
   imagesizes="100vw"
   fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -1087,7 +1093,7 @@ const IMG = (() => {
    * Doc: https://developers.cloudflare.com/images/image-resizing/url-format/
    * Formato: /cdn-cgi/image/{options}/{url-original}
    */
-  function cf(url, { w = 800, h, q = 82, fit = 'cover', format = 'webp' } = {}) {
+  function cf(url, { w = 800, h, q = 82, fit = 'cover', format = 'auto' } = {}) {
     if (!url || url.startsWith('data:')) return url;
     if (!CF_ENABLED) return url; // en local, devuelve original
     // Solo optimizar imágenes de Supabase Storage y GitHub CDN
@@ -1182,9 +1188,9 @@ function renderHero(images) {
     // Tamaños precisos según breakpoints reales del hero (full-width siempre)
     const sizes = '(max-width: 480px) 480px, (max-width: 768px) 768px, (max-width: 1280px) 1280px, 1920px';
     const srcset = [480, 768, 1024, 1280, 1920]
-      .map(w => `${IMG.cf(img, { w, q: isFirst ? 82 : 78 })} ${w}w`)
+      .map(w => `${IMG.cf(img, { w, q: isFirst ? 70 : 68 })} ${w}w`)
       .join(', ');
-    const src = IMG.cf(img, { w: 1280, q: 82 });
+    const src = IMG.cf(img, { w: 1280, q: 70 });
     return `<div class="hero-slide${isFirst ? ' active' : ''}">
       <img
         src="${src}"
@@ -1193,7 +1199,7 @@ function renderHero(images) {
         alt="Estela's Realty Services — Propiedades en Panamá"
         width="1280" height="720"
         loading="${isFirst ? 'eager' : 'lazy'}"
-        decoding="${isFirst ? 'sync' : 'async'}"
+        decoding="async"
         ${isFirst ? 'fetchpriority="high"' : ''}
       >
     </div>`;
@@ -1204,12 +1210,12 @@ function renderHero(images) {
   if(images[0]) {
     const existingPreload = document.querySelector('link[rel="preload"][as="image"]');
     if(existingPreload) {
-      const newHref = IMG.cf(images[0], { w: 1280, q: 82 });
+      const newHref = IMG.cf(images[0], { w: 1280, q: 70 });
       // Solo actualizar si la URL cambió (Supabase devolvió imagen diferente al default)
       if(existingPreload.href !== newHref) {
         existingPreload.href = newHref;
         existingPreload.setAttribute('imagesrcset',
-          [480,768,1280,1920].map(w=>`${IMG.cf(images[0],{w,q:80})} ${w}w`).join(', '));
+          [480,768,1280,1920].map(w=>`${IMG.cf(images[0],{w,q:70})} ${w}w`).join(', '));
       }
     }
   }
