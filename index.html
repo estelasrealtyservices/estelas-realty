@@ -6,6 +6,13 @@
 <title>Estela's Realty Services | Propiedades en Panamá</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png">
+<!-- LCP PRELOAD: dispara al parsear HTML, antes que cualquier JS o CSS externo.
+     Garantiza que la imagen hero principal llega al browser con maxima prioridad. -->
+<link rel="preload" as="image"
+  href="/cdn-cgi/image/width=1200,quality=80,format=webp,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg"
+  imagesrcset="/cdn-cgi/image/width=768,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 768w,/cdn-cgi/image/width=1200,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1200w,/cdn-cgi/image/width=1920,quality=78,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774744855211.jpeg 1920w"
+  imagesizes="100vw"
+  fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -46,9 +53,11 @@
   /* HERO SLIDESHOW */
   .hero{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:white;text-align:center;padding:26px 32px 65px;}
   .hero-slides{position:absolute;inset:0;z-index:0;}
-  .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease;}
+  /* hero-slide now wraps a real <img> for proper LCP scoring */
+  .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;overflow:hidden;}
   .hero-slide.active{opacity:1;}
-  .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.58) 0%,rgba(45,45,82,0.48) 100%);}
+  .hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+  .hero-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,26,46,0.58) 0%,rgba(45,45,82,0.48) 100%);pointer-events:none;}
   .hero-fallback{position:absolute;inset:0;background:linear-gradient(160deg,var(--primary) 0%,#2d2d52 100%);z-index:-1;}
   .hero-pattern{position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23FFC145' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
   .hero-content{position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;}
@@ -802,7 +811,7 @@
           srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 300w,
                   /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 500w,
                   /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 800w"
-          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
+          sizes="(max-width:640px) 100vw, (max-width:900px) 50vw, 33vw"
           alt="Propiedades en Playa"
           loading="lazy" width="400" height="520"
         >
@@ -815,7 +824,7 @@
           srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 300w,
                   /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 500w,
                   /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 800w"
-          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
+          sizes="(max-width:640px) 100vw, (max-width:900px) 50vw, 33vw"
           alt="Propiedades en Campo"
           loading="lazy" width="400" height="520"
         >
@@ -828,7 +837,7 @@
           srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 300w,
                   /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 500w,
                   /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 800w"
-          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
+          sizes="(max-width:640px) 100vw, (max-width:900px) 50vw, 33vw"
           alt="Propiedades en Ciudad"
           loading="lazy" width="400" height="520"
         >
@@ -1165,26 +1174,51 @@ function renderHero(images) {
   if(dotsEl) dotsEl.innerHTML = '';
   if(!images || !images.length) { if(container) container.innerHTML=''; return; }
 
-  // Preload LCP image (primera imagen del hero) para máxima velocidad
-  if(images[0] && !document.querySelector('link[rel="preload"][as="image"]')){
-    const preload = document.createElement('link');
-    preload.rel = 'preload'; preload.as = 'image';
-    preload.href = IMG.cf(images[0], { w: 1400, q: 80 });
-    // imagesrcset para navegadores que soporten srcset en preload
-    preload.setAttribute('imagesrcset', [1000,1400,1920].map(w=>`${IMG.cf(images[0],{w,q:80})} ${w}w`).join(', '));
-    preload.setAttribute('imagesizes', '100vw');
-    document.head.appendChild(preload);
-  }
-
-  // Genera slides con imágenes optimizadas por CF (1400px max, WebP)
+  // Genera slides con <img> real para que el browser pueda registrar el LCP correctamente.
+  // La primera imagen usa fetchpriority="high" + loading="eager" (LCP crítico).
+  // Las siguientes usan loading="lazy" porque están ocultas (opacity:0).
   if(container) container.innerHTML = images.map((img, i) => {
-    const optUrl = IMG.cf(img, { w: 1400, q: 78 });
-    return `<div class="hero-slide${i===0?' active':''}" style="background-image:url('${optUrl}')"></div>`;
+    const isFirst = i === 0;
+    // Tamaños precisos según breakpoints reales del hero (full-width siempre)
+    const sizes = '(max-width: 480px) 480px, (max-width: 768px) 768px, (max-width: 1280px) 1280px, 1920px';
+    const srcset = [480, 768, 1024, 1280, 1920]
+      .map(w => `${IMG.cf(img, { w, q: isFirst ? 82 : 78 })} ${w}w`)
+      .join(', ');
+    const src = IMG.cf(img, { w: 1280, q: 82 });
+    return `<div class="hero-slide${isFirst ? ' active' : ''}">
+      <img
+        src="${src}"
+        srcset="${srcset}"
+        sizes="${sizes}"
+        alt="Estela's Realty Services — Propiedades en Panamá"
+        width="1280" height="720"
+        loading="${isFirst ? 'eager' : 'lazy'}"
+        decoding="${isFirst ? 'sync' : 'async'}"
+        ${isFirst ? 'fetchpriority="high"' : ''}
+      >
+    </div>`;
   }).join('');
+
+  // Si Supabase devuelve una imagen diferente al DEFAULT_HERO,
+  // actualiza el preload existente en <head> para evitar re-descarga.
+  if(images[0]) {
+    const existingPreload = document.querySelector('link[rel="preload"][as="image"]');
+    if(existingPreload) {
+      const newHref = IMG.cf(images[0], { w: 1280, q: 82 });
+      // Solo actualizar si la URL cambió (Supabase devolvió imagen diferente al default)
+      if(existingPreload.href !== newHref) {
+        existingPreload.href = newHref;
+        existingPreload.setAttribute('imagesrcset',
+          [480,768,1280,1920].map(w=>`${IMG.cf(images[0],{w,q:80})} ${w}w`).join(', '));
+      }
+    }
+  }
 
   // Dots de navegación
   if(dotsEl && images.length > 1){
-    dotsEl.innerHTML = images.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})" aria-label="Slide ${i+1}"></button>`).join('');
+    dotsEl.innerHTML = images.map((_,i)=>
+      `<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})" aria-label="Slide ${i+1}"></button>`
+    ).join('');
   }
 }
 
@@ -1206,7 +1240,7 @@ function renderBento(bentoConfig) {
   const slice = bentoConfig.slice(0, 3);
   cards.innerHTML = slice.map(c => `
     <div class="destino-card" onclick="setBento(this,'${c.val}')" data-val="${c.val}">
-      ${IMG.tag(c.img||'', { alt: `Propiedades en ${c.tag||c.val}`, w: 500, h: 600, fit: 'cover', sizes: '(max-width:600px) 100vw, (max-width:900px) 50vw, 400px' })}
+      ${IMG.tag(c.img||'', { alt: `Propiedades en ${c.tag||c.val}`, w: 500, h: 600, fit: 'cover', sizes: '(max-width:640px) 100vw, (max-width:900px) 50vw, 33vw' })}
       <span class="destino-label">${c.tag||c.val}</span>
     </div>`).join('');
   updateCatCounts();
@@ -1365,7 +1399,7 @@ function renderProperties(list){
     return `
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
-        ${IMG.tag(thumb, { alt: p.title, w: 600, h: 450, sizes: '(max-width:600px) 100vw, (max-width:1024px) 50vw, 380px', fit: 'cover' })}
+        ${IMG.tag(thumb, { alt: p.title, w: 600, h: 450, sizes: '(max-width:640px) 100vw, (max-width:1024px) calc(50vw - 32px), 380px', fit: 'cover' })}
         <div class="card-badge ${opClass}">${getOpLabel(p.operation)}</div>
         ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
@@ -1402,8 +1436,8 @@ function openDetail(id){
   const imgs=(p.images?.length ? p.images : p.image_thumbs?.length ? p.image_thumbs : [PH]);
   document.getElementById('detailBody').innerHTML=`
     <div class="detail-gallery">
-      <div class="detail-main">${IMG.tag(imgs[0], { alt: p.title, w: 900, h: 480, eager: true, fit: 'cover', sizes: '(max-width:768px) 100vw, 65vw' })}</div>
-      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb">${IMG.tag(i, { alt: '', w: 400, h: 240, fit: 'cover', sizes: '200px' })}</div>`).join('')}</div>
+      <div class="detail-main">${IMG.tag(imgs[0], { alt: p.title, w: 900, h: 480, eager: true, fit: 'cover', sizes: '(max-width:640px) 100vw, (max-width:1024px) 100vw, 65vw' })}</div>
+      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb">${IMG.tag(i, { alt: '', w: 400, h: 240, fit: 'cover', sizes: '(max-width:640px) 50vw, (max-width:1024px) 33vw, 220px' })}</div>`).join('')}</div>
     </div>
     <div class="detail-info">
       <div>
