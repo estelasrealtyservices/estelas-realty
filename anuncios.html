@@ -99,7 +99,10 @@
   .property-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:var(--transition);cursor:pointer;animation:fadeSlide 0.3s ease;}
   .property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent;}
   .card-image{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
+  /* <picture> ocupa todo el contenedor igual que un <img> */
+  .card-image picture{display:block;width:100%;height:100%;}
   .card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s, opacity 0.35s ease, filter 0.35s ease;}
+  /* blur-up: placeholder borroso → nítido al cargar */
   .card-image img.lazy-img{opacity:0;filter:blur(6px);}
   .card-image img.lazy-loaded{opacity:1;filter:blur(0);}
   .property-card:hover .card-image img{transform:scale(1.04);}
@@ -537,11 +540,48 @@ function resetFilters(){
 }
 
 // ---- RENDER ----
+// ---- VIEWPORT LAZY INTELLIGENCE ----
+// Detecta cuántas tarjetas caben above-the-fold según el grid actual
+// para cargarlas eager (sin lazy) y el resto lazy
+function getEagerCount(){
+  const w = window.innerWidth;
+  // cols × rows visibles estimados
+  if(w >= 1024) return 6;  // 3 cols × 2 rows
+  if(w >= 600)  return 4;  // 2 cols × 2 rows
+  return 2;                 // 1 col × 2 rows
+}
+
+// Genera URL WebP transformada vía Supabase Storage Transform API
+// Si la URL ya es de Supabase, aplica width + format=webp
+function toWebP(url, w=800){
+  if(!url || url.startsWith('data:')) return url;
+  try {
+    const u = new URL(url);
+    // Supabase Storage render endpoint
+    if(u.hostname.includes('supabase.co') && u.pathname.includes('/storage/')){
+      // Convertir a transform endpoint: /storage/v1/object/public/... → /storage/v1/render/image/public/...
+      const renderPath = u.pathname.replace('/object/','/render/image/');
+      u.pathname = renderPath;
+      u.searchParams.set('width', w);
+      u.searchParams.set('quality', '80');
+      u.searchParams.set('format', 'origin'); // Supabase devuelve WebP si el browser lo soporta
+      return u.toString();
+    }
+    // CDN externo: pasar tal cual (ya son WebP si se subieron correctamente)
+    return url;
+  } catch(e){ return url; }
+}
+
+// Genera srcset multi-resolución para responsive images
+function toSrcSet(url){
+  if(!url || url.startsWith('data:')) return '';
+  return [400,800,1200].map(w=>`${toWebP(url,w)} ${w}w`).join(', ');
+}
+
 function renderPage(){
   const tx = t();
   const total = filteredList.length;
 
-  // Grid count
   const start = (currentPage-1)*PER_PAGE;
   const end = Math.min(start+PER_PAGE, total);
   document.getElementById('gridCount').innerHTML = total > 0
@@ -562,31 +602,75 @@ function renderPage(){
   }
 
   const pageItems = filteredList.slice(start, end);
-  grid.innerHTML = pageItems.map(p => cardHTML(p, tx)).join('');
+  const eagerCount = (currentPage === 1) ? getEagerCount() : 0;
 
-  // Lazy images
+  // Preload de la primera imagen (LCP candidate) — solo en page 1
+  if(currentPage === 1 && pageItems[0]){
+    injectPreload(pageItems[0].image_thumbs?.[0]);
+  }
+
+  grid.innerHTML = pageItems.map((p, i) => cardHTML(p, tx, i < eagerCount)).join('');
+
+  // Solo observamos las tarjetas lazy (las eager ya tienen src)
   initLazyImages();
 
-  // Pagination
   renderPagination(total);
 
-  // Scroll to top of grid (smooth) only if not first load
   if(currentPage > 1){
     document.querySelector('.listings-section').scrollIntoView({behavior:'smooth', block:'start'});
   }
 }
 
-function cardHTML(p, tx){
+// Inyecta <link rel="preload"> para el LCP (primera imagen visible)
+let _preloadInjected = false;
+function injectPreload(url){
+  if(_preloadInjected || !url) return;
+  _preloadInjected = true;
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = toWebP(url, 800);
+  link.setAttribute('imagesrcset', toSrcSet(url));
+  link.setAttribute('imagesizes', '(max-width:600px) 100vw, (max-width:1024px) 50vw, 33vw');
+  document.head.appendChild(link);
+}
+
+function cardHTML(p, tx, eager=false){
   // Portada: solo el primer thumbnail (imagen comprimida).
   // Nunca tocamos p.images[] aquí — eso se carga al abrir el modal.
   const thumb = p.image_thumbs?.[0] || PH;
+  const srcSet = toSrcSet(thumb);
+  const webpSrc = toWebP(thumb, 800);
+  const sizes = '(max-width:600px) 100vw, (max-width:1024px) 50vw, 33vw';
+
+  // SVG placeholder LQIP (Low Quality Image Placeholder) inline
+  const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f0ede8'/%3E%3C/svg%3E";
+
   const opClass = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   const opLabel = p.operation==='Alquiler vacacional' ? tx.opVac : p.operation==='Alquiler' ? tx.opRent : tx.opSale;
   const period = p.operation==='Alquiler vacacional' ? tx.perNight : p.operation==='Alquiler' ? tx.perMonth : '';
+
+  // EAGER: imagen above-the-fold, se carga de inmediato con <picture> + srcset
+  // LAZY: imagen below-fold, usa data-src + IntersectionObserver (blur-up)
+  const imgHtml = eager
+    ? `<picture>
+        <source type="image/webp" srcset="${srcSet}" sizes="${sizes}">
+        <img src="${webpSrc}" alt="${p.title}" width="800" height="600"
+             class="lazy-loaded"
+             srcset="${srcSet}" sizes="${sizes}"
+             decoding="async">
+      </picture>`
+    : `<picture class="lazy-picture" data-srcset="${srcSet}" data-src="${webpSrc}">
+        <source type="image/webp" data-srcset="${srcSet}" sizes="${sizes}">
+        <img src="${placeholder}" data-src="${webpSrc}" alt="${p.title}"
+             width="800" height="600" class="lazy-img"
+             decoding="async">
+      </picture>`;
+
   return `
   <div class="property-card" onclick="openDetail('${p.id}')">
     <div class="card-image">
-      <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img">
+      ${imgHtml}
       <div class="card-badge ${opClass}">${opLabel}</div>
       ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
       <div class="card-code">${p.code||''}</div>
@@ -803,35 +887,74 @@ function syncMobileSearch(val){
   filterAndRender();
 }
 
-// ---- LAZY IMAGES (blur-up) ----
+// ---- LAZY IMAGES INTELIGENTE (blur-up + <picture> + srcset) ----
 let lazyObserver=null;
 function initLazyImages(){
-  const imgs=document.querySelectorAll('img.lazy-img[data-src]');
-  if(!imgs.length) return;
+  // Observamos el <picture> contenedor (no el <img> directo)
+  // para poder activar también el <source type="image/webp">
+  const pictures = document.querySelectorAll('picture.lazy-picture');
+  const imgs = document.querySelectorAll('img.lazy-img[data-src]:not(picture *)'); // fallback sin picture
+
+  const targets = [...pictures, ...imgs];
+  if(!targets.length) return;
+
   if(!lazyObserver){
-    lazyObserver=new IntersectionObserver((entries)=>{
+    lazyObserver = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
-        if(e.isIntersecting){
-          const img=e.target;
-          // blur-up: imagen cargada → transición suave de desenfoque a nítida
-          img.onload=function(){
+        if(!e.isIntersecting) return;
+
+        const el = e.target;
+
+        if(el.tagName === 'PICTURE'){
+          // Activar <source> WebP primero
+          const source = el.querySelector('source[data-srcset]');
+          if(source){
+            source.srcset = source.dataset.srcset;
+            source.removeAttribute('data-srcset');
+          }
+          // Luego activar el <img> con blur-up
+          const img = el.querySelector('img[data-src]');
+          if(img){
+            img.onload = function(){
+              this.classList.remove('lazy-img');
+              this.classList.add('lazy-loaded');
+            };
+            img.onerror = function(){
+              this.onerror = null;
+              this.src = PH;
+              this.classList.remove('lazy-img');
+              this.classList.add('lazy-loaded');
+            };
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          el.classList.remove('lazy-picture');
+
+        } else if(el.tagName === 'IMG'){
+          // Imagen suelta sin <picture>
+          el.onload = function(){
             this.classList.remove('lazy-img');
             this.classList.add('lazy-loaded');
           };
-          img.onerror=function(){
-            this.onerror=null;
-            this.src=PH;
+          el.onerror = function(){
+            this.onerror = null;
+            this.src = PH;
             this.classList.remove('lazy-img');
             this.classList.add('lazy-loaded');
           };
-          img.src=img.dataset.src;
-          img.removeAttribute('data-src');
-          lazyObserver.unobserve(img);
+          el.src = el.dataset.src;
+          el.removeAttribute('data-src');
         }
+
+        lazyObserver.unobserve(el);
       });
-    },{rootMargin:'200px 0px'}); // pre-carga 200px antes de entrar al viewport
+    },{
+      rootMargin: '200px 0px', // pre-carga 200px antes de entrar al viewport
+      threshold: 0
+    });
   }
-  imgs.forEach(img=>lazyObserver.observe(img));
+
+  targets.forEach(el => lazyObserver.observe(el));
 }
 
 // ---- LEAFLET ----
