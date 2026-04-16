@@ -99,7 +99,9 @@
   .property-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:var(--transition);cursor:pointer;animation:fadeSlide 0.3s ease;}
   .property-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent;}
   .card-image{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface2);}
-  .card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+  .card-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s, opacity 0.35s ease, filter 0.35s ease;}
+  .card-image img.lazy-img{opacity:0;filter:blur(6px);}
+  .card-image img.lazy-loaded{opacity:1;filter:blur(0);}
   .property-card:hover .card-image img{transform:scale(1.04);}
   .card-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
   .badge-rent{background:var(--primary);color:white;}
@@ -442,9 +444,12 @@ async function init(){
 
 async function loadProperties(){
   try {
+    // Select columnar: excluimos 'images' (array pesado) del payload inicial.
+    // Solo traemos image_thumbs (portadas pequeñas). Las imágenes completas
+    // se cargan bajo demanda cuando el usuario abre el modal (openDetail).
     const {data,error} = await sb
       .from('properties')
-      .select('*')
+      .select('id,code,title,zone,type,operation,price,rooms,baths,size,parking,floor,features,description,video_url,latitude,longitude,featured,status,encuentra24_code,image_thumbs,created_at,is_active')
       .eq('is_active', true)
       .order('created_at', {ascending: false});
     if(error) throw error;
@@ -572,7 +577,9 @@ function renderPage(){
 }
 
 function cardHTML(p, tx){
-  const thumb = p.image_thumbs?.[0] || p.images?.[0] || PH;
+  // Portada: solo el primer thumbnail (imagen comprimida).
+  // Nunca tocamos p.images[] aquí — eso se carga al abrir el modal.
+  const thumb = p.image_thumbs?.[0] || PH;
   const opClass = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   const opLabel = p.operation==='Alquiler vacacional' ? tx.opVac : p.operation==='Alquiler' ? tx.opRent : tx.opSale;
   const period = p.operation==='Alquiler vacacional' ? tx.perNight : p.operation==='Alquiler' ? tx.perMonth : '';
@@ -640,13 +647,54 @@ function goPage(n){
 }
 
 // ---- DETAIL MODAL ----
-function openDetail(id){
+// Cache de imágenes completas para no re-fetchear si ya se abrió la propiedad
+const _imgCache = {};
+
+async function openDetail(id){
   const p = allProperties.find(x=>x.id===id);
   if(!p) return;
   const tx = t();
   document.getElementById('detailCode').textContent = p.code;
   document.getElementById('detailTitle').textContent = p.title;
-  const imgs = (p.images?.length ? p.images : p.image_thumbs?.length ? p.image_thumbs : [PH]);
+
+  // Render del modal inmediato con thumbnails como placeholder
+  const thumbs = p.image_thumbs?.length ? p.image_thumbs : [PH];
+  renderModalBody(p, tx, thumbs);
+  document.getElementById('detailModal').classList.add('open');
+  document.body.style.overflow='hidden';
+
+  // Cargar imágenes completas bajo demanda (solo si no están en cache)
+  if(_imgCache[id]){
+    swapModalImages(_imgCache[id], p.title);
+  } else {
+    try {
+      const {data} = await sb
+        .from('properties')
+        .select('images')
+        .eq('id', id)
+        .single();
+      const fullImgs = data?.images?.length ? data.images : thumbs;
+      _imgCache[id] = fullImgs;
+      // Solo actualizar si el modal sigue abierto para esta propiedad
+      if(document.getElementById('detailModal').classList.contains('open')){
+        swapModalImages(fullImgs, p.title);
+      }
+    } catch(e){
+      console.warn('No se pudieron cargar imágenes completas:', e?.message);
+    }
+  }
+
+  // Map
+  if(p.latitude && p.longitude){
+    loadLeafletThen(()=>{
+      const map = L.map('clientMap',{zoomControl:true}).setView([p.latitude,p.longitude],15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+      L.circle([p.latitude,p.longitude],{radius:120,color:'#FFC145',fillColor:'#FFC145',fillOpacity:0.15}).addTo(map);
+    });
+  }
+}
+
+function renderModalBody(p, tx, imgs){
   const opClass = p.operation==='Alquiler' ? 'badge-rent' : p.operation==='Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   document.getElementById('detailBody').innerHTML = `
     <div class="detail-gallery">
@@ -689,16 +737,23 @@ function openDetail(id){
         </div>
       </div>
     </div>`;
-  document.getElementById('detailModal').classList.add('open');
-  document.body.style.overflow='hidden';
-  // Map
-  if(p.latitude && p.longitude){
-    loadLeafletThen(()=>{
-      const map = L.map('clientMap',{zoomControl:true}).setView([p.latitude,p.longitude],15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
-      L.circle([p.latitude,p.longitude],{radius:120,color:'#FFC145',fillColor:'#FFC145',fillOpacity:0.15}).addTo(map);
-    });
+}
+
+function swapModalImages(imgs, title){
+  const main = document.querySelector('#detailBody .detail-main img');
+  const thumbEls = document.querySelectorAll('#detailBody .detail-thumb img');
+  if(main && imgs[0]){
+    main.style.transition='opacity 0.3s';
+    main.style.opacity='0';
+    setTimeout(()=>{main.src=imgs[0]; main.alt=title; main.style.opacity='1';}, 150);
   }
+  thumbEls.forEach((el,i)=>{
+    if(imgs[i+1]){
+      el.style.transition='opacity 0.3s';
+      el.style.opacity='0';
+      setTimeout(()=>{el.src=imgs[i+1]; el.style.opacity='1';}, 200+i*80);
+    }
+  });
 }
 
 function closeModal(){
@@ -748,7 +803,7 @@ function syncMobileSearch(val){
   filterAndRender();
 }
 
-// ---- LAZY IMAGES ----
+// ---- LAZY IMAGES (blur-up) ----
 let lazyObserver=null;
 function initLazyImages(){
   const imgs=document.querySelectorAll('img.lazy-img[data-src]');
@@ -758,14 +813,23 @@ function initLazyImages(){
       entries.forEach(e=>{
         if(e.isIntersecting){
           const img=e.target;
-          img.onerror=function(){this.onerror=null;this.src=PH;};
+          // blur-up: imagen cargada → transición suave de desenfoque a nítida
+          img.onload=function(){
+            this.classList.remove('lazy-img');
+            this.classList.add('lazy-loaded');
+          };
+          img.onerror=function(){
+            this.onerror=null;
+            this.src=PH;
+            this.classList.remove('lazy-img');
+            this.classList.add('lazy-loaded');
+          };
           img.src=img.dataset.src;
           img.removeAttribute('data-src');
-          img.classList.remove('lazy-img');
           lazyObserver.unobserve(img);
         }
       });
-    },{rootMargin:'200px'});
+    },{rootMargin:'200px 0px'}); // pre-carga 200px antes de entrar al viewport
   }
   imgs.forEach(img=>lazyObserver.observe(img));
 }
