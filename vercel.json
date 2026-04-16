@@ -34,6 +34,19 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=86400" }
       ]
+    },
+    {
+      "source": "/cdn-cgi/image/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
+        { "key": "Vary", "value": "Accept" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(?:png|jpg|jpeg|webp|avif|gif|svg|ico)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
     }
   ]
 }

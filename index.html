@@ -29,108 +29,6 @@
   @keyframes spin{to{transform:rotate(360deg);}}
   @keyframes fadeSlide{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-  /* PRICE SLIDER */
-  .price-slider-wrap{
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:0;
-    background:white;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:5px 14px 5px 10px;
-    cursor:pointer;
-    transition:var(--transition);
-    min-width:160px;
-    user-select:none;
-  }
-  .price-slider-wrap:hover{border-color:var(--primary);}
-  .price-slider-wrap .material-icons{color:var(--text3);font-size:16px;margin-right:6px;flex-shrink:0;}
-  .price-slider-label{font-size:13px;color:var(--text2);white-space:nowrap;font-family:inherit;}
-  .price-slider-label.has-value{color:var(--primary);font-weight:600;}
-
-  /* DROPDOWN PANEL */
-  .price-slider-panel{
-    position:absolute;
-    top:calc(100% + 8px);
-    left:0;
-    background:white;
-    border:1px solid var(--border);
-    border-radius:14px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.12);
-    padding:20px 20px 16px;
-    width:280px;
-    z-index:200;
-    display:none;
-    flex-direction:column;
-    gap:14px;
-  }
-  .price-slider-panel.open{display:flex;}
-  .price-slider-panel-header{display:flex;justify-content:space-between;align-items:center;}
-  .price-slider-panel-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:500;}
-  .price-slider-clear{background:none;border:none;font-size:12px;color:var(--text3);cursor:pointer;padding:2px 6px;border-radius:6px;transition:var(--transition);font-family:inherit;}
-  .price-slider-clear:hover{background:var(--surface2);color:var(--text);}
-
-  /* RANGE VALUES DISPLAY */
-  .price-range-display{display:flex;justify-content:space-between;align-items:center;gap:8px;}
-  .price-range-box{
-    flex:1;background:var(--surface2);border-radius:8px;
-    padding:6px 10px;text-align:center;
-    font-size:13px;font-weight:600;color:var(--primary);
-  }
-  .price-range-sep{font-size:12px;color:var(--text3);}
-
-  /* DUAL RANGE TRACK */
-  .dual-range-container{position:relative;height:36px;display:flex;align-items:center;}
-  .dual-range-track{
-    position:absolute;left:0;right:0;height:4px;
-    background:var(--border);border-radius:2px;
-  }
-  .dual-range-fill{
-    position:absolute;height:4px;
-    background:var(--primary);border-radius:2px;
-    pointer-events:none;
-  }
-  .dual-range-input{
-    position:absolute;width:100%;height:4px;
-    -webkit-appearance:none;appearance:none;
-    background:transparent;pointer-events:none;
-    outline:none;border:none;
-  }
-  .dual-range-input::-webkit-slider-thumb{
-    -webkit-appearance:none;appearance:none;
-    width:20px;height:20px;border-radius:50%;
-    background:var(--primary);
-    border:3px solid white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.2);
-    pointer-events:all;cursor:grab;
-    transition:transform 0.15s, box-shadow 0.15s;
-  }
-  .dual-range-input::-webkit-slider-thumb:active{
-    cursor:grabbing;transform:scale(1.15);
-    box-shadow:0 3px 12px rgba(0,0,0,0.3);
-  }
-  .dual-range-input::-moz-range-thumb{
-    width:20px;height:20px;border-radius:50%;
-    background:var(--primary);
-    border:3px solid white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.2);
-    pointer-events:all;cursor:grab;
-  }
-
-  /* QUICK PRESETS */
-  .price-presets{display:flex;gap:6px;flex-wrap:wrap;}
-  .price-preset{
-    background:var(--surface2);border:1px solid var(--border);
-    border-radius:20px;padding:4px 10px;
-    font-size:11px;color:var(--text2);cursor:pointer;
-    transition:var(--transition);font-family:inherit;
-    white-space:nowrap;
-  }
-  .price-preset:hover,.price-preset.active{
-    background:var(--primary);color:white;border-color:var(--primary);
-  }
-
   /* Scroll offset para nav sticky: solo scroll-margin-top */
   #bentoCats,#propiedades,#zonas,#servicios,#contacto{scroll-margin-top:90px;}
   @media(max-width:768px){
@@ -900,30 +798,39 @@
 
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Playa'" data-val="Playa">
         <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp"
+          src="/cdn-cgi/image/width=500,height=600,quality=82,format=webp,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp"
+          srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 300w,
+                  /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 500w,
+                  /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp 800w"
+          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
           alt="Propiedades en Playa"
-          loading="lazy"
-          width="400" height="520"
+          loading="lazy" width="400" height="520"
         >
         <span class="destino-label">Playa</span>
       </div>
 
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Campo'" data-val="Montaña / Campo">
         <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp"
+          src="/cdn-cgi/image/width=500,height=600,quality=82,format=webp,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp"
+          srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 300w,
+                  /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 500w,
+                  /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp 800w"
+          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
           alt="Propiedades en Campo"
-          loading="lazy"
-          width="400" height="520"
+          loading="lazy" width="400" height="520"
         >
         <span class="destino-label">Campo</span>
       </div>
 
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Ciudad'" data-val="Ciudad">
         <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp"
+          src="/cdn-cgi/image/width=500,height=600,quality=82,format=webp,fit=cover/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp"
+          srcset="/cdn-cgi/image/width=300,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 300w,
+                  /cdn-cgi/image/width=500,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 500w,
+                  /cdn-cgi/image/width=800,quality=80,format=webp/https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp 800w"
+          sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 400px"
           alt="Propiedades en Ciudad"
-          loading="lazy"
-          width="400" height="520"
+          loading="lazy" width="400" height="520"
         >
         <span class="destino-label">Ciudad</span>
       </div>
@@ -943,40 +850,10 @@
         <button class="tab" onclick="setTab(this,'Venta')">Venta</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <!-- PRICE SLIDER -->
-        <div class="price-slider-wrap" id="priceSliderWrap" onclick="togglePricePanel(event)">
-          <span class="material-icons">attach_money</span>
-          <span class="price-slider-label" id="priceSliderLabel">Precio</span>
-          <div class="price-slider-panel" id="priceSliderPanel" onclick="event.stopPropagation()">
-            <div class="price-slider-panel-header">
-              <span class="price-slider-panel-title" id="priceSliderTitle">Rango de precio</span>
-              <button class="price-slider-clear" onclick="clearPriceFilter()" id="priceClearBtn">Limpiar</button>
-            </div>
-            <div class="price-range-display">
-              <div class="price-range-box" id="priceMinDisplay">$0</div>
-              <span class="price-range-sep">—</span>
-              <div class="price-range-box" id="priceMaxDisplay">$10,000+</div>
-            </div>
-            <div class="dual-range-container">
-              <div class="dual-range-track"></div>
-              <div class="dual-range-fill" id="dualRangeFill"></div>
-              <input type="range" class="dual-range-input" id="priceRangeMin"
-                min="0" max="10000" step="100" value="0"
-                oninput="onPriceRangeChange()">
-              <input type="range" class="dual-range-input" id="priceRangeMax"
-                min="0" max="10000" step="100" value="10000"
-                oninput="onPriceRangeChange()">
-            </div>
-            <div class="price-presets" id="pricePresets">
-              <button class="price-preset" onclick="applyPricePreset(0,800)">Hasta $800</button>
-              <button class="price-preset" onclick="applyPricePreset(0,1500)">Hasta $1,500</button>
-              <button class="price-preset" onclick="applyPricePreset(1500,3000)">$1,500–$3,000</button>
-              <button class="price-preset" onclick="applyPricePreset(3000,10000)">+$3,000</button>
-            </div>
-          </div>
-        </div>
-        <!-- hidden input for compatibility with applyFilters() -->
-        <input type="hidden" id="priceFilter" value="">
+        <select class="filter-select" id="priceFilter" onchange="filterProperties()">
+          <option value="">Precio</option><option value="0-1000">Hasta $1,000</option>
+          <option value="1000-2000">$1,000–$2,000</option><option value="2000-5000">$2,000–$5,000</option><option value="5000+">+$5,000</option>
+        </select>
         <select class="filter-select" id="roomsFilter" onchange="filterProperties()">
           <option value="">Habitaciones</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
         </select>
@@ -1182,6 +1059,83 @@ const DEFAULT_HERO = [
   'https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774835123599.jpeg',
 ];
 
+// ═══════════════════════════════════════════════════════════════
+//  IMAGE OPTIMIZATION SYSTEM  v1.0
+//  - Cloudflare Image Resizing para URLs de Supabase Storage
+//  - Convierte automáticamente a WebP con srcset responsivo
+//  - Lazy loading con IntersectionObserver + LQIP placeholder
+//  - Fallback graceful si Cloudflare no está disponible
+// ═══════════════════════════════════════════════════════════════
+
+const IMG = (() => {
+  // Detecta si estamos en producción con Cloudflare (vercel.app tiene CF)
+  const CF_ENABLED = location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
+  const SUPABASE_STORAGE_PREFIX = 'https://uwifcvcnzeduovqrjhdf.supabase.co/storage/v1/object/public/';
+  const GITHUB_CDN_PREFIX = 'https://cdn.jsdelivr.net/gh/estelasrealtyservices/';
+
+  /**
+   * Genera una URL optimizada via Cloudflare Image Resizing
+   * Doc: https://developers.cloudflare.com/images/image-resizing/url-format/
+   * Formato: /cdn-cgi/image/{options}/{url-original}
+   */
+  function cf(url, { w = 800, h, q = 82, fit = 'cover', format = 'webp' } = {}) {
+    if (!url || url.startsWith('data:')) return url;
+    if (!CF_ENABLED) return url; // en local, devuelve original
+    // Solo optimizar imágenes de Supabase Storage y GitHub CDN
+    const isOptimizable = url.includes(SUPABASE_STORAGE_PREFIX) || url.includes(GITHUB_CDN_PREFIX) || url.includes('unsplash.com');
+    if (!isOptimizable) return url;
+    const opts = [`width=${w}`, `quality=${q}`, `format=${format}`, `fit=${fit}`];
+    if (h) opts.push(`height=${h}`);
+    return `/cdn-cgi/image/${opts.join(',')}/${url}`;
+  }
+
+  /**
+   * Genera un srcset completo para imágenes responsivas
+   * Produce: 400w, 800w, 1200w según el uso
+   */
+  function srcset(url, sizes = [400, 800, 1200]) {
+    if (!url || !CF_ENABLED) return '';
+    return sizes.map(w => `${cf(url, { w, q: 80 })} ${w}w`).join(', ');
+  }
+
+  /**
+   * LQIP — Low Quality Image Placeholder (SVG blur inline)
+   * Se muestra mientras la imagen real carga
+   */
+  const LQIP = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23e8e8e6'/%3E%3C/svg%3E`;
+
+  /**
+   * Genera un <img> tag completo con lazy loading, srcset y WebP
+   * @param {string} url     - URL original de la imagen
+   * @param {object} opts    - { alt, w, h, sizes, cls, eager, fit }
+   */
+  function tag(url, { alt = '', w = 800, h, sizes = '(max-width:600px) 100vw, (max-width:1024px) 50vw, 33vw', cls = '', eager = false, fit = 'cover' } = {}) {
+    const src = cf(url, { w, h, fit });
+    const ss = srcset(url, w <= 400 ? [200, 400, 600] : w <= 800 ? [400, 800, 1200] : [600, 1200, 1600]);
+    const loading = eager ? 'eager' : 'lazy';
+    const decode = eager ? 'sync' : 'async';
+    const widthAttr = w ? `width="${w}"` : '';
+    const heightAttr = h ? `height="${h}"` : '';
+
+    if (eager) {
+      // Above-the-fold: carga inmediata, sin IntersectionObserver
+      return `<img src="${src}" ${ss ? `srcset="${ss}" sizes="${sizes}"` : ''} alt="${alt}" loading="${loading}" decoding="${decode}" ${widthAttr} ${heightAttr} ${cls ? `class="${cls}"` : ''} style="object-fit:${fit}">`;
+    } else {
+      // Below-the-fold: lazy via data-src + IntersectionObserver
+      return `<img src="${LQIP}" data-src="${src}" ${ss ? `data-srcset="${ss}" data-sizes="${sizes}"` : ''} alt="${alt}" loading="lazy" decoding="async" ${widthAttr} ${heightAttr} class="lazy-img${cls ? ' '+cls : ''}" style="object-fit:${fit};filter:blur(0);transition:filter 0.4s">`;
+    }
+  }
+
+  /**
+   * URL optimizada para background-image CSS
+   */
+  function bgUrl(url, w = 1400) {
+    return cf(url, { w, q: 78, fit: 'cover' });
+  }
+
+  return { cf, srcset, tag, bgUrl, LQIP };
+})();
+
 // ---- INIT ----
 async function init() {
   updatePriceFill(); // initialize slider track fill
@@ -1210,9 +1164,28 @@ function renderHero(images) {
   const dotsEl = document.getElementById('heroDots');
   if(dotsEl) dotsEl.innerHTML = '';
   if(!images || !images.length) { if(container) container.innerHTML=''; return; }
-  // Solo usamos la primera imagen
-  const img = images[0];
-  if(container) container.innerHTML = `<div class="hero-slide active" style="background-image:url('${img}')"></div>`;
+
+  // Preload LCP image (primera imagen del hero) para máxima velocidad
+  if(images[0] && !document.querySelector('link[rel="preload"][as="image"]')){
+    const preload = document.createElement('link');
+    preload.rel = 'preload'; preload.as = 'image';
+    preload.href = IMG.cf(images[0], { w: 1400, q: 80 });
+    // imagesrcset para navegadores que soporten srcset en preload
+    preload.setAttribute('imagesrcset', [1000,1400,1920].map(w=>`${IMG.cf(images[0],{w,q:80})} ${w}w`).join(', '));
+    preload.setAttribute('imagesizes', '100vw');
+    document.head.appendChild(preload);
+  }
+
+  // Genera slides con imágenes optimizadas por CF (1400px max, WebP)
+  if(container) container.innerHTML = images.map((img, i) => {
+    const optUrl = IMG.cf(img, { w: 1400, q: 78 });
+    return `<div class="hero-slide${i===0?' active':''}" style="background-image:url('${optUrl}')"></div>`;
+  }).join('');
+
+  // Dots de navegación
+  if(dotsEl && images.length > 1){
+    dotsEl.innerHTML = images.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="goSlide(${i})" aria-label="Slide ${i+1}"></button>`).join('');
+  }
 }
 
 function goSlide(n) {
@@ -1233,7 +1206,7 @@ function renderBento(bentoConfig) {
   const slice = bentoConfig.slice(0, 3);
   cards.innerHTML = slice.map(c => `
     <div class="destino-card" onclick="setBento(this,'${c.val}')" data-val="${c.val}">
-      <img src="${c.img||''}" alt="Propiedades en ${c.tag||c.val}" loading="lazy" width="400" height="520">
+      ${IMG.tag(c.img||'', { alt: `Propiedades en ${c.tag||c.val}`, w: 500, h: 600, fit: 'cover', sizes: '(max-width:600px) 100vw, (max-width:900px) 50vw, 400px' })}
       <span class="destino-label">${c.tag||c.val}</span>
     </div>`).join('');
   updateCatCounts();
@@ -1299,6 +1272,7 @@ function applyFilters() {
   const type=document.getElementById('typeFilter').value;
   const zone=document.getElementById('zoneFilter').value;
   const oper=document.getElementById('operFilter')?.value||'';
+  const price=document.getElementById('priceFilter').value;
   const rooms=document.getElementById('roomsFilter').value;
   const order=document.getElementById('orderFilter').value;
   const locType=document.getElementById('locationTypeFilter')?.value||'';
@@ -1311,105 +1285,15 @@ function applyFilters() {
   if(locType) list=list.filter(p=>(p.location_type||[]).includes(locType));
   if(lifestyle) list=list.filter(p=>(p.lifestyle||[]).includes(lifestyle));
   if(rooms){const r=parseInt(rooms);list=list.filter(p=>rooms==='4'?p.rooms>=4:p.rooms===r);}
-  const priceMin = parseInt(document.getElementById('priceRangeMin')?.value||0);
-  const priceMax = parseInt(document.getElementById('priceRangeMax')?.value||10000);
-  const priceActive = document.getElementById('priceFilter').value === 'active';
-  if(priceActive){
-    list=list.filter(p=>p.price>=priceMin && (priceMax>=10000 ? true : p.price<=priceMax));
+  if(price){
+    if(price==='5000+') list=list.filter(p=>p.price>=5000);
+    else{const[mn,mx]=price.split('-').map(Number);list=list.filter(p=>p.price>=mn&&p.price<=mx);}
   }
   if(order==='price-asc') list.sort((a,b)=>a.price-b.price);
   else if(order==='price-desc') list.sort((a,b)=>b.price-a.price);
   else if(order==='newest') list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   return list;
 }
-
-// ---- PRICE SLIDER ----
-const PRICE_MAX = 10000;
-
-function togglePricePanel(e){
-  e.stopPropagation();
-  const panel = document.getElementById('priceSliderPanel');
-  const isOpen = panel.classList.contains('open');
-  // close all dropdowns first
-  document.querySelectorAll('.price-slider-panel.open').forEach(p=>p.classList.remove('open'));
-  if(!isOpen) {
-    panel.classList.add('open');
-    updatePriceFill();
-  }
-}
-
-document.addEventListener('click', ()=>{
-  document.querySelectorAll('.price-slider-panel.open').forEach(p=>p.classList.remove('open'));
-});
-
-function onPriceRangeChange(){
-  const minEl = document.getElementById('priceRangeMin');
-  const maxEl = document.getElementById('priceRangeMax');
-  let minVal = parseInt(minEl.value);
-  let maxVal = parseInt(maxEl.value);
-  // Prevent overlap: keep at least $100 gap
-  if(minVal >= maxVal - 100){ minVal = maxVal - 100; minEl.value = minVal; }
-  updatePriceUI(true);
-  filterProperties();
-}
-
-function updatePriceUI(active){
-  const minVal = parseInt(document.getElementById('priceRangeMin').value);
-  const maxVal = parseInt(document.getElementById('priceRangeMax').value);
-  const fmtMin = '$' + minVal.toLocaleString();
-  const fmtMax = maxVal >= PRICE_MAX ? '$10,000+' : '$' + maxVal.toLocaleString();
-  document.getElementById('priceMinDisplay').textContent = fmtMin;
-  document.getElementById('priceMaxDisplay').textContent = fmtMax;
-  // label on the button
-  const label = document.getElementById('priceSliderLabel');
-  const isFiltering = active && (minVal > 0 || maxVal < PRICE_MAX);
-  if(isFiltering){
-    label.textContent = fmtMin + ' – ' + fmtMax;
-    label.classList.add('has-value');
-    document.getElementById('priceFilter').value = 'active';
-    // update preset highlights
-    document.querySelectorAll('.price-preset').forEach(b=>b.classList.remove('active'));
-  } else {
-    label.textContent = currentLang==='en'?'Price':'Precio';
-    label.classList.remove('has-value');
-    document.getElementById('priceFilter').value = '';
-    document.querySelectorAll('.price-preset').forEach(b=>b.classList.remove('active'));
-  }
-  updatePriceFill();
-}
-
-function updatePriceFill(){
-  const minVal = parseInt(document.getElementById('priceRangeMin').value);
-  const maxVal = parseInt(document.getElementById('priceRangeMax').value);
-  const pct1 = (minVal / PRICE_MAX) * 100;
-  const pct2 = (maxVal / PRICE_MAX) * 100;
-  const fill = document.getElementById('dualRangeFill');
-  if(fill){ fill.style.left = pct1+'%'; fill.style.right = (100-pct2)+'%'; }
-}
-
-function applyPricePreset(min, max){
-  document.getElementById('priceRangeMin').value = min;
-  document.getElementById('priceRangeMax').value = max;
-  // toggle: if already active, clear
-  const cur = document.getElementById('priceFilter').value;
-  const minEl = parseInt(document.getElementById('priceRangeMin').value);
-  const maxEl = parseInt(document.getElementById('priceRangeMax').value);
-  updatePriceUI(true);
-  // highlight preset
-  document.querySelectorAll('.price-preset').forEach(b=>{
-    const [bMin, bMax] = b.getAttribute('onclick').match(/\d+/g).map(Number);
-    b.classList.toggle('active', bMin===min && bMax===max);
-  });
-  filterProperties();
-}
-
-function clearPriceFilter(){
-  document.getElementById('priceRangeMin').value = 0;
-  document.getElementById('priceRangeMax').value = PRICE_MAX;
-  updatePriceUI(false);
-  filterProperties();
-}
-// ---- END PRICE SLIDER ----
 
 function filterProperties(){renderProperties(applyFilters());}
 
@@ -1425,9 +1309,6 @@ function resetFilters(){
   const zi=document.getElementById('zoneInput');if(zi){zi.value='';zi.dataset.selected='';}
   const zms=document.getElementById('zoneMobileSelect');if(zms)zms.value='';
   document.getElementById('priceFilter').value='';
-  document.getElementById('priceRangeMin').value=0;
-  document.getElementById('priceRangeMax').value=10000;
-  updatePriceUI(false);
   document.getElementById('roomsFilter').value='';
   document.getElementById('orderFilter').value='';
   const ltf=document.getElementById('locationTypeFilter');if(ltf)ltf.value='';
@@ -1484,7 +1365,7 @@ function renderProperties(list){
     return `
     <div class="property-card" onclick="openDetail('${p.id}')">
       <div class="card-image">
-        <img data-src="${thumb}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23f4f4f2'/%3E%3C/svg%3E" alt="${p.title}" class="lazy-img">
+        ${IMG.tag(thumb, { alt: p.title, w: 600, h: 450, sizes: '(max-width:600px) 100vw, (max-width:1024px) 50vw, 380px', fit: 'cover' })}
         <div class="card-badge ${opClass}">${getOpLabel(p.operation)}</div>
         ${p.featured?'<div style="position:absolute;bottom:10px;right:10px;background:#E8650A;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;z-index:2;">Destacado</div>':''}
         <div class="card-code">${p.code}</div>
@@ -1521,8 +1402,8 @@ function openDetail(id){
   const imgs=(p.images?.length ? p.images : p.image_thumbs?.length ? p.image_thumbs : [PH]);
   document.getElementById('detailBody').innerHTML=`
     <div class="detail-gallery">
-      <div class="detail-main"><img src="${imgs[0]}" alt="${p.title}"></div>
-      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb"><img src="${i}" alt=""></div>`).join('')}</div>
+      <div class="detail-main">${IMG.tag(imgs[0], { alt: p.title, w: 900, h: 480, eager: true, fit: 'cover', sizes: '(max-width:768px) 100vw, 65vw' })}</div>
+      <div class="detail-thumbs">${imgs.slice(1,3).map(i=>`<div class="detail-thumb">${IMG.tag(i, { alt: '', w: 400, h: 240, fit: 'cover', sizes: '200px' })}</div>`).join('')}</div>
     </div>
     <div class="detail-info">
       <div>
@@ -1620,7 +1501,7 @@ function generateListing(id){
   @media print{.contact{background:#1A1A2E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style>
   </head><body>
   <div class="header"><div class="brand">Estela's Realty Services</div><div class="code">${p.code}</div></div>
-  <img src="${p.images?.[0]||PH}" alt="${p.title}">
+  <img src="${IMG.cf(p.images?.[0]||PH, {w:900,q:85,format:'jpeg'})}" alt="${p.title}">
   <span class="badge">${p.operation}</span><h1>${p.title}</h1>
   <div style="color:#888;font-size:14px">📍 ${p.zone} · ${p.type}</div>
   <div class="price">$${(p.price||0).toLocaleString()}<span style="font-size:16px;font-weight:400">${p.operation==='Alquiler vacacional'?' / noche':p.operation==='Alquiler'?' / mes':''}</span></div>
@@ -1834,13 +1715,7 @@ function setLang(lang){
   tabs.forEach((tab, i) => { if(tabTexts[i]) tab.textContent = tabTexts[i]; });
 
   // Filters
-  // Price slider label (only if not actively filtering)
-  if(!document.getElementById('priceFilter').value){
-    const lbl = document.getElementById('priceSliderLabel');
-    if(lbl && !lbl.classList.contains('has-value')) lbl.textContent = t.priceFilter;
-  }
-  const psp = document.getElementById('priceSliderTitle');
-  if(psp) psp.textContent = currentLang==='en' ? 'Price range' : 'Rango de precio';
+  setOptionText('priceFilter', 0, t.priceFilter);
   setOptionText('roomsFilter', 0, t.roomsFilter);
   setOptionText('orderFilter', 0, t.orderFilter);
   setOptionText('orderFilter', 1, t.orderAsc);
@@ -1946,14 +1821,19 @@ function initLazyImages(){
       entries.forEach(e => {
         if(e.isIntersecting){
           const img = e.target;
-          img.onerror = function(){ this.onerror=null; this.src=PH; };
+          // Soporte srcset responsivo
+          if(img.dataset.srcset){ img.srcset = img.dataset.srcset; img.removeAttribute('data-srcset'); }
+          if(img.dataset.sizes){ img.sizes = img.dataset.sizes; img.removeAttribute('data-sizes'); }
+          img.onerror = function(){ this.onerror=null; this.src=PH; this.style.filter='none'; };
+          img.onload  = function(){ this.style.filter='none'; }; // blur-up reveal
+          img.style.filter = 'blur(8px)';
           img.src = img.dataset.src;
           img.removeAttribute('data-src');
           img.classList.remove('lazy-img');
           lazyObserver.unobserve(img);
         }
       });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '300px 0px' }); // pre-carga 300px antes de entrar al viewport
   }
   imgs.forEach(img => lazyObserver.observe(img));
 }
@@ -1967,12 +1847,14 @@ function initLazyBg(){
     bgObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if(e.isIntersecting){
-          e.target.style.backgroundImage = `url('${e.target.dataset.bg}')`;
+          // Usa CF para optimizar el background-image (WebP, redimensionado a 900px)
+          const optUrl = IMG.bgUrl(e.target.dataset.bg, 900);
+          e.target.style.backgroundImage = `url('${optUrl}')`;
           e.target.removeAttribute('data-bg');
           bgObserver.unobserve(e.target);
         }
       });
-    }, { rootMargin: '300px' });
+    }, { rootMargin: '400px' });
   }
   els.forEach(el => bgObserver.observe(el));
 }
