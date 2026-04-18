@@ -1479,9 +1479,29 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
         <div class="modal-section-title">Características</div>
         <div class="form-grid-3">
           <div class="form-group"><label>Metraje (m²)</label><input type="number" id="fSize" placeholder="120"></div>
-          <div class="form-group"><label>Habitaciones</label><select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <!-- Campo dinámico: Habitaciones / Puestos / oculto según tipo -->
+          <div class="form-group" id="fRoomsGroup">
+            <label id="fRoomsLabel">Habitaciones</label>
+            <select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>12</option><option>15</option><option>20</option><option>25</option><option>30</option></select>
+          </div>
           <div class="form-group"><label>Baños</label><select id="fBaths"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-          <div class="form-group"><label>Parqueos</label><select id="fParking"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <!-- Parqueos: select + campo numérico para >8 -->
+          <div class="form-group" id="fParkingGroup">
+            <label>Parqueos</label>
+            <select id="fParking" onchange="onParkingChange()">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="99">8+ (indicar cantidad)</option>
+            </select>
+            <input type="number" id="fParkingCustom" min="9" placeholder="Cantidad total de parqueos" style="display:none;margin-top:6px;" oninput="syncParkingCustom()">
+          </div>
           <div class="form-group"><label>Piso / Unidad</label><input type="text" id="fFloor" placeholder="Ej: 12-B, PH, Planta baja, Casa 4"></div>
         </div>
       </div>
@@ -1568,6 +1588,27 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
           </div>
         </div>
 
+        <!-- CATEGORÍA COMERCIAL: solo visible para Local / Oficina -->
+        <div class="amenity-category" id="cat-comercial-wrap" style="display:none;">
+          <div class="amenity-cat-header">
+            <div class="amenity-cat-title"><span class="cat-icon">🏢</span> Espacios y Servicios Comerciales</div>
+            <button class="btn-add-amenity" onclick="addCustomAmenity(this, 'cat-comercial')"><span class="material-icons">add</span>Agregar</button>
+          </div>
+          <div class="amenity-cat-grid" id="cat-comercial">
+            <button class="feature-toggle" onclick="toggleFeature(this)">Recepción</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Sala de reuniones</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Zona de almacenamiento</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cocineta</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Acceso para discapacitados</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Sistema eléctrico trifásico</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Cableado telefónico estructurado</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Red de datos (Cat 6)</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">A/C central</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Baños para empleados</button>
+            <button class="feature-toggle" onclick="toggleFeature(this)">Bodega interna</button>
+          </div>
+        </div>
+
         <!-- CATEGORÍA 4: Ubicación y Entorno -->
         <div class="amenity-category">
           <div class="amenity-cat-header">
@@ -1591,11 +1632,16 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
           <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Fotos</label>
           <span style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:13px">drag_indicator</span>Arrastra para reordenar</span>
         </div>
-        <div class="upload-area">
+        <div class="upload-area" id="uploadArea">
           <input type="file" id="photoInput" multiple accept="image/*" onchange="addPhotos(this)">
-          <span class="material-icons">add_photo_alternate</span>
-          <p>Haz clic para agregar fotos</p>
-          <p style="font-size:11px;margin-top:4px;color:var(--text3)">JPG, PNG · Máx. 10 fotos</p>
+          <span class="material-icons" style="font-size:36px;color:var(--text3);display:block;margin-bottom:8px;">add_photo_alternate</span>
+          <p style="font-size:14px;font-weight:500;color:var(--text2)">Haz clic o arrastra fotos aquí</p>
+          <p style="font-size:11px;margin-top:6px;color:var(--text3)">JPG · PNG · WEBP — se convierten a <strong style="color:#2e7d32">WebP automáticamente</strong></p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Máx 1200px</span>
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Objetivo &lt;200KB</span>
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Thumb auto</span>
+          </div>
         </div>
         <div class="modal-prog" id="modalProg"><div class="modal-prog-fill" id="modalProgFill" style="width:0%"></div></div>
         <style>
@@ -1803,6 +1849,85 @@ let isAdmin = false;           // shortcut
 let allAgents = [];            // profiles list (admin only)
 let agentsLoaded = false;
 const PH='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80';
+
+// ═══════════════════════════════════════════════════════
+//  🖼️  PIPELINE DE IMÁGENES — WebP + Compresión + Thumbs
+// ═══════════════════════════════════════════════════════
+//
+//  Flujo de cada foto subida:
+//  1. compressToWebP(file, 1200, 0.82) → Blob WebP ≤200 KB  → sube a Storage como .webp  → guarda en images[]
+//  2. generateThumb(file, 600, 0.75)   → Blob WebP ≤60 KB   → sube a Storage como _thumb.webp → guarda en image_thumbs[]
+//  3. El frontend (anuncios.html) usa image_thumbs[] para las tarjetas (carga rápida)
+//     y carga images[] bajo demanda al abrir el modal.
+//
+//  Supabase Storage Transform API también puede redimensionar on-the-fly,
+//  pero subir ya en WebP ahorra el paso de transformación y reduce costo de egress.
+
+/**
+ * Comprime una imagen a WebP con ancho máximo y calidad dada.
+ * Ajusta la calidad automáticamente para alcanzar el targetKB si es posible.
+ * @param {File} file        - Archivo original
+ * @param {number} maxW      - Ancho máximo en px (default 1200)
+ * @param {number} quality   - Calidad inicial 0–1 (default 0.82)
+ * @param {number} targetKB  - Peso objetivo en KB (default 200)
+ * @returns {Promise<Blob>}  - Blob WebP comprimido
+ */
+async function compressToWebP(file, maxW=1200, quality=0.82, targetKB=200){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // Intento inicial
+      let q = quality;
+      let blob = await canvasToBlob(canvas, 'image/webp', q);
+
+      // Reducir calidad iterativamente si supera targetKB
+      while(blob.size > targetKB * 1024 && q > 0.30){
+        q = Math.max(0.30, q - 0.08);
+        blob = await canvasToBlob(canvas, 'image/webp', q);
+      }
+      resolve(blob);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('No se pudo cargar la imagen')); };
+    img.src = url;
+  });
+}
+
+/**
+ * Genera un thumbnail pequeño en WebP (para image_thumbs[]).
+ * @param {File|Blob} source - Fuente de imagen
+ * @param {number} maxW      - Ancho máximo (default 600)
+ * @param {number} quality   - Calidad (default 0.75)
+ * @returns {Promise<Blob>}
+ */
+async function generateThumb(source, maxW=600, quality=0.75){
+  return compressToWebP(source instanceof Blob && !(source instanceof File)
+    ? new File([source], 'thumb.webp', {type:'image/webp'})
+    : source,
+    maxW, quality, 60  // target 60 KB para thumbs
+  );
+}
+
+/** Wrapper promisificado de canvas.toBlob */
+function canvasToBlob(canvas, type, quality){
+  return new Promise(res => canvas.toBlob(res, type, quality));
+}
+
+/**
+ * Formatea bytes a string legible (KB / MB).
+ */
+function fmtSize(bytes){
+  if(bytes < 1024) return bytes+'B';
+  if(bytes < 1024*1024) return Math.round(bytes/1024)+'KB';
+  return (bytes/1024/1024).toFixed(1)+'MB';
+}
 
 const DEFAULT_ZONES=[
   {name:'Costa del Este',subtitle:'Zona exclusiva',img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900&q=80'},
@@ -2293,9 +2418,15 @@ async function addHeroImages(input){
   bar.classList.add('visible');
   let uploaded=0;
   for(let i=0;i<files.length;i++){
-    const ext=files[i].name.split('.').pop().toLowerCase();
-    const path=`hero/${Date.now()}_${i}.${ext}`;
-    const{data,error}=await sb.storage.from(STORAGE_BUCKET).upload(path,files[i],{upsert:true,contentType:files[i].type});
+    // Comprimir a WebP
+    let uploadFile = files[i];
+    try {
+      const blob = await compressToWebP(files[i], 1200, 0.82, 200);
+      uploadFile = new File([blob], 'hero.webp', {type:'image/webp'});
+    } catch(e){ console.warn('Compresión hero falló, usando original'); }
+
+    const path=`hero/${Date.now()}_${i}.webp`;
+    const{data,error}=await sb.storage.from(STORAGE_BUCKET).upload(path,uploadFile,{upsert:true,contentType:'image/webp'});
     if(error){
       console.error('Error subiendo imagen hero:', error);
       showToast('Error subiendo imagen: '+error.message,true);
@@ -2309,7 +2440,7 @@ async function addHeroImages(input){
   bar.classList.remove('visible');
   fill.style.width='0%';
   renderHeroEditor();
-  if(uploaded>0) showToast(`${uploaded} foto(s) subida(s). Haz clic en Guardar para aplicar.`);
+  if(uploaded>0) showToast(`${uploaded} foto(s) subida(s) en WebP. Haz clic en Guardar para aplicar.`);
 }
 
 async function saveHeroImages(){
@@ -2449,7 +2580,7 @@ async function changeZoneImage(i, input){
   const file=input.files[0];
   if(!file) return;
 
-  const validTypes=['image/jpeg','image/jpg','image/png','image/webp'];
+  const validTypes=['image/jpeg','image/jpg','image/png','image/webp','image/gif'];
   if(!validTypes.includes(file.type)){
     showToast('Solo se permiten imágenes JPG, PNG o WEBP.',true);
     return;
@@ -2458,17 +2589,23 @@ async function changeZoneImage(i, input){
   const bar=document.getElementById('zoneProgress');
   const fill=document.getElementById('zoneProgressFill');
   bar.classList.add('visible');
-  fill.style.width='30%';
+  fill.style.width='20%';
 
-  const ext=file.name.split('.').pop().toLowerCase();
+  // Comprimir a WebP antes de subir
+  let uploadFile = file;
+  try {
+    const blob = await compressToWebP(file, 1200, 0.82, 200);
+    uploadFile = new File([blob], 'zone.webp', {type:'image/webp'});
+  } catch(e){ console.warn('Compresión zona falló, usando original'); }
+
+  fill.style.width='50%';
+
   const safeName=zoneData[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
-  const path=`zones/${Date.now()}_${safeName}.${ext}`;
+  const path=`zones/${Date.now()}_${safeName}.webp`;
 
-  fill.style.width='60%';
-
-  const{data, error}=await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+  const{data, error}=await sb.storage.from(STORAGE_BUCKET).upload(path, uploadFile, {
     upsert: true,
-    contentType: file.type
+    contentType: 'image/webp'
   });
 
   fill.style.width='100%';
@@ -2483,7 +2620,7 @@ async function changeZoneImage(i, input){
   const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   zoneData[i].img=u.publicUrl;
   renderZonesEditor();
-  showToast(`Foto de ${zoneData[i].name} lista. Haz clic en Guardar cambios.`);
+  showToast(`Foto de ${zoneData[i].name} lista (WebP). Haz clic en Guardar cambios.`);
   setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
 }
 
@@ -2897,10 +3034,79 @@ function updatePriceLabel(){
 function updateTypeFields(){
   const type=document.getElementById('fType').value;
   const tituladoGroup=document.getElementById('fTituladoGroup');
+  const roomsGroup=document.getElementById('fRoomsGroup');
+  const roomsLabel=document.getElementById('fRoomsLabel');
+  const roomsSel=document.getElementById('fRooms');
+  const catComercial=document.getElementById('cat-comercial-wrap');
+
+  // Terreno / Lote → mostrar campo titulado
   if(type==='Terreno'||type==='Lote'){
     tituladoGroup.style.display='flex';
   } else {
     tituladoGroup.style.display='none';
+  }
+
+  // Tipos sin habitaciones residenciales
+  const noRooms=['Galera','Bodega','Terreno','Lote'];
+  const isCommercialOffice=['Local','Oficina'].includes(type);
+  const isNoRooms=noRooms.includes(type);
+
+  if(isCommercialOffice){
+    // Local u Oficina: cambiar etiqueta a "Puestos / Divisiones"
+    roomsGroup.style.display='flex';
+    roomsLabel.textContent='Puestos / Divisiones';
+    roomsSel.title='Número de puestos operativos o divisiones del espacio';
+    // Mostrar amenidades comerciales
+    catComercial.style.display='block';
+  } else if(isNoRooms){
+    // Galera, Bodega, Terreno, Lote: ocultar campo
+    roomsGroup.style.display='none';
+    catComercial.style.display='none';
+  } else {
+    // Residencial: label normal
+    roomsGroup.style.display='flex';
+    roomsLabel.textContent='Habitaciones';
+    roomsSel.title='';
+    catComercial.style.display='none';
+  }
+}
+
+function onParkingChange(){
+  const sel=document.getElementById('fParking');
+  const customInput=document.getElementById('fParkingCustom');
+  if(sel.value==='99'){
+    customInput.style.display='block';
+    customInput.focus();
+  } else {
+    customInput.style.display='none';
+    customInput.value='';
+  }
+}
+
+function syncParkingCustom(){
+  // No hace nada adicional — el valor se lee en getPayload
+}
+
+function getParkingValue(){
+  const sel=document.getElementById('fParking');
+  if(sel.value==='99'){
+    const custom=parseInt(document.getElementById('fParkingCustom').value)||9;
+    return custom;
+  }
+  return parseInt(sel.value)||0;
+}
+
+function setParkingValue(val){
+  const sel=document.getElementById('fParking');
+  const customInput=document.getElementById('fParkingCustom');
+  if(val<=8){
+    sel.value=String(val);
+    customInput.style.display='none';
+    customInput.value='';
+  } else {
+    sel.value='99';
+    customInput.style.display='block';
+    customInput.value=String(val);
   }
 }
 
@@ -2939,9 +3145,9 @@ function openModal(id=null){
     document.getElementById('fMaintenance').value=p.maintenance_cost||'';
     document.getElementById('fTitulado').value=p.titulado||'';
     document.getElementById('fSize').value=p.size;
-    document.getElementById('fRooms').value=p.rooms;
-    document.getElementById('fBaths').value=p.baths;
-    document.getElementById('fParking').value=p.parking;
+    document.getElementById('fRooms').value=p.rooms||0;
+    document.getElementById('fBaths').value=p.baths||1;
+    setParkingValue(p.parking||0);
     document.getElementById('fFloor').value=p.floor||p.owner_unit||'';
     document.getElementById('fDesc').value=p.description||'';
     document.getElementById('fDescEn').value=p.description_en||'';
@@ -2988,6 +3194,10 @@ function openModal(id=null){
     document.getElementById('fOportunidad').checked=false;
     document.getElementById('fUrgente').checked=false;
     document.querySelectorAll('.loc-type-btn,.lifestyle-btn').forEach(b=>b.classList.remove('selected'));
+    // Reset parking custom
+    document.getElementById('fParking').value='0';
+    document.getElementById('fParkingCustom').style.display='none';
+    document.getElementById('fParkingCustom').value='';
     updatePriceLabel();
     updateTypeFields();
     document.getElementById('deleteBtn').style.display='none';
@@ -3096,16 +3306,78 @@ function renderPhotoGrid(){
     card.appendChild(badge);
     card.appendChild(handle);
     card.appendChild(removeBtn);
+
+    // WebP size badge (solo para fotos nuevas, no existentes)
+    if(!item.isExisting && item.sizeInfo){
+      const sizeBadge = document.createElement('div');
+      sizeBadge.style.cssText = 'position:absolute;bottom:30px;left:0;right:0;text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.9);background:rgba(0,150,0,0.7);padding:2px 4px;letter-spacing:0.3px;';
+      sizeBadge.textContent = '✓ WebP · ' + item.sizeInfo;
+      card.appendChild(sizeBadge);
+    } else if(item.isExisting){
+      const existBadge = document.createElement('div');
+      existBadge.style.cssText = 'position:absolute;bottom:30px;left:0;right:0;text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.4);padding:2px 4px;';
+      existBadge.textContent = 'Guardada';
+      card.appendChild(existBadge);
+    }
+
     card.appendChild(caption);
     grid.appendChild(card);
   });
 }
 
-function addPhotos(input){
+async function addPhotos(input){
   const files = [...input.files];
-  files.forEach(function(f){
-    photoItems.push({ url: URL.createObjectURL(f), file: f, caption: '', isExisting: false });
-  });
+  if(!files.length) return;
+
+  // Mostrar estado de compresión en el upload area
+  const area = document.querySelector('.upload-area');
+  const originalContent = area ? area.innerHTML : '';
+  if(area){
+    area.style.pointerEvents = 'none';
+    area.innerHTML = `
+      <span class="material-icons" style="font-size:36px;color:var(--accent);display:block;margin-bottom:8px;animation:spin 1s linear infinite">sync</span>
+      <p style="font-size:13px;color:var(--text2);font-weight:500">Comprimiendo a WebP…</p>
+      <p style="font-size:11px;color:var(--text3);margin-top:4px">0 / ${files.length} fotos</p>`;
+  }
+
+  for(let idx=0; idx<files.length; idx++){
+    const f = files[idx];
+    try {
+      // Comprimir a WebP antes de agregar al array
+      const compressed = await compressToWebP(f);
+      const compressedFile = new File([compressed], f.name.replace(/\.[^.]+$/, '.webp'), {type:'image/webp'});
+      const preview = URL.createObjectURL(compressed);
+      const originalKB = Math.round(f.size/1024);
+      const newKB = Math.round(compressed.size/1024);
+      const saved = Math.round((1 - compressed.size/f.size)*100);
+
+      photoItems.push({
+        url: preview,
+        file: compressedFile,
+        originalName: f.name,
+        caption: '',
+        isExisting: false,
+        sizeInfo: `${originalKB}KB→${newKB}KB (−${saved}%)`
+      });
+    } catch(e) {
+      console.warn('Compresión falló para', f.name, '— subiendo original:', e.message);
+      photoItems.push({ url: URL.createObjectURL(f), file: f, caption: '', isExisting: false });
+    }
+
+    if(area){
+      area.innerHTML = `
+        <span class="material-icons" style="font-size:36px;color:var(--accent);display:block;margin-bottom:8px;animation:spin 1s linear infinite">sync</span>
+        <p style="font-size:13px;color:var(--text2);font-weight:500">Comprimiendo a WebP…</p>
+        <p style="font-size:11px;color:var(--text3);margin-top:4px">${idx+1} / ${files.length} fotos</p>`;
+    }
+  }
+
+  // Restaurar upload area
+  if(area){
+    area.style.pointerEvents = '';
+    area.innerHTML = originalContent;
+  }
+
   renderPhotoGrid();
   input.value = '';
 }
@@ -3158,12 +3430,36 @@ async function saveProperty(){
       const item=photoItems[i];
       if(!item.isExisting && item.file){
         const propCode=document.getElementById('modalCode').textContent||'ERS-000';
-        const path=`properties/${propCode}/${Date.now()}_${i}.${item.file.name.split('.').pop()}`;
-        const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,item.file,{upsert:true});
-        if(!error){
-          const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-          item.url=u.publicUrl;
-          item.isExisting=true;
+        const ts = Date.now();
+        // Subir imagen full (ya está comprimida en WebP por addPhotos)
+        const fullPath=`properties/${propCode}/${ts}_${i}.webp`;
+        const{error:errFull}=await sb.storage.from(STORAGE_BUCKET).upload(fullPath, item.file, {
+          upsert: true,
+          contentType: 'image/webp'
+        });
+        if(!errFull){
+          const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(fullPath);
+          item.url = u.publicUrl;
+          item.isExisting = true;
+
+          // Generar y subir thumbnail (600px, ~60KB)
+          try {
+            const thumbBlob = await generateThumb(item.file);
+            const thumbPath = `properties/${propCode}/${ts}_${i}_thumb.webp`;
+            const{error:errThumb}=await sb.storage.from(STORAGE_BUCKET).upload(thumbPath, thumbBlob, {
+              upsert: true,
+              contentType: 'image/webp'
+            });
+            if(!errThumb){
+              const{data:ut}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(thumbPath);
+              item.thumbUrl = ut.publicUrl;
+            }
+          } catch(te){
+            console.warn('Thumbnail generation failed:', te.message);
+            item.thumbUrl = item.url; // fallback a la full
+          }
+        } else {
+          console.error('Error subiendo imagen:', errFull.message);
         }
         uploaded++;
         document.getElementById('modalProgFill').style.width=`${Math.round((uploaded/newItems.length)*100)}%`;
@@ -3172,7 +3468,8 @@ async function saveProperty(){
     document.getElementById('modalProg').classList.remove('visible');
   }
 
-  const imageUrls = photoItems.map(item=>item.url);
+  const imageUrls  = photoItems.map(item=>item.url);
+  const thumbUrls  = photoItems.map(item=>item.thumbUrl || item.url); // image_thumbs[]
   const imageCaptions = photoItems.map(item=>item.caption||'');
 
   const payload={
@@ -3187,7 +3484,7 @@ async function saveProperty(){
     size:parseFloat(document.getElementById('fSize').value)||0,
     rooms:parseInt(document.getElementById('fRooms').value)||0,
     baths:parseInt(document.getElementById('fBaths').value)||1,
-    parking:parseInt(document.getElementById('fParking').value)||0,
+    parking:getParkingValue(),
     floor:document.getElementById('fFloor').value||'',
     owner_unit:document.getElementById('fFloor').value||null,
     description:document.getElementById('fDesc').value,
@@ -3196,6 +3493,7 @@ async function saveProperty(){
     location_type:[...document.querySelectorAll('.loc-type-btn.selected')].map(b=>b.dataset.val),
     lifestyle:[...document.querySelectorAll('.lifestyle-btn.selected')].map(b=>b.dataset.val),
     images:imageUrls,
+    image_thumbs:thumbUrls,
     image_captions:imageCaptions,
     video_url:document.getElementById('fVideo').value||'',
     featured:document.getElementById('fFeatured').checked,
@@ -3303,16 +3601,24 @@ async function uploadBentoImg(input,i){
   const file=input.files[0];if(!file) return;
   const bar=document.getElementById('bentoProgress');
   const fill=document.getElementById('bentoProgressFill');
-  bar.classList.add('visible');fill.style.width='30%';
-  const ext=file.name.split('.').pop().toLowerCase();
-  const path=`bento/bento_${i}_${Date.now()}.${ext}`;
-  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
-  fill.style.width='80%';
+  bar.classList.add('visible');fill.style.width='20%';
+
+  // Comprimir a WebP
+  let uploadFile = file;
+  try {
+    const blob = await compressToWebP(file, 1200, 0.82, 200);
+    uploadFile = new File([blob], 'bento.webp', {type:'image/webp'});
+  } catch(e){ console.warn('Compresión bento falló, usando original'); }
+
+  fill.style.width='50%';
+  const path=`bento/bento_${i}_${Date.now()}.webp`;
+  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,uploadFile,{upsert:true,contentType:'image/webp'});
+  fill.style.width='90%';
   if(!error){
     const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
     document.getElementById('bImg'+i).value=u.publicUrl;
     previewBentoImg(i);
-    showToast('Imagen subida. Recuerda guardar los cambios.');
+    showToast(`Imagen bento subida (WebP, ${fmtSize(uploadFile.size)}). Recuerda guardar.`);
   }else{
     showToast('Error al subir imagen: '+error.message,true);
   }
@@ -4074,8 +4380,10 @@ function openDetailModal(id){
   const badgeCls = p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   const active = p.is_active !== false;
 
+  const isCommercialType = ['Local','Oficina'].includes(p.type);
+  const roomsLabel = isCommercialType ? 'Puestos / Divisiones' : 'Habitaciones';
   const specs = [
-    p.rooms    ? `<div class="detail-field"><div class="detail-field-label">Habitaciones</div><div class="detail-field-val">${p.rooms}</div></div>` : '',
+    (p.rooms && !['Galera','Bodega','Terreno','Lote'].includes(p.type)) ? `<div class="detail-field"><div class="detail-field-label">${roomsLabel}</div><div class="detail-field-val">${p.rooms}</div></div>` : '',
     p.baths    ? `<div class="detail-field"><div class="detail-field-label">Baños</div><div class="detail-field-val">${p.baths}</div></div>` : '',
     p.size     ? `<div class="detail-field"><div class="detail-field-label">Metraje</div><div class="detail-field-val">${p.size} m²</div></div>` : '',
     p.parking  ? `<div class="detail-field"><div class="detail-field-label">Parqueos</div><div class="detail-field-val">${p.parking}</div></div>` : '',
@@ -4197,6 +4505,31 @@ document.addEventListener('DOMContentLoaded', function(){
   const agentModal = document.getElementById('agentModal');
   if(agentModal) agentModal.addEventListener('click', function(e){
     if(e.target === this) closeAgentModal();
+  });
+
+  // ── Drag-and-drop visual feedback en el upload area ──
+  // El <input type="file"> ya cubre el área, pero añadimos resaltado al arrastrar
+  document.addEventListener('dragover', function(e){
+    const area = document.getElementById('uploadArea');
+    if(area && document.getElementById('propModal')?.classList.contains('open')){
+      e.preventDefault();
+      area.style.borderColor = 'var(--accent)';
+      area.style.background  = 'rgba(201,168,76,0.06)';
+    }
+  });
+  document.addEventListener('dragleave', function(e){
+    const area = document.getElementById('uploadArea');
+    if(area && !area.contains(e.relatedTarget)){
+      area.style.borderColor = '';
+      area.style.background  = '';
+    }
+  });
+  document.addEventListener('drop', function(e){
+    const area = document.getElementById('uploadArea');
+    if(area){
+      area.style.borderColor = '';
+      area.style.background  = '';
+    }
   });
 });
 </script>
