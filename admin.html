@@ -3039,26 +3039,28 @@ function updateTypeFields(){
   const roomsSel=document.getElementById('fRooms');
   const catComercial=document.getElementById('cat-comercial-wrap');
 
+  // Guard: si los elementos no existen aún, salir
+  if(!roomsGroup||!roomsLabel||!catComercial) return;
+
   // Terreno / Lote → mostrar campo titulado
-  tituladoGroup.style.display=(type==='Terreno'||type==='Lote')?'flex':'none';
+  if(tituladoGroup) tituladoGroup.style.display=(type==='Terreno'||type==='Lote')?'flex':'none';
 
   // Lógica de habitaciones según tipo
-  const isCommercial=['Local','Oficina'].includes(type);
-  const noRooms=['Galera','Bodega','Terreno','Lote'].includes(type);
+  const isCommercial=(type==='Local'||type==='Oficina');
+  const noRooms=(type==='Galera'||type==='Bodega'||type==='Terreno'||type==='Lote');
 
   if(isCommercial){
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Puestos / Divisiones';
-    roomsSel.title='Número de puestos operativos o divisiones del espacio';
+    if(roomsSel) roomsSel.title='Número de puestos operativos o divisiones del espacio';
     catComercial.style.display='block';
   } else if(noRooms){
     roomsGroup.style.display='none';
     catComercial.style.display='none';
   } else {
-    // Residencial: Apartamento, Casa, Penthouse…
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Habitaciones';
-    roomsSel.title='';
+    if(roomsSel) roomsSel.title='';
     catComercial.style.display='none';
   }
 }
