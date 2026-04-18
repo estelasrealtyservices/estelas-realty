@@ -1628,7 +1628,7 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
         <div class="modal-section-title">Multimedia</div>
         <div class="form-group" style="margin-bottom:16px;"><label>URL de video (YouTube / Vimeo)</label><input type="url" id="fVideo" placeholder="https://youtube.com/watch?v=..."></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Fotos</label>
+          <label style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Fotos <span id="photoCountLabel" style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0;">(0 / 20)</span></label>
           <span style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:13px">drag_indicator</span>Arrastra para reordenar</span>
         </div>
         <div class="upload-area" id="uploadArea">
@@ -1637,9 +1637,10 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
           <p style="font-size:14px;font-weight:500;color:var(--text2)">Haz clic o arrastra fotos aquí</p>
           <p style="font-size:11px;margin-top:6px;color:var(--text3)">JPG · PNG · WEBP — se convierten a <strong style="color:#2e7d32">WebP automáticamente</strong></p>
           <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;flex-wrap:wrap;">
-            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Máx 1200px</span>
-            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Objetivo &lt;200KB</span>
-            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Thumb auto</span>
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Paralelo · más rápido</span>
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Máx 1200px · &lt;200KB</span>
+            <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:20px;font-weight:600;">✓ Thumb sin pérdida extra</span>
+            <span style="font-size:10px;background:#fff3e0;color:#e65100;padding:3px 10px;border-radius:20px;font-weight:600;">⚠ Máx 20 fotos</span>
           </div>
         </div>
         <div class="modal-prog" id="modalProg"><div class="modal-prog-fill" id="modalProgFill" style="width:0%"></div></div>
@@ -3215,6 +3216,13 @@ let dragSrcIdx = null;
 function renderPhotoGrid(){
   const grid = document.getElementById('photoGrid');
   grid.innerHTML = '';
+  // Actualizar contador de fotos
+  const countLabel = document.getElementById('photoCountLabel');
+  if(countLabel){
+    const n = photoItems.length;
+    countLabel.textContent = `(${n} / ${MAX_PHOTOS})`;
+    countLabel.style.color = n >= MAX_PHOTOS ? '#E53935' : 'var(--text3)';
+  }
   if(!photoItems.length) return;
 
   photoItems.forEach(function(item, i){
@@ -3315,59 +3323,80 @@ function renderPhotoGrid(){
   });
 }
 
+// ── MEJORA B: Límite máximo de fotos por propiedad ──
+const MAX_PHOTOS = 20;
+
 async function addPhotos(input){
   const files = [...input.files];
   if(!files.length) return;
 
+  // ── MEJORA B: Verificar límite antes de procesar ──
+  const currentCount = photoItems.length;
+  const available = MAX_PHOTOS - currentCount;
+  if(available <= 0){
+    showToast(`Límite de ${MAX_PHOTOS} fotos alcanzado. Elimina alguna para agregar más.`, true);
+    input.value = '';
+    return;
+  }
+  const filesToProcess = files.slice(0, available);
+  if(files.length > available){
+    showToast(`Solo se agregarán ${available} foto(s) — límite de ${MAX_PHOTOS} por propiedad.`, true);
+  }
+
   // Mostrar estado de compresión en el upload area
   const area = document.querySelector('.upload-area');
   const originalContent = area ? area.innerHTML : '';
-  if(area){
-    area.style.pointerEvents = 'none';
-    area.innerHTML = `
+  let done = 0;
+  const updateUI = () => {
+    if(area) area.innerHTML = `
       <span class="material-icons" style="font-size:36px;color:var(--accent);display:block;margin-bottom:8px;animation:spin 1s linear infinite">sync</span>
       <p style="font-size:13px;color:var(--text2);font-weight:500">Comprimiendo a WebP…</p>
-      <p style="font-size:11px;color:var(--text3);margin-top:4px">0 / ${files.length} fotos</p>`;
-  }
+      <p style="font-size:11px;color:var(--text3);margin-top:4px">${done} / ${filesToProcess.length} fotos listas</p>`;
+  };
+  if(area){ area.style.pointerEvents='none'; updateUI(); }
 
-  for(let idx=0; idx<files.length; idx++){
-    const f = files[idx];
-    try {
-      // Comprimir a WebP antes de agregar al array
-      const compressed = await compressToWebP(f);
+  // ── MEJORA A: Compresión en paralelo con Promise.allSettled ──
+  // ── MEJORA C: Thumb se genera desde el File original (no desde el WebP ya comprimido) ──
+  const results = await Promise.allSettled(
+    filesToProcess.map(async (f) => {
+      // Full: 1200px ≤200KB
+      const compressed = await compressToWebP(f, 1200, 0.82, 200);
+      // Thumb: generado desde el File ORIGINAL para evitar doble compresión con pérdida
+      const thumb = await generateThumb(f, 600, 0.75);
+      done++;
+      updateUI();
+      return { f, compressed, thumb };
+    })
+  );
+
+  // Procesar resultados (fulfilled o fallback al original)
+  for(const result of results){
+    if(result.status === 'fulfilled'){
+      const { f, compressed, thumb } = result.value;
       const compressedFile = new File([compressed], f.name.replace(/\.[^.]+$/, '.webp'), {type:'image/webp'});
-      const preview = URL.createObjectURL(compressed);
-      const originalKB = Math.round(f.size/1024);
-      const newKB = Math.round(compressed.size/1024);
-      const saved = Math.round((1 - compressed.size/f.size)*100);
-
+      const thumbFile      = new File([thumb],      f.name.replace(/\.[^.]+$/, '_thumb.webp'), {type:'image/webp'});
+      const originalKB = Math.round(f.size / 1024);
+      const newKB      = Math.round(compressed.size / 1024);
+      const saved      = Math.round((1 - compressed.size / f.size) * 100);
       photoItems.push({
-        url: preview,
-        file: compressedFile,
+        url:          URL.createObjectURL(compressed),
+        thumbPreview: URL.createObjectURL(thumb),
+        file:         compressedFile,
+        thumbFile:    thumbFile,           // ← archivo thumb pre-generado desde el original
         originalName: f.name,
-        caption: '',
-        isExisting: false,
-        sizeInfo: `${originalKB}KB→${newKB}KB (−${saved}%)`
+        caption:      '',
+        isExisting:   false,
+        sizeInfo:     `${originalKB}KB→${newKB}KB (−${saved}%)`
       });
-    } catch(e) {
-      console.warn('Compresión falló para', f.name, '— subiendo original:', e.message);
-      photoItems.push({ url: URL.createObjectURL(f), file: f, caption: '', isExisting: false });
-    }
-
-    if(area){
-      area.innerHTML = `
-        <span class="material-icons" style="font-size:36px;color:var(--accent);display:block;margin-bottom:8px;animation:spin 1s linear infinite">sync</span>
-        <p style="font-size:13px;color:var(--text2);font-weight:500">Comprimiendo a WebP…</p>
-        <p style="font-size:11px;color:var(--text3);margin-top:4px">${idx+1} / ${files.length} fotos</p>`;
+    } else {
+      // Fallback: subir original sin comprimir
+      const f = filesToProcess[results.indexOf(result)];
+      console.warn('Compresión falló para', f?.name, result.reason);
+      if(f) photoItems.push({ url: URL.createObjectURL(f), file: f, caption: '', isExisting: false });
     }
   }
 
-  // Restaurar upload area
-  if(area){
-    area.style.pointerEvents = '';
-    area.innerHTML = originalContent;
-  }
-
+  if(area){ area.style.pointerEvents=''; area.innerHTML=originalContent; }
   renderPhotoGrid();
   input.value = '';
 }
@@ -3432,9 +3461,10 @@ async function saveProperty(){
           item.url = u.publicUrl;
           item.isExisting = true;
 
-          // Generar y subir thumbnail (600px, ~60KB)
+          // Generar y subir thumbnail (ya pre-generado desde el original en addPhotos)
           try {
-            const thumbBlob = await generateThumb(item.file);
+            // ── MEJORA C: usar thumbFile pre-generado desde el File original ──
+            const thumbBlob = item.thumbFile || await generateThumb(item.file);
             const thumbPath = `properties/${propCode}/${ts}_${i}_thumb.webp`;
             const{error:errThumb}=await sb.storage.from(STORAGE_BUCKET).upload(thumbPath, thumbBlob, {
               upsert: true,
@@ -3445,7 +3475,7 @@ async function saveProperty(){
               item.thumbUrl = ut.publicUrl;
             }
           } catch(te){
-            console.warn('Thumbnail generation failed:', te.message);
+            console.warn('Thumbnail upload failed:', te.message);
             item.thumbUrl = item.url; // fallback a la full
           }
         } else {
