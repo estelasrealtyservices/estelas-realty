@@ -1482,25 +1482,24 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
           <!-- Campo dinámico: Habitaciones / Puestos / oculto según tipo -->
           <div class="form-group" id="fRoomsGroup">
             <label id="fRoomsLabel">Habitaciones</label>
-            <select id="fRooms"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>12</option><option>15</option><option>20</option><option>25</option><option>30</option></select>
+            <select id="fRooms">
+              <option>0</option><option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option><option>7</option>
+              <option>8</option><option>9</option><option>10</option><option>12</option>
+              <option>15</option><option>20</option><option>25</option><option>30</option>
+            </select>
           </div>
           <div class="form-group"><label>Baños</label><select id="fBaths"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-          <!-- Parqueos: select + campo numérico para >8 -->
-          <div class="form-group" id="fParkingGroup">
+          <!-- Parqueos con opción 8+ -->
+          <div class="form-group">
             <label>Parqueos</label>
             <select id="fParking" onchange="onParkingChange()">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
               <option value="99">8+ (indicar cantidad)</option>
             </select>
-            <input type="number" id="fParkingCustom" min="9" placeholder="Cantidad total de parqueos" style="display:none;margin-top:6px;" oninput="syncParkingCustom()">
+            <input type="number" id="fParkingCustom" min="9" placeholder="Total de parqueos" style="display:none;margin-top:6px;" oninput="syncParkingCustom()">
           </div>
           <div class="form-group"><label>Piso / Unidad</label><input type="text" id="fFloor" placeholder="Ej: 12-B, PH, Planta baja, Casa 4"></div>
         </div>
@@ -3040,30 +3039,22 @@ function updateTypeFields(){
   const catComercial=document.getElementById('cat-comercial-wrap');
 
   // Terreno / Lote → mostrar campo titulado
-  if(type==='Terreno'||type==='Lote'){
-    tituladoGroup.style.display='flex';
-  } else {
-    tituladoGroup.style.display='none';
-  }
+  tituladoGroup.style.display=(type==='Terreno'||type==='Lote')?'flex':'none';
 
-  // Tipos sin habitaciones residenciales
-  const noRooms=['Galera','Bodega','Terreno','Lote'];
-  const isCommercialOffice=['Local','Oficina'].includes(type);
-  const isNoRooms=noRooms.includes(type);
+  // Lógica de habitaciones según tipo
+  const isCommercial=['Local','Oficina'].includes(type);
+  const noRooms=['Galera','Bodega','Terreno','Lote'].includes(type);
 
-  if(isCommercialOffice){
-    // Local u Oficina: cambiar etiqueta a "Puestos / Divisiones"
+  if(isCommercial){
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Puestos / Divisiones';
     roomsSel.title='Número de puestos operativos o divisiones del espacio';
-    // Mostrar amenidades comerciales
     catComercial.style.display='block';
-  } else if(isNoRooms){
-    // Galera, Bodega, Terreno, Lote: ocultar campo
+  } else if(noRooms){
     roomsGroup.style.display='none';
     catComercial.style.display='none';
   } else {
-    // Residencial: label normal
+    // Residencial: Apartamento, Casa, Penthouse…
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Habitaciones';
     roomsSel.title='';
@@ -3071,44 +3062,43 @@ function updateTypeFields(){
   }
 }
 
+// ---- PARKING helpers ----
 function onParkingChange(){
   const sel=document.getElementById('fParking');
-  const customInput=document.getElementById('fParkingCustom');
+  const inp=document.getElementById('fParkingCustom');
   if(sel.value==='99'){
-    customInput.style.display='block';
-    customInput.focus();
+    inp.style.display='block';
+    inp.focus();
   } else {
-    customInput.style.display='none';
-    customInput.value='';
+    inp.style.display='none';
+    inp.value='';
   }
 }
 
-function syncParkingCustom(){
-  // No hace nada adicional — el valor se lee en getPayload
-}
+function syncParkingCustom(){ /* valor leído por getParkingValue */ }
 
 function getParkingValue(){
   const sel=document.getElementById('fParking');
   if(sel.value==='99'){
-    const custom=parseInt(document.getElementById('fParkingCustom').value)||9;
-    return custom;
+    return parseInt(document.getElementById('fParkingCustom').value)||9;
   }
   return parseInt(sel.value)||0;
 }
 
 function setParkingValue(val){
   const sel=document.getElementById('fParking');
-  const customInput=document.getElementById('fParkingCustom');
+  const inp=document.getElementById('fParkingCustom');
   if(val<=8){
     sel.value=String(val);
-    customInput.style.display='none';
-    customInput.value='';
+    inp.style.display='none';
+    inp.value='';
   } else {
     sel.value='99';
-    customInput.style.display='block';
-    customInput.value=String(val);
+    inp.style.display='block';
+    inp.value=String(val);
   }
 }
+
 
 function addCustomAmenity(btn, gridId){
   const name=prompt('Nombre de la nueva amenidad:');
@@ -3194,7 +3184,7 @@ function openModal(id=null){
     document.getElementById('fOportunidad').checked=false;
     document.getElementById('fUrgente').checked=false;
     document.querySelectorAll('.loc-type-btn,.lifestyle-btn').forEach(b=>b.classList.remove('selected'));
-    // Reset parking custom
+    // Reset parking
     document.getElementById('fParking').value='0';
     document.getElementById('fParkingCustom').style.display='none';
     document.getElementById('fParkingCustom').value='';
@@ -4380,10 +4370,12 @@ function openDetailModal(id){
   const badgeCls = p.operation === 'Alquiler' ? 'badge-rent' : p.operation === 'Alquiler vacacional' ? 'badge-vacation' : 'badge-sale';
   const active = p.is_active !== false;
 
-  const isCommercialType = ['Local','Oficina'].includes(p.type);
-  const roomsLabel = isCommercialType ? 'Puestos / Divisiones' : 'Habitaciones';
+  const isCommercialDetail = ['Local','Oficina'].includes(p.type);
+  const noRoomsDetail = ['Galera','Bodega','Terreno','Lote'].includes(p.type);
+  const roomsDetailLabel = isCommercialDetail ? 'Puestos / Divisiones' : 'Habitaciones';
+
   const specs = [
-    (p.rooms && !['Galera','Bodega','Terreno','Lote'].includes(p.type)) ? `<div class="detail-field"><div class="detail-field-label">${roomsLabel}</div><div class="detail-field-val">${p.rooms}</div></div>` : '',
+    (p.rooms && !noRoomsDetail) ? `<div class="detail-field"><div class="detail-field-label">${roomsDetailLabel}</div><div class="detail-field-val">${p.rooms}</div></div>` : '',
     p.baths    ? `<div class="detail-field"><div class="detail-field-label">Baños</div><div class="detail-field-val">${p.baths}</div></div>` : '',
     p.size     ? `<div class="detail-field"><div class="detail-field-label">Metraje</div><div class="detail-field-val">${p.size} m²</div></div>` : '',
     p.parking  ? `<div class="detail-field"><div class="detail-field-label">Parqueos</div><div class="detail-field-val">${p.parking}</div></div>` : '',
