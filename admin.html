@@ -1831,8 +1831,10 @@ INSERT INTO profiles (id, full_name, role) VALUES ('TU-USER-ID-AQUI', 'Admin', '
 const SUPABASE_URL='https://uwifcvcnzeduovqrjhdf.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWZjdmNuemVkdW92cXJqaGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzU4MjQsImV4cCI6MjA4OTcxMTgyNH0.QRuqmtMpCxGSasr8fvzDMcZtlYYTODLqeCaDQou9dP0';
 const STORAGE_BUCKET='property-images';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false},
+  global:{headers:{'x-client-info':'estelas-realty-admin'}}
+});
 let allProperties=[];
 let selectedFiles=[];
 let codeCounter=1;
