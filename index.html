@@ -1084,9 +1084,9 @@ const DEFAULT_HERO = [
 
 const IMG = (() => {
   // Detecta si estamos en producción con Cloudflare (vercel.app tiene CF)
-  const CF_ENABLED = location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
-  const SUPABASE_STORAGE_PREFIX = 'https://uwifcvcnzeduovqrjhdf.supabase.co/storage/v1/object/public/';
-  const GITHUB_CDN_PREFIX = 'https://cdn.jsdelivr.net/gh/estelasrealtyservices/';
+const CF_ENABLED = false;
+const SUPABASE_STORAGE_PREFIX = 'https://uwifcvcnzeduovqrjhdf.supabase.co/storage/v1/object/public/';
+const GITHUB_CDN_PREFIX = 'https://cdn.jsdelivr.net/gh/estelasrealtyservices/';
 
   /**
    * Genera una URL optimizada via Cloudflare Image Resizing
