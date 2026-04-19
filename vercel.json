@@ -18,7 +18,7 @@
   ],
   "headers": [
     {
-      "source": "/api/og/:code",
+      "source": "/api/og/:path*",
       "headers": [
         { "key": "Cache-Control", "value": "public, s-maxage=60, stale-while-revalidate=300" }
       ]
@@ -30,20 +30,20 @@
       ]
     },
     {
-      "source": "/(.*)\\.html",
+      "source": "/:path*.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=86400" }
+        { "key": "Cache-Control", "value": "public, s-maxage=0, must-revalidate" }
       ]
     },
     {
-      "source": "/cdn-cgi/image/(.*)",
+      "source": "/cdn-cgi/image/:path*",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
         { "key": "Vary", "value": "Accept" }
       ]
     },
     {
-      "source": "/(.*)\\.(?:png|jpg|jpeg|webp|avif|gif|svg|ico)",
+      "source": "/:path*.(png|jpg|jpeg|webp|avif|gif|svg|ico)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
