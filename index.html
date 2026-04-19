@@ -1257,11 +1257,10 @@ function renderZones(zones) {
   const visible = zones.slice(0, 6);
   document.getElementById('zonesGrid').innerHTML = visible.map((z)=>`
     <div class="zone-card" onclick="setZone('${z.name}')">
-      <div class="bento-bg" data-bg="${z.img}" style="position:absolute;inset:0;background-size:cover;background-position:center;"></div>
+      <div class="bento-bg" style="position:absolute;inset:0;background-size:cover;background-position:center;${z.img ? `background-image:url('${z.img}')` : ''}"></div>
       <div class="zone-overlay"></div>
       <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
     </div>`).join('');
-  if(typeof initLazyBg === 'function') initLazyBg();
 }
 
 // ---- SOCIAL ICONS ----
