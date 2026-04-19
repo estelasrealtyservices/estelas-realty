@@ -3039,26 +3039,28 @@ function updateTypeFields(){
   const roomsSel=document.getElementById('fRooms');
   const catComercial=document.getElementById('cat-comercial-wrap');
 
+  // Guard: si los elementos no existen aún, salir
+  if(!roomsGroup||!roomsLabel||!catComercial) return;
+
   // Terreno / Lote → mostrar campo titulado
-  tituladoGroup.style.display=(type==='Terreno'||type==='Lote')?'flex':'none';
+  if(tituladoGroup) tituladoGroup.style.display=(type==='Terreno'||type==='Lote')?'flex':'none';
 
   // Lógica de habitaciones según tipo
-  const isCommercial=['Local','Oficina'].includes(type);
-  const noRooms=['Galera','Bodega','Terreno','Lote'].includes(type);
+  const isCommercial=(type==='Local'||type==='Oficina');
+  const noRooms=(type==='Galera'||type==='Bodega'||type==='Terreno'||type==='Lote');
 
   if(isCommercial){
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Puestos / Divisiones';
-    roomsSel.title='Número de puestos operativos o divisiones del espacio';
+    if(roomsSel) roomsSel.title='Número de puestos operativos o divisiones del espacio';
     catComercial.style.display='block';
   } else if(noRooms){
     roomsGroup.style.display='none';
     catComercial.style.display='none';
   } else {
-    // Residencial: Apartamento, Casa, Penthouse…
     roomsGroup.style.display='flex';
     roomsLabel.textContent='Habitaciones';
-    roomsSel.title='';
+    if(roomsSel) roomsSel.title='';
     catComercial.style.display='none';
   }
 }
@@ -3170,25 +3172,53 @@ function openModal(id=null){
     document.getElementById('modalTitle').textContent='Agregar propiedad';
     document.getElementById('modalCode').textContent='ERS-2025-'+String(codeCounter).padStart(3,'0');
     document.getElementById('editingId').value='';
-    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo','fOwnerName','fOwnerContact','fE24Code','fMaintenance'].forEach(id=>document.getElementById(id).value='');
-    // Clear zone autocomplete
+
+    // Reset selects a valores por defecto
+    document.getElementById('fOperation').value='Alquiler';
+    document.getElementById('fType').value='Apartamento';
+    document.getElementById('fRooms').value='0';
+    document.getElementById('fBaths').value='1';
+
+    // Reset todos los campos de texto / número
+    ['fTitle','fPrice','fSize','fFloor','fDesc','fDescEn','fVideo',
+     'fOwnerName','fOwnerContact','fE24Code','fMaintenance',
+     'fLatitude','fLongitude'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.value='';
+    });
+
+    // Reset zone autocomplete
     document.getElementById('fZone').value='';
     zoneACUpdateClear();
+
+    // Reset campos condicionales
     document.getElementById('fTitulado').value='';
-    document.getElementById('fLatitude').value='';
-    document.getElementById('fLongitude').value='';
     document.getElementById('mapCoordsText').textContent='Haz clic en el mapa o busca una dirección para ubicar la propiedad';
     document.getElementById('mapSearchInput').value='';
+
+    // Reset checkboxes
     document.getElementById('fFeatured').checked=false;
     document.getElementById('fExclusivo').checked=false;
     document.getElementById('fGanga').checked=false;
     document.getElementById('fOportunidad').checked=false;
     document.getElementById('fUrgente').checked=false;
+
+    // Reset TODOS los feature-toggles (amenidades) sin excepción
+    document.querySelectorAll('.feature-toggle').forEach(b=>b.classList.remove('selected'));
+
+    // Reset location_type y lifestyle
     document.querySelectorAll('.loc-type-btn,.lifestyle-btn').forEach(b=>b.classList.remove('selected'));
+
     // Reset parking
     document.getElementById('fParking').value='0';
     document.getElementById('fParkingCustom').style.display='none';
     document.getElementById('fParkingCustom').value='';
+
+    // Reset fotos
+    photoItems=[];
+    document.getElementById('photoGrid').innerHTML='';
+    document.getElementById('modalProgFill').style.width='0%';
+
     updatePriceLabel();
     updateTypeFields();
     document.getElementById('deleteBtn').style.display='none';
