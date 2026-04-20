@@ -3053,11 +3053,6 @@ function canvasToBlob(canvas, type, quality){
   return new Promise(res => canvas.toBlob(res, type, quality));
 }
 
-function formatBytes(bytes){
-  if(bytes < 1024) return bytes + ' B';
-  if(bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/1048576).toFixed(1) + ' MB';
-}
 
 // ---- PHOTO MANAGER (drag & drop + captions) ----
 let photoItems = [];
@@ -3489,60 +3484,6 @@ async function saveSocialLinks(){
     showToast('Error: '+e.message,true);
   }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar redes sociales';
-}
-
-// ---- ANUNCIOS PAGE EDITOR ----
-async function loadAnunciosBg(){
-  try{
-    const{data}=await sb.from('site_config').select('value').eq('id','anuncios_header_bg').single();
-    if(data?.value){
-      document.getElementById('anunciosBgUrl').value=data.value;
-      previewAnunciosBg();
-    }
-  }catch(e){ /* no hay imagen aún, sin problema */ }
-}
-
-function previewAnunciosBg(){
-  const url=document.getElementById('anunciosBgUrl').value.trim();
-  const div=document.getElementById('anunciosBgImg');
-  if(url) div.style.backgroundImage=`url('${url}')`;
-  else div.style.backgroundImage='none';
-}
-
-async function uploadAnunciosBg(input){
-  const file=input.files[0]; if(!file) return;
-  const bar=document.getElementById('anunciosBgProgress');
-  const fill=document.getElementById('anunciosBgProgressFill');
-  bar.classList.add('visible'); fill.style.width='30%';
-  const ext=file.name.split('.').pop().toLowerCase();
-  const path=`anuncios/anuncios_header_${Date.now()}.${ext}`;
-  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
-  fill.style.width='80%';
-  if(!error){
-    const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-    document.getElementById('anunciosBgUrl').value=u.publicUrl;
-    previewAnunciosBg();
-    showToast('Imagen subida. Presiona "Guardar imagen de fondo" para aplicarla.');
-  } else {
-    showToast('Error al subir imagen: '+error.message,true);
-  }
-  fill.style.width='100%';
-  setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
-}
-
-async function saveAnunciosBg(){
-  const url=document.getElementById('anunciosBgUrl').value.trim();
-  if(!url){ showToast('Ingresa o sube una imagen primero.',true); return; }
-  const btn=document.getElementById('saveAnunciosBgBtn');
-  btn.disabled=true; btn.innerHTML='<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
-  try{
-    const{error}=await sb.from('site_config').upsert({id:'anuncios_header_bg',value:url,updated_at:new Date().toISOString()},{onConflict:'id'});
-    if(error) throw error;
-    showToast('¡Imagen de fondo guardada! Ya aparece en la página Anuncios.');
-  }catch(e){
-    showToast('Error: '+e.message,true);
-  }
-  btn.disabled=false; btn.innerHTML='<span class="material-icons">save</span>Guardar imagen de fondo';
 }
 
 // ---- TOAST ----
