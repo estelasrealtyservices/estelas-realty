@@ -2293,9 +2293,15 @@ async function addHeroImages(input){
   bar.classList.add('visible');
   let uploaded=0;
   for(let i=0;i<files.length;i++){
-    const ext=files[i].name.split('.').pop().toLowerCase();
-    const path=`hero/${Date.now()}_${i}.${ext}`;
-    const{data,error}=await sb.storage.from(STORAGE_BUCKET).upload(path,files[i],{upsert:true,contentType:files[i].type});
+    // ── Comprimir a WebP 1920px ≤300KB (hero es full-width) ──
+    let uploadFile = files[i];
+    try {
+      const blob = await compressToWebP(files[i], 1920, 0.82, 300);
+      uploadFile = new File([blob], 'hero.webp', {type:'image/webp'});
+    } catch(e){ console.warn('Compresión hero falló, usando original'); }
+
+    const path=`hero/${Date.now()}_${i}.webp`;
+    const{data,error}=await sb.storage.from(STORAGE_BUCKET).upload(path,uploadFile,{upsert:true,contentType:'image/webp'});
     if(error){
       console.error('Error subiendo imagen hero:', error);
       showToast('Error subiendo imagen: '+error.message,true);
@@ -2309,7 +2315,7 @@ async function addHeroImages(input){
   bar.classList.remove('visible');
   fill.style.width='0%';
   renderHeroEditor();
-  if(uploaded>0) showToast(`${uploaded} foto(s) subida(s). Haz clic en Guardar para aplicar.`);
+  if(uploaded>0) showToast(`${uploaded} foto(s) subida(s) en WebP. Haz clic en Guardar para aplicar.`);
 }
 
 async function saveHeroImages(){
@@ -2449,7 +2455,7 @@ async function changeZoneImage(i, input){
   const file=input.files[0];
   if(!file) return;
 
-  const validTypes=['image/jpeg','image/jpg','image/png','image/webp'];
+  const validTypes=['image/jpeg','image/jpg','image/png','image/webp','image/gif'];
   if(!validTypes.includes(file.type)){
     showToast('Solo se permiten imágenes JPG, PNG o WEBP.',true);
     return;
@@ -2458,17 +2464,23 @@ async function changeZoneImage(i, input){
   const bar=document.getElementById('zoneProgress');
   const fill=document.getElementById('zoneProgressFill');
   bar.classList.add('visible');
-  fill.style.width='30%';
+  fill.style.width='20%';
 
-  const ext=file.name.split('.').pop().toLowerCase();
+  // ── Comprimir a WebP 800px ≤150KB (zonas se muestran pequeñas en index) ──
+  let uploadFile = file;
+  try {
+    const blob = await compressToWebP(file, 800, 0.80, 150);
+    uploadFile = new File([blob], 'zone.webp', {type:'image/webp'});
+  } catch(e){ console.warn('Compresión zona falló, usando original'); }
+
+  fill.style.width='50%';
+
   const safeName=zoneData[i].name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
-  const path=`zones/${Date.now()}_${safeName}.${ext}`;
+  const path=`zones/${Date.now()}_${safeName}.webp`;
 
-  fill.style.width='60%';
-
-  const{data, error}=await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+  const{data, error}=await sb.storage.from(STORAGE_BUCKET).upload(path, uploadFile, {
     upsert: true,
-    contentType: file.type
+    contentType: 'image/webp'
   });
 
   fill.style.width='100%';
@@ -2483,7 +2495,7 @@ async function changeZoneImage(i, input){
   const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   zoneData[i].img=u.publicUrl;
   renderZonesEditor();
-  showToast(`Foto de ${zoneData[i].name} lista. Haz clic en Guardar cambios.`);
+  showToast(`Foto de ${zoneData[i].name} lista (WebP). Haz clic en Guardar cambios.`);
   setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},600);
 }
 
@@ -3412,16 +3424,25 @@ async function uploadBentoImg(input,i){
   const file=input.files[0];if(!file) return;
   const bar=document.getElementById('bentoProgress');
   const fill=document.getElementById('bentoProgressFill');
-  bar.classList.add('visible');fill.style.width='30%';
-  const ext=file.name.split('.').pop().toLowerCase();
-  const path=`bento/bento_${i}_${Date.now()}.${ext}`;
-  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
-  fill.style.width='80%';
+  bar.classList.add('visible');fill.style.width='20%';
+
+  // ── Comprimir a WebP 800px ≤150KB (bento cards son ~500px en index) ──
+  let uploadFile = file;
+  try {
+    const blob = await compressToWebP(file, 800, 0.80, 150);
+    uploadFile = new File([blob], 'bento.webp', {type:'image/webp'});
+  } catch(e){ console.warn('Compresión bento falló, usando original'); }
+
+  fill.style.width='50%';
+  const path=`bento/bento_${i}_${Date.now()}.webp`;
+  const{error}=await sb.storage.from(STORAGE_BUCKET).upload(path,uploadFile,{upsert:true,contentType:'image/webp'});
+  fill.style.width='90%';
   if(!error){
     const{data:u}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
     document.getElementById('bImg'+i).value=u.publicUrl;
     previewBentoImg(i);
-    showToast('Imagen subida. Recuerda guardar los cambios.');
+    const kb = Math.round(uploadFile.size / 1024);
+    showToast(`Imagen bento subida (WebP, ${kb}KB). Recuerda guardar.`);
   }else{
     showToast('Error al subir imagen: '+error.message,true);
   }
