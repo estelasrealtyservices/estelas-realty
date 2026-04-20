@@ -686,6 +686,203 @@
     .marquee-track { animation-duration: 10s; }
   }
 
+  /* =========================================
+     FRANJA · PROYECTOS NUEVOS
+     ========================================= */
+  #proyectos-nuevos{
+    background:var(--surface2);
+    padding:96px 0 104px;
+    position:relative;
+    scroll-margin-top:90px;
+  }
+  #proyectos-nuevos::before,
+  #proyectos-nuevos::after{
+    content:'';position:absolute;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 0,rgba(26,26,46,0.08) 20%,rgba(26,26,46,0.08) 80%,transparent 100%);
+  }
+  #proyectos-nuevos::before{top:0;}
+  #proyectos-nuevos::after{bottom:0;}
+
+  .pn-header{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:32px;
+    margin-bottom:56px;
+  }
+  .pn-kicker{
+    display:flex;align-items:center;gap:10px;
+    font-size:11px;font-weight:500;letter-spacing:2.2px;text-transform:uppercase;
+    color:var(--text2);
+    margin-bottom:18px;
+  }
+  .pn-kicker::before{
+    content:'';width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px rgba(255,193,69,0.18);
+  }
+  .pn-title{
+    font-family:'DM Sans',sans-serif;
+    font-size:clamp(32px,4vw,52px);
+    font-weight:200;
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    color:var(--primary);
+    max-width:14ch;
+  }
+  .pn-title em{
+    font-style:normal;font-weight:400;color:var(--primary);
+    position:relative;white-space:nowrap;
+  }
+  .pn-title em::after{
+    content:'';position:absolute;left:0;right:0;bottom:0.08em;
+    height:0.22em;background:var(--accent);opacity:0.45;z-index:-1;
+  }
+  .pn-subtitle{
+    font-size:14px;font-weight:300;color:var(--text2);
+    max-width:32ch;line-height:1.7;text-align:right;
+  }
+
+  .pn-hero{
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:64px;align-items:stretch;
+  }
+  .pn-hero-main{
+    position:relative;aspect-ratio:16/10;
+    border-radius:var(--radius);overflow:hidden;
+    background:var(--surface2);cursor:pointer;
+  }
+  .pn-hero-main .slide{
+    position:absolute;inset:0;opacity:0;
+    transition:opacity 0.9s ease;
+  }
+  .pn-hero-main .slide.active{opacity:1;}
+  .pn-hero-main .slide img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .pn-hero-main:hover .slide.active img{transform:scale(1.03);}
+  .pn-badge{
+    position:absolute;top:14px;left:14px;z-index:3;
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--surface);color:var(--primary);
+    padding:5px 10px 5px 8px;border-radius:20px;
+    font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  }
+  /* Dentro del hero editorial el badge se separa un poco más del borde */
+  .pn-hero-main .pn-badge{top:20px;left:20px;}
+  .pn-badge::before{
+    content:'';width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+    animation:pnPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pnPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,193,69,0.55);}
+    50%{box-shadow:0 0 0 5px rgba(255,193,69,0);}
+  }
+  .pn-hero-meta{
+    position:absolute;left:24px;right:24px;bottom:24px;
+    display:flex;justify-content:space-between;align-items:end;
+    color:white;z-index:2;
+  }
+  .pn-hero-meta::before{
+    content:'';position:absolute;left:-24px;right:-24px;bottom:-24px;top:-80px;
+    background:linear-gradient(to top,rgba(26,26,46,0.75) 0%,transparent 100%);
+    z-index:-1;pointer-events:none;
+  }
+  .pn-hero-num{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.8);
+  }
+
+  .pn-hero-side{display:flex;flex-direction:column;padding-top:8px;}
+  .pn-hero-list{
+    display:flex;flex-direction:column;
+    border-top:1px solid rgba(26,26,46,0.12);
+  }
+  .pn-hero-item{
+    display:grid;grid-template-columns:64px 1fr auto;
+    gap:20px;align-items:center;padding:22px 0;
+    border-bottom:1px solid rgba(26,26,46,0.12);
+    cursor:pointer;transition:var(--transition);position:relative;
+  }
+  .pn-hero-item:hover{padding-left:8px;}
+  .pn-hero-item::before{
+    content:'';position:absolute;left:0;top:50%;
+    width:0;height:1px;background:var(--primary);
+    transform:translateY(-50%);transition:width 0.35s ease;
+  }
+  .pn-hero-item.active::before{width:40px;}
+  .pn-hero-item.active{padding-left:52px;}
+  .pn-hero-num-side{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px;letter-spacing:1.5px;color:var(--text3);
+  }
+  .pn-hero-item.active .pn-hero-num-side{color:var(--primary);}
+  .pn-hero-info{min-width:0;}
+  .pn-status{
+    font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--text3);margin-bottom:8px;
+  }
+  /* Dentro del listado lateral queda más compacto */
+  .pn-hero-info .pn-status{margin-bottom:4px;}
+  .pn-status strong{color:var(--text2);font-weight:500;}
+  .pn-hero-info h3{
+    font-family:'DM Sans',sans-serif;
+    font-size:18px;font-weight:400;color:var(--primary);
+    line-height:1.25;letter-spacing:-0.005em;
+  }
+  .pn-hero-item.active .pn-hero-info h3{font-weight:500;}
+  .pn-hero-price{
+    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;
+    font-size:15px;font-weight:700;color:var(--primary);
+    letter-spacing:-0.3px;text-align:right;white-space:nowrap;
+  }
+  .pn-hero-price small{
+    display:block;font-family:'DM Sans',sans-serif;font-weight:400;
+    font-size:10px;letter-spacing:1px;color:var(--text3);
+    text-transform:uppercase;margin-bottom:2px;
+  }
+
+  .pn-hero-cta{margin-top:auto;padding-top:32px;}
+  .pn-cta-link{
+    display:inline-flex;align-items:center;gap:14px;
+    padding:16px 4px 16px 0;
+    font-family:'DM Sans',sans-serif;
+    font-size:15px;font-weight:500;letter-spacing:0.01em;
+    color:var(--primary);text-decoration:none;position:relative;
+    border-bottom:1px solid var(--primary);
+    transition:var(--transition);
+  }
+  .pn-cta-link .arrow{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;
+    background:var(--primary);color:white;
+    transition:var(--transition);
+  }
+  .pn-cta-link:hover{padding-right:20px;}
+  .pn-cta-link:hover .arrow{background:var(--accent);color:var(--primary);transform:rotate(-45deg);}
+  .pn-cta-link .material-icons{font-size:16px;transition:transform 0.25s;}
+
+  @media(max-width:1024px){
+    .pn-hero{grid-template-columns:1fr;gap:40px;}
+    .pn-hero-main{aspect-ratio:16/10;}
+  }
+  @media(max-width:768px){
+    #proyectos-nuevos{padding:56px 0 64px;scroll-margin-top:70px;}
+    .pn-header{grid-template-columns:1fr;gap:18px;margin-bottom:32px;}
+    .pn-title{font-size:30px;}
+    .pn-subtitle{text-align:left;max-width:100%;}
+    .pn-hero-main{aspect-ratio:4/3;}
+    .pn-hero-item{grid-template-columns:40px 1fr auto;gap:12px;padding:16px 0;}
+    .pn-hero-info h3{font-size:15px;}
+    .pn-hero-price{font-size:13px;}
+    .pn-badge{top:10px;left:10px;font-size:9px;padding:4px 8px 4px 6px;letter-spacing:1.2px;}
+    .pn-hero-main .pn-badge{top:14px;left:14px;}
+  }
+
 </style>
 </head>
 <body>
@@ -704,6 +901,7 @@
   <div class="nav-links">
     <a href="#" id="navLinkHome">Inicio</a>
     <a href="#propiedades" id="navLinkProps">Propiedades</a>
+    <a href="#proyectos-nuevos" id="navLinkNew">Nuevos</a>
     <a href="#bentoCats" id="navLinkDestinos">Destinos</a>
     <a href="#zonas" id="navLinkZones">Zonas</a>
     <a href="#servicios" id="navLinkSvcs">Servicios</a>
@@ -724,6 +922,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#" onclick="closeMenu()" id="mNavHome">Inicio</a>
   <a href="#propiedades" onclick="closeMenu()" id="mNavProps">Propiedades</a>
+  <a href="#proyectos-nuevos" onclick="closeMenu()" id="mNavNew">Nuevos</a>
   <a href="#bentoCats" onclick="closeMenu()" id="mNavDestinos">Destinos</a>
   <a href="#zonas" onclick="closeMenu()" id="mNavZones">Zonas</a>
   <a href="#servicios" onclick="closeMenu()" id="mNavSvcs">Servicios</a>
@@ -840,6 +1039,51 @@
   </div><!-- /destinos-grid -->
 </section>
 
+<!-- =========================================
+     FRANJA · PROYECTOS NUEVOS
+     Layout Editorial (hero + lista lateral con auto-avance).
+     Datos hardcodeados de demo — migrar a Supabase en v2.
+     ========================================= -->
+<section id="proyectos-nuevos" data-screen-label="Proyectos Nuevos">
+  <div class="container">
+
+    <header class="pn-header">
+      <div>
+        <div class="pn-kicker" id="pnKicker">En Preventa</div>
+        <h2 class="pn-title" id="pnTitle">Proyectos <em>nuevos</em> en Panamá</h2>
+      </div>
+      <p class="pn-subtitle" id="pnSubtitle">Diseños en construcción con precios de lanzamiento. Selección curada por nuestro equipo.</p>
+    </header>
+
+    <div class="pn-hero">
+      <!-- Main visual -->
+      <div class="pn-hero-main" id="pnHeroMain">
+        <span class="pn-badge" id="pnBadgeNuevo">Nuevo</span>
+        <!-- slides renderizados por JS -->
+        <div class="pn-hero-meta">
+          <span id="heroMetaName" style="font-size:15px;letter-spacing:0.01em;"></span>
+          <span class="pn-hero-num" id="heroMetaNum">01 / 03</span>
+        </div>
+      </div>
+
+      <!-- Side list -->
+      <div class="pn-hero-side">
+        <div class="pn-hero-list" id="pnHeroList">
+          <!-- items renderizados por JS -->
+        </div>
+
+        <div class="pn-hero-cta">
+          <a href="anuncios.html?tipo=proyecto-nuevo" class="pn-cta-link" id="pnCtaLink">
+            <span id="pnCtaText">Ver todos los proyectos nuevos</span>
+            <span class="arrow"><span class="material-icons">arrow_forward</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <div class="container">
   <section class="section" id="propiedades">
     <div class="section-header"><div class="section-title" id="sectionPropsTitle">Explora nuestros anuncios inmobiliarios</div></div>
@@ -894,7 +1138,6 @@
     </div>
   </section>
 
-  </section>
 </div>
 
 <section id="servicios">
@@ -1059,6 +1302,14 @@ const DEFAULT_HERO = [
   'https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/1774835123599.jpeg',
 ];
 
+// Proyectos nuevos — default. Puede sobrescribirse desde site_config.new_projects (array de objetos).
+// Campos: name, price, img (URL), status ('preventa'|'construccion'), delivery (año)
+const DEFAULT_NEW_PROJECTS = [
+  { name:'Bosco di Santa Maria',     price:'$485,000', img:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2027' },
+  { name:'Uptown Marbella',          price:'$320,000', img:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80', status:'construccion', delivery:'2028' },
+  { name:'Brisas del Pacífico Sur',  price:'$245,000', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2028' },
+];
+
 // ═══════════════════════════════════════════════════════════════
 //  IMAGE OPTIMIZATION SYSTEM  v1.0
 //  - Cloudflare Image Resizing para URLs de Supabase Storage
@@ -1151,9 +1402,11 @@ async function loadSiteConfig() {
     renderZones(cfg.zone_images || DEFAULT_ZONES);
     renderSocialIcons(cfg.social_links || {});
     if (cfg.bento_config && cfg.bento_config.length) renderBento(cfg.bento_config);
+    renderNewProjects(Array.isArray(cfg.new_projects) && cfg.new_projects.length ? cfg.new_projects : DEFAULT_NEW_PROJECTS);
   } catch(e) {
     renderHero(DEFAULT_HERO);
     renderZones(DEFAULT_ZONES);
+    renderNewProjects(DEFAULT_NEW_PROJECTS);
   }
 }
 
@@ -1246,6 +1499,94 @@ function renderZones(zones) {
       <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
     </div>`).join('');
 }
+
+// ---- NEW PROJECTS (franja editorial) ----
+// Datos guardados en projectsData (raw) para poder re-renderizar al cambiar idioma sin volver a pegarle a Supabase
+let projectsData = [];
+let pnIdx = 0, pnTimer = null, pnIOInstalled = false;
+
+function renderNewProjects(projects){
+  if(!Array.isArray(projects) || !projects.length) return;
+  projectsData = projects.slice(0, 3); // Layout editorial fijo a 3 items
+  const mainEl = document.getElementById('pnHeroMain');
+  const listEl = document.getElementById('pnHeroList');
+  if(!mainEl || !listEl) return;
+
+  const t = TI[currentLang] || TI.es;
+  const statusLabel = s => s === 'construccion' ? t.pnConstruccion : t.pnPreventa;
+
+  // Slides (imágenes): las reconstruimos al inicio del contenedor, dejando intactos .pn-badge y .pn-hero-meta
+  mainEl.querySelectorAll('.slide').forEach(s => s.remove());
+  const slidesHTML = projectsData.map((p,i) => `
+    <div class="slide${i===0?' active':''}" data-idx="${i}">
+      <img src="${p.img||''}" alt="${p.name||''}" loading="lazy" decoding="async" width="1280" height="800">
+    </div>`).join('');
+  // Insertar slides justo después del badge (antes de .pn-hero-meta)
+  const meta = mainEl.querySelector('.pn-hero-meta');
+  meta.insertAdjacentHTML('beforebegin', slidesHTML);
+
+  // Lista lateral
+  listEl.innerHTML = projectsData.map((p,i) => `
+    <div class="pn-hero-item${i===0?' active':''}" data-idx="${i}">
+      <span class="pn-hero-num-side">${String(i+1).padStart(2,'0')}</span>
+      <div class="pn-hero-info">
+        <div class="pn-status"><strong>${statusLabel(p.status)}</strong> · ${t.pnEntrega} ${p.delivery||''}</div>
+        <h3>${p.name||''}</h3>
+      </div>
+      <div class="pn-hero-price"><small>${t.pnDesde}</small>${p.price||''}</div>
+    </div>`).join('');
+
+  // Meta inicial
+  pnIdx = 0;
+  const total = projectsData.length;
+  const nameEl = document.getElementById('heroMetaName');
+  const numEl = document.getElementById('heroMetaNum');
+  if(nameEl) nameEl.textContent = projectsData[0]?.name || '';
+  if(numEl) numEl.textContent = '01 / ' + String(total).padStart(2,'0');
+
+  // Listeners (click + hover) — se re-atachan tras cada render
+  listEl.querySelectorAll('.pn-hero-item').forEach((it, i) => {
+    it.addEventListener('mouseenter', () => { pnSetHero(i); pnStopAuto(); });
+    it.addEventListener('click', () => { pnSetHero(i); pnStopAuto(); });
+  });
+
+  // Auto-rotación con IntersectionObserver — solo instalar una vez
+  if(!pnIOInstalled){
+    const root = document.getElementById('proyectos-nuevos');
+    if(root){
+      root.addEventListener('mouseenter', pnStopAuto);
+      root.addEventListener('mouseleave', pnStartAuto);
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries)=>{
+          entries.forEach(e => e.isIntersecting ? pnStartAuto() : pnStopAuto());
+        }, { threshold: 0.25 });
+        io.observe(root);
+      } else {
+        pnStartAuto();
+      }
+      pnIOInstalled = true;
+    }
+  }
+}
+
+function pnSetHero(n){
+  if(!projectsData.length) return;
+  pnIdx = n;
+  const slides = document.querySelectorAll('#pnHeroMain .slide');
+  const items  = document.querySelectorAll('#pnHeroList .pn-hero-item');
+  slides.forEach((s,i)=>s.classList.toggle('active', i===n));
+  items.forEach((it,i)=>it.classList.toggle('active', i===n));
+  const nameEl = document.getElementById('heroMetaName');
+  const numEl  = document.getElementById('heroMetaNum');
+  if(nameEl) nameEl.textContent = projectsData[n]?.name || '';
+  if(numEl)  numEl.textContent  = String(n+1).padStart(2,'0') + ' / ' + String(projectsData.length).padStart(2,'0');
+}
+function pnStartAuto(){
+  pnStopAuto();
+  if(projectsData.length < 2) return;
+  pnTimer = setInterval(()=>pnSetHero((pnIdx+1) % projectsData.length), 5000);
+}
+function pnStopAuto(){ if(pnTimer){ clearInterval(pnTimer); pnTimer = null; } }
 
 // ---- SOCIAL ICONS ----
 const SOCIAL_SVGS = {
@@ -1588,9 +1929,15 @@ const TI = {
     featured:'Destacado',
     hab:'Hab.',banos:'Baños',park:'Park.',
     waTooltip:'¡Escríbenos al WhatsApp!',
-    navHome:'Inicio',navProps:'Propiedades',navDestinos:'Destinos',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',
+    navHome:'Inicio',navProps:'Propiedades',navDestinos:'Destinos',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',navNew:'Nuevos',
     bentoKicker:'Descubre tu nuevo destino',
     verMasBtn:'Ver más propiedades',
+    pnKicker:'En Preventa',
+    pnTitle:'Proyectos <em>nuevos</em> en Panamá',
+    pnSubtitle:'Diseños en construcción con precios de lanzamiento. Selección curada por nuestro equipo.',
+    pnCta:'Ver todos los proyectos nuevos',
+    pnDesde:'Desde',pnBadge:'Nuevo',
+    pnPreventa:'Preventa',pnConstruccion:'En construcción',pnEntrega:'Entrega',
     trustTitle:'Somos el referente de confianza en el mercado inmobiliario panameño.',
     trustSubtitle:'Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.',
     aliados:'Nuestros Aliados',
@@ -1633,9 +1980,15 @@ const TI = {
     featured:'Featured',
     hab:'Bed.',banos:'Baths',park:'Park.',
     waTooltip:'Chat with us on WhatsApp!',
-    navHome:'Home',navProps:'Properties',navDestinos:'Destinations',navZones:'Zones',navSvcs:'Services',navContact:'Contact',
+    navHome:'Home',navProps:'Properties',navDestinos:'Destinations',navZones:'Zones',navSvcs:'Services',navContact:'Contact',navNew:'New',
     bentoKicker:'Go to your next destination',
     verMasBtn:'View more listings',
+    pnKicker:'Pre-sale',
+    pnTitle:'New <em>projects</em> in Panama',
+    pnSubtitle:'Designs under construction at launch prices. Curated selection by our team.',
+    pnCta:'View all new projects',
+    pnDesde:'From',pnBadge:'New',
+    pnPreventa:'Pre-sale',pnConstruccion:'Under construction',pnEntrega:'Delivery',
     trustTitle:"We are the trusted benchmark in Panama's real estate market.",
     trustSubtitle:'With over 38 years of experience, we offer one of the most attractive portfolios of carefully selected properties for both sale and rent. In addition, we provide legal and immigration solutions, ensuring a smooth and secure transition for your investment.',
     aliados:'Our Partners',
@@ -1738,6 +2091,7 @@ function setLang(lang){
   // Nav links
   setEl('navLinkHome', t.navHome);
   setEl('navLinkProps', t.navProps);
+  setEl('navLinkNew', t.navNew);
   setEl('navLinkZones', t.navZones);
   setEl('navLinkDestinos', t.navDestinos);
   setEl('bentoKicker', t.bentoKicker);
@@ -1749,6 +2103,7 @@ function setLang(lang){
   setEl('navLinkContact', t.navContact);
   setEl('mNavHome', t.navHome);
   setEl('mNavProps', t.navProps);
+  setEl('mNavNew', t.navNew);
   setEl('mNavZones', t.navZones);
   setEl('mNavDestinos', t.navDestinos);
   setEl('mNavSvcs', t.navSvcs);
@@ -1757,6 +2112,15 @@ function setLang(lang){
   // Footer
   setEl('footerTagline', t.footerTagline);
   setEl('footerCopyright', t.footerCopyright);
+
+  // Proyectos nuevos (franja)
+  setEl('pnKicker', t.pnKicker);
+  setInnerHTML('pnTitle', t.pnTitle);
+  setEl('pnSubtitle', t.pnSubtitle);
+  setEl('pnCtaText', t.pnCta);
+  setEl('pnBadgeNuevo', t.pnBadge);
+  // Re-render lista lateral para traducir etiquetas de estado/entrega/desde
+  if(projectsData && projectsData.length) renderNewProjects(projectsData);
 
   // Re-render cards with translated labels
   renderProperties(applyFilters());

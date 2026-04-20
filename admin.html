@@ -384,6 +384,26 @@
   .bento-editor-upload .material-icons{font-size:16px;}
   .bento-editor-emoji{font-size:20px;margin-bottom:4px;}
 
+  /* ==========================================================
+     PROJECTS EDITOR (Franja "Proyectos Nuevos")
+     Reusa clases .bento-editor-* con variantes específicas
+     ========================================================== */
+  .projects-editor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
+  .projects-editor-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:var(--transition);position:relative;}
+  .projects-editor-card:hover{box-shadow:var(--shadow-hover);}
+  .projects-editor-delete{position:absolute;top:8px;right:8px;z-index:3;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.92);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:#e53935;}
+  .projects-editor-delete:hover{background:#e53935;color:white;border-color:#e53935;}
+  .projects-editor-delete .material-icons{font-size:16px;}
+  .projects-editor-thumb{width:100%;height:150px;object-fit:cover;display:block;background:#e0e0e0;}
+  .projects-editor-thumb-placeholder{width:100%;height:150px;display:flex;align-items:center;justify-content:center;background:var(--surface2);color:var(--text3);flex-direction:column;gap:6px;}
+  .projects-editor-thumb-placeholder .material-icons{font-size:36px;opacity:0.4;}
+  .projects-editor-body{padding:14px;}
+  .projects-editor-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .projects-editor-add{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:var(--transition);}
+  .projects-editor-add:hover{background:#2d2d52;}
+  .projects-editor-add:disabled{opacity:0.4;cursor:not-allowed;}
+  .projects-editor-add .material-icons{font-size:16px;}
+
   @media(max-width:900px){
     .admin-stats{grid-template-columns:1fr 1fr;}
     .site-editor{grid-template-columns:1fr;}
@@ -392,6 +412,7 @@
     .admin-content{padding:16px;}
     .admin-tabs{padding:0 16px;}
     .bento-editor-grid{grid-template-columns:1fr 1fr;}
+    .projects-editor-grid{grid-template-columns:1fr 1fr;}
   }
 
   /* ============================================================
@@ -693,6 +714,7 @@
     .editor-card-body{padding:14px 16px;}
     .editor-card-title{font-size:14px;}
     .bento-editor-grid{grid-template-columns:1fr;}
+    .projects-editor-grid{grid-template-columns:1fr;}
 
     /* --- MAP compact --- */
     .map-container{height:220px;}
@@ -1195,6 +1217,36 @@
           </div>
           <button class="save-config-btn" id="saveBentoBtn" onclick="saveBentoConfig()">
             <span class="material-icons">save</span>Guardar cambios del Bento Grid
+          </button>
+        </div>
+      </div>
+
+      <!-- NEW PROJECTS EDITOR — franja "Proyectos Nuevos" del index -->
+      <div class="editor-card" style="margin-top:24px;">
+        <div class="editor-card-header" style="display:flex;align-items:center;gap:12px;">
+          <div class="editor-card-icon"><span class="material-icons">apartment</span></div>
+          <div style="flex:1;">
+            <div class="editor-card-title">Franja "Proyectos Nuevos"</div>
+            <div class="editor-card-subtitle">Proyectos en preventa y construcción que aparecen en la página principal (máx. 3)</div>
+          </div>
+          <button class="projects-editor-add" id="btnAddProject" onclick="addNewProject()">
+            <span class="material-icons">add</span>Agregar proyecto
+          </button>
+        </div>
+        <div class="editor-card-body">
+          <p style="font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.6;">
+            <span class="material-icons" style="font-size:14px;vertical-align:middle;color:var(--accent)">info</span>
+            Los proyectos aparecen en la franja editorial del index, debajo de "Destinos". Se muestran hasta <strong>3 proyectos</strong>. Recomendado: imagen horizontal (16:10).
+          </p>
+          <div class="progress-bar" id="projectsProgress"><div class="progress-fill" id="projectsProgressFill" style="width:0%"></div></div>
+          <div class="projects-editor-grid" id="projectsEditorGrid">
+            <div style="text-align:center;padding:20px;color:var(--text3);grid-column:1/-1;">
+              <span class="material-icons" style="animation:spin 1s linear infinite;display:block;margin-bottom:8px">sync</span>
+              Cargando proyectos...
+            </div>
+          </div>
+          <button class="save-config-btn" id="saveProjectsBtn" onclick="saveNewProjects()">
+            <span class="material-icons">save</span>Guardar cambios de proyectos
           </button>
         </div>
       </div>
@@ -2250,18 +2302,23 @@ async function loadSiteConfig(){
       const saved=savedBento.find(s=>s.val===def.val);
       return saved?{...def,...saved}:{...def};
     });
+    // New projects — array libre, puede estar vacío
+    projectsData = Array.isArray(cfg.new_projects) ? cfg.new_projects.slice(0, MAX_PROJECTS) : [];
     loadSocialInputs(cfg.social_links||{});
     renderHeroEditor();
     renderZonesEditor();
     renderBentoEditor();
+    renderProjectsEditor();
     syncZoneSelects();
   }catch(e){
     heroImages=[];
     zoneData=DEFAULT_ZONES.map(z=>({...z}));
     bentoData=DEFAULT_BENTO.map(d=>({...d}));
+    projectsData=[];
     renderHeroEditor();
     renderZonesEditor();
     renderBentoEditor();
+    renderProjectsEditor();
     syncZoneSelects();
   }
 }
@@ -3475,6 +3532,201 @@ async function saveBentoConfig(){
     showToast('Error: '+e.message,true);
   }
   btn.disabled=false;btn.innerHTML='<span class="material-icons">save</span>Guardar cambios del Bento Grid';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NEW PROJECTS EDITOR — franja "Proyectos Nuevos" del index
+// Guarda en site_config.new_projects como array:
+//   [{name, price, img, status:'preventa'|'construccion', delivery:'YYYY'}, ...]
+// Fotos suben a bucket property-images/projects/
+// ═══════════════════════════════════════════════════════════════
+let projectsData = [];
+const MAX_PROJECTS = 3;
+const DEFAULT_PROJECTS = [
+  { name:'', price:'', img:'', status:'preventa', delivery:'' }
+];
+
+function renderProjectsEditor(){
+  const grid = document.getElementById('projectsEditorGrid');
+  if(!grid) return;
+  // Sincronizar botón "Agregar" según cantidad
+  const btnAdd = document.getElementById('btnAddProject');
+  if(btnAdd) btnAdd.disabled = projectsData.length >= MAX_PROJECTS;
+
+  if(!projectsData.length){
+    grid.innerHTML = `
+      <div style="text-align:center;padding:30px 20px;color:var(--text3);grid-column:1/-1;border:1px dashed var(--border);border-radius:10px;">
+        <span class="material-icons" style="font-size:36px;opacity:0.4;display:block;margin-bottom:8px">apartment</span>
+        <p style="margin:0 0 4px;font-size:14px;">Aún no hay proyectos en la franja</p>
+        <p style="margin:0;font-size:12px;">Haz clic en "Agregar proyecto" para crear el primero</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = projectsData.slice(0, MAX_PROJECTS).map((p, i) => `
+    <div class="projects-editor-card" id="projCard${i}">
+      <button class="projects-editor-delete" onclick="removeProject(${i})" title="Eliminar proyecto">
+        <span class="material-icons">close</span>
+      </button>
+      ${p.img
+        ? `<img class="projects-editor-thumb" src="${p.img}" alt="${p.name||'Proyecto'}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="projects-editor-thumb-placeholder" style="display:none"><span class="material-icons">broken_image</span><span style="font-size:12px">Sin imagen</span></div>`
+        : `<div class="projects-editor-thumb-placeholder"><span class="material-icons">image</span><span style="font-size:12px">Sin imagen</span></div>`
+      }
+      <div class="projects-editor-body">
+        <label class="bento-editor-label" style="display:block;">Nombre del proyecto</label>
+        <input class="bento-editor-input" id="pName${i}" value="${escapeAttr(p.name||'')}" placeholder="Ej: Bosco di Santa Maria" oninput="onProjectFieldChange(${i},'name',this.value)">
+
+        <label class="bento-editor-label" style="display:block;">Precio desde</label>
+        <input class="bento-editor-input" id="pPrice${i}" value="${escapeAttr(p.price||'')}" placeholder="$485,000" oninput="onProjectFieldChange(${i},'price',this.value)">
+
+        <div class="projects-editor-row">
+          <div>
+            <label class="bento-editor-label" style="display:block;">Estado</label>
+            <select class="bento-editor-input" id="pStatus${i}" onchange="onProjectFieldChange(${i},'status',this.value)">
+              <option value="preventa"${p.status==='preventa'?' selected':''}>Preventa</option>
+              <option value="construccion"${p.status==='construccion'?' selected':''}>En construcción</option>
+            </select>
+          </div>
+          <div>
+            <label class="bento-editor-label" style="display:block;">Entrega (año)</label>
+            <input class="bento-editor-input" id="pDelivery${i}" type="number" min="2024" max="2035" value="${escapeAttr(p.delivery||'')}" placeholder="2027" oninput="onProjectFieldChange(${i},'delivery',this.value)">
+          </div>
+        </div>
+
+        <label class="bento-editor-label" style="display:block;">URL de imagen</label>
+        <input class="bento-editor-input" id="pImg${i}" value="${escapeAttr(p.img||'')}" placeholder="https://..." oninput="onProjectFieldChange(${i},'img',this.value);previewProjectImg(${i})">
+        <div class="bento-editor-upload" style="margin-top:4px;">
+          <input type="file" accept="image/*" onchange="uploadProjectImg(this,${i})">
+          <span class="material-icons">upload</span>Subir foto del proyecto
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// Helper para escapar comillas en atributos HTML
+function escapeAttr(s){
+  return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Mantener projectsData sincronizado en memoria con cada cambio (sin re-render costoso)
+function onProjectFieldChange(i, field, value){
+  if(!projectsData[i]) return;
+  projectsData[i][field] = value;
+}
+
+function previewProjectImg(i){
+  const url = document.getElementById('pImg'+i)?.value.trim();
+  const card = document.getElementById('projCard'+i);
+  if(!card) return;
+  let img = card.querySelector('.projects-editor-thumb');
+  let ph  = card.querySelector('.projects-editor-thumb-placeholder');
+  if(url){
+    if(!img){
+      img = document.createElement('img');
+      img.className = 'projects-editor-thumb';
+      img.alt = 'Preview';
+      img.onerror = function(){ this.style.display='none'; if(ph) ph.style.display='flex'; };
+      // Insertar después del botón de eliminar (que es el primer hijo)
+      const delBtn = card.querySelector('.projects-editor-delete');
+      delBtn.insertAdjacentElement('afterend', img);
+    }
+    img.src = url; img.style.display = 'block';
+    if(ph) ph.style.display = 'none';
+  } else {
+    if(img) img.style.display = 'none';
+    if(ph)  ph.style.display  = 'flex';
+  }
+}
+
+async function uploadProjectImg(input, i){
+  const file = input.files[0];
+  if(!file) return;
+  const bar  = document.getElementById('projectsProgress');
+  const fill = document.getElementById('projectsProgressFill');
+  bar.classList.add('visible'); fill.style.width = '20%';
+
+  // Comprimir a WebP 1400px ≤250KB (la franja usa 16:10 horizontal, quality alta)
+  let uploadFile = file;
+  try {
+    const blob = await compressToWebP(file, 1400, 0.82, 250);
+    uploadFile = new File([blob], 'project.webp', { type:'image/webp' });
+  } catch(e){ console.warn('Compresión proyecto falló, usando original'); }
+
+  fill.style.width = '55%';
+  const path = `projects/proj_${i}_${Date.now()}.webp`;
+  const { error } = await sb.storage.from(STORAGE_BUCKET).upload(path, uploadFile, { upsert:true, contentType:'image/webp' });
+  fill.style.width = '90%';
+
+  if(!error){
+    const { data:u } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+    // Actualizar estado + input + preview
+    if(projectsData[i]) projectsData[i].img = u.publicUrl;
+    const inp = document.getElementById('pImg'+i);
+    if(inp) inp.value = u.publicUrl;
+    previewProjectImg(i);
+    const kb = Math.round(uploadFile.size / 1024);
+    showToast(`Foto del proyecto subida (WebP, ${kb}KB). Recuerda guardar.`);
+  } else {
+    showToast('Error al subir imagen: ' + error.message, true);
+  }
+  fill.style.width = '100%';
+  setTimeout(() => { bar.classList.remove('visible'); fill.style.width = '0%'; }, 600);
+}
+
+function addNewProject(){
+  if(projectsData.length >= MAX_PROJECTS){
+    showToast(`Máximo ${MAX_PROJECTS} proyectos en la franja.`, true);
+    return;
+  }
+  projectsData.push({ name:'', price:'', img:'', status:'preventa', delivery:'' });
+  renderProjectsEditor();
+}
+
+function removeProject(i){
+  if(!confirm('¿Eliminar este proyecto de la franja? Los cambios se aplican al guardar.')) return;
+  projectsData.splice(i, 1);
+  renderProjectsEditor();
+}
+
+function collectProjectsData(){
+  // projectsData ya está sincronizado por onProjectFieldChange; solo limpiamos vacíos/espacios
+  return projectsData
+    .map(p => ({
+      name:     (p.name||'').trim(),
+      price:    (p.price||'').trim(),
+      img:      (p.img||'').trim(),
+      status:   p.status || 'preventa',
+      delivery: (p.delivery||'').toString().trim(),
+    }))
+    .filter(p => p.name || p.img); // descartamos entradas totalmente vacías
+}
+
+async function saveNewProjects(){
+  const btn = document.getElementById('saveProjectsBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-icons" style="animation:spin 1s linear infinite">sync</span>Guardando...';
+  const clean = collectProjectsData();
+
+  // Validación ligera: avisar si falta algo importante por proyecto
+  const incomplete = clean.filter(p => !p.name || !p.img);
+  if(incomplete.length){
+    showToast(`${incomplete.length} proyecto(s) sin nombre o sin foto — se guardará igual pero no se verán bien en el index.`, false);
+  }
+
+  try {
+    const { error } = await sb.from('site_config').upsert(
+      { id:'new_projects', value:clean, updated_at:new Date().toISOString() },
+      { onConflict:'id' }
+    );
+    if(error) throw error;
+    projectsData = clean;
+    renderProjectsEditor();
+    showToast('¡Proyectos guardados! Ya aparecen en la franja del index.');
+  } catch(e){
+    showToast('Error: ' + e.message, true);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<span class="material-icons">save</span>Guardar cambios de proyectos';
 }
 
 // ---- SOCIAL LINKS ----
