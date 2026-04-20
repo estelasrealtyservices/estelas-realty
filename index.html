@@ -687,6 +687,119 @@
   }
 
   /* =========================================
+     SCROLL REVEAL SYSTEM
+     Sistema unificado de fade-in al scrollear
+     Filosofía: opt-in con clase .reveal — el sitio sigue siendo
+     funcional sin JS; el observer solo añade .is-visible.
+     ========================================= */
+
+  /* Estado base: elemento oculto y desplazado 30px */
+  .reveal{
+    opacity:0;
+    transform:translate3d(0,30px,0);
+    transition:
+      opacity 0.8s cubic-bezier(0.22,0.61,0.36,1),
+      transform 0.8s cubic-bezier(0.22,0.61,0.36,1);
+    will-change:opacity, transform;
+  }
+  /* Variantes de dirección */
+  .reveal-up   { transform:translate3d(0,30px,0); }
+  .reveal-fade { transform:none; } /* solo opacidad, sin desplazamiento */
+  .reveal-left { transform:translate3d(-30px,0,0); }
+  .reveal-right{ transform:translate3d(30px,0,0); }
+
+  /* Estado revelado */
+  .reveal.is-visible{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+  /* Limpiar will-change después de animar para liberar memoria de GPU */
+  .reveal.is-visible.done{ will-change:auto; }
+
+  /* Stagger: aplicado a un contenedor, sus hijos entran en cascada */
+  .reveal-stagger > *{
+    opacity:0;
+    transform:translate3d(0,30px,0);
+    transition:
+      opacity 0.8s cubic-bezier(0.22,0.61,0.36,1),
+      transform 0.8s cubic-bezier(0.22,0.61,0.36,1);
+    will-change:opacity, transform;
+  }
+  .reveal-stagger.is-visible > *{
+    opacity:1;
+    transform:translate3d(0,0,0);
+  }
+  /* Delays incrementales — hasta 8 hijos; después todos entran juntos */
+  .reveal-stagger.is-visible > *:nth-child(1){transition-delay:0.00s;}
+  .reveal-stagger.is-visible > *:nth-child(2){transition-delay:0.08s;}
+  .reveal-stagger.is-visible > *:nth-child(3){transition-delay:0.16s;}
+  .reveal-stagger.is-visible > *:nth-child(4){transition-delay:0.24s;}
+  .reveal-stagger.is-visible > *:nth-child(5){transition-delay:0.32s;}
+  .reveal-stagger.is-visible > *:nth-child(6){transition-delay:0.40s;}
+  .reveal-stagger.is-visible > *:nth-child(7){transition-delay:0.48s;}
+  .reveal-stagger.is-visible > *:nth-child(8){transition-delay:0.56s;}
+
+  /* ===== HERO — entrada escalonada al cargar ===== */
+  /* Aplicamos animaciones cortas con delays: el tag primero, luego h1, luego buscador, luego stats */
+  @keyframes heroFadeUp{
+    from{ opacity:0; transform:translate3d(0,20px,0); }
+    to  { opacity:1; transform:translate3d(0,0,0); }
+  }
+  /* El hero bloque lo animamos todo — cada pieza con su delay */
+  .hero h1,
+  .hero .hero-tag,
+  .hero .search-bar,
+  .hero .stats-row{
+    animation:heroFadeUp 0.9s cubic-bezier(0.22,0.61,0.36,1) both;
+  }
+  .hero .hero-tag  { animation-delay:0.10s; }
+  .hero h1         { animation-delay:0.25s; }
+  .hero p          { animation:heroFadeUp 0.9s cubic-bezier(0.22,0.61,0.36,1) both; animation-delay:0.40s; }
+  .hero .search-bar{ animation-delay:0.50s; }
+  .hero .stats-row { animation-delay:0.70s; }
+
+  /* ===== MICROINTERACCIÓN: hover suave en cards ===== */
+  /* Propiedades: lift sutil + sombra ligeramente más pronunciada al hover */
+  .property-card{
+    transition:
+      transform 0.35s cubic-bezier(0.22,0.61,0.36,1),
+      box-shadow 0.35s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .property-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 32px rgba(26,26,46,0.12);
+  }
+  /* Destinos: zoom ligero en la imagen ya existe en tu CSS (transform:scale(1.06)).
+     Agregamos también un lift tenue de la card completa. */
+  .destino-card{
+    transition:transform 0.4s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .destino-card:hover{
+    transform:translateY(-2px);
+  }
+
+  /* ===== Accesibilidad: respetar prefers-reduced-motion ===== */
+  @media (prefers-reduced-motion: reduce){
+    .reveal,
+    .reveal-stagger > *,
+    .reveal-stagger.is-visible > *{
+      opacity:1 !important;
+      transform:none !important;
+      transition:none !important;
+      animation:none !important;
+    }
+    .hero h1, .hero .hero-tag, .hero p,
+    .hero .search-bar, .hero .stats-row{
+      animation:none !important;
+      opacity:1 !important;
+      transform:none !important;
+    }
+    .property-card:hover, .destino-card:hover{
+      transform:none !important;
+    }
+  }
+
+  /* =========================================
      FRANJA · PROYECTOS NUEVOS
      ========================================= */
   #proyectos-nuevos{
@@ -982,7 +1095,7 @@
 </section>
 
 <div class="trust-band">
-  <div class="trust-inner">
+  <div class="trust-inner reveal reveal-up">
     <h2 class="trust-title" id="trustTitle">Somos el referente de confianza en el mercado inmobiliario panameño.</h2>
     <div class="trust-divider"></div>
     <p class="trust-subtitle" id="trustSubtitle">Con más de 38 años de trayectoria, contamos con el más amplio catálogo de propiedades selectas tanto para venta y alquiler. Adicionalmente te brindamos soluciones legales y migratorias garantizamos una transición fluida y segura para su inversión.</p>
@@ -998,12 +1111,12 @@
   <div class="destinos-grid">
 
     <!-- Bloque izquierdo: fondo sólido + texto -->
-    <div class="destinos-left">
+    <div class="destinos-left reveal reveal-left">
       <h2 class="destinos-heading" id="bentoKicker">Descubre tu nuevo destino</h2>
     </div>
 
     <!-- Tres tarjetas verticales -->
-    <div class="destinos-cards">
+    <div class="destinos-cards reveal-stagger">
 
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Playa'" data-val="Playa">
         <img
@@ -1047,7 +1160,7 @@
 <section id="proyectos-nuevos" data-screen-label="Proyectos Nuevos">
   <div class="container">
 
-    <header class="pn-header">
+    <header class="pn-header reveal reveal-up">
       <div>
         <div class="pn-kicker" id="pnKicker">En Preventa</div>
         <h2 class="pn-title" id="pnTitle">Proyectos <em>nuevos</em> en Panamá</h2>
@@ -1057,7 +1170,7 @@
 
     <div class="pn-hero">
       <!-- Main visual -->
-      <div class="pn-hero-main" id="pnHeroMain">
+      <div class="pn-hero-main reveal reveal-left" id="pnHeroMain">
         <span class="pn-badge" id="pnBadgeNuevo">Nuevo</span>
         <!-- slides renderizados por JS -->
         <div class="pn-hero-meta">
@@ -1067,7 +1180,7 @@
       </div>
 
       <!-- Side list -->
-      <div class="pn-hero-side">
+      <div class="pn-hero-side reveal reveal-right">
         <div class="pn-hero-list" id="pnHeroList">
           <!-- items renderizados por JS -->
         </div>
@@ -1086,8 +1199,8 @@
 
 <div class="container">
   <section class="section" id="propiedades">
-    <div class="section-header"><div class="section-title" id="sectionPropsTitle">Explora nuestros anuncios inmobiliarios</div></div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
+    <div class="section-header reveal reveal-up"><div class="section-title" id="sectionPropsTitle">Explora nuestros anuncios inmobiliarios</div></div>
+    <div class="reveal reveal-up" style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
       <div class="tabs">
         <button class="tab active" onclick="setTab(this,'')">Todos</button>
         <button class="tab" onclick="setTab(this,'Alquiler')">Alquiler</button>
@@ -1130,10 +1243,10 @@
 
   <!-- SECCIÓN: ZONAS -->
   <section class="section" id="zonas">
-    <div class="section-header">
+    <div class="section-header reveal reveal-up">
       <div class="section-title" id="sectionZonesTitle">Encuentra tu zona</div>
     </div>
-    <div class="zones-grid" id="zonesGrid">
+    <div class="zones-grid reveal-stagger" id="zonesGrid">
       <!-- rendered by JS from Supabase config -->
     </div>
   </section>
@@ -1143,10 +1256,10 @@
 <section id="servicios">
   <div class="container">
     <div class="section" style="padding-top:10px;padding-bottom:10px;">
-      <div class="section-header">
+      <div class="section-header reveal reveal-up">
         <div class="section-title" id="sectionServicesTitle">Servicios Adicionales</div>
       </div>
-      <div class="services-grid" id="servicesGrid">
+      <div class="services-grid reveal-stagger" id="servicesGrid">
         <div class="service-card" onclick="toggleService(this)">
           <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><path d="M16 14l1.5 1.5L20 13"/></svg></div>
           <h3>Trámites legales</h3>
@@ -1182,7 +1295,7 @@
   </div>
 </section>
 
-<section class="marquee-strip" aria-label="Nuestros Aliados">
+<section class="marquee-strip reveal reveal-fade" aria-label="Nuestros Aliados">
   <p class="marquee-label" id="mAliadosTitle">Nuestros Aliados</p>
   <div class="marquee-window">
     <div class="marquee-track">
@@ -1210,7 +1323,7 @@
 
 <section style="background:var(--primary);color:white;padding:60px 32px;" id="contacto">
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
-    <div>
+    <div class="reveal reveal-left">
       <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;" id="contactSectionTag">Contáctanos</div>
       <h2 style="font-family:'DM Sans', sans-serif;font-size:32px;margin-bottom:16px;line-height:1.3;" id="contactSectionH2">¿Listo para encontrar<br>tu propiedad ideal?</h2>
       <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;line-height:1.7;" id="contactSectionP">Nuestro equipo está disponible para ayudarte a encontrar la propiedad perfecta.</p>
@@ -1220,7 +1333,7 @@
         <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.8);"><span class="material-icons" style="color:var(--accent)">location_on</span>Ciudad de Panamá, Panamá</div>
       </div>
     </div>
-    <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;border:1px solid rgba(255,255,255,0.1);">
+    <div class="reveal reveal-right" style="background:rgba(255,255,255,0.05);border-radius:16px;padding:32px;border:1px solid rgba(255,255,255,0.1);">
       <h3 style="font-size:18px;margin-bottom:20px;" id="contactFormTitle">Envíanos un mensaje</h3>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <input type="text" id="contactName" placeholder="Tu nombre" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:white;font-family:inherit;font-size:14px;outline:none;">
@@ -1498,6 +1611,8 @@ function renderZones(zones) {
       <div class="zone-overlay"></div>
       <div class="zone-info"><div class="zone-name">${z.name}</div><div class="zone-count">${z.subtitle||''}</div></div>
     </div>`).join('');
+  // Reobservar: por si el reveal se inició antes de que se pintaran las cards
+  if(typeof initScrollReveal === 'function') initScrollReveal();
 }
 
 // ---- NEW PROJECTS (franja editorial) ----
@@ -1750,6 +1865,13 @@ function renderProperties(list){
   }).join('');
   // Activar lazy loading con IntersectionObserver
   initLazyImages();
+  // Marcar el grid para stagger (solo una vez, y solo cuando hay cards reales)
+  const pg = document.getElementById('propertyGrid');
+  if(pg && !pg.classList.contains('reveal-stagger')){
+    pg.classList.add('reveal-stagger');
+  }
+  // Reactivar el scroll-reveal para las cards recién pintadas
+  initScrollReveal();
 }
 
 function openDetail(id){
@@ -2183,6 +2305,49 @@ function initLazyImages(){
   imgs.forEach(img => lazyObserver.observe(img));
 }
 
+// ---- SCROLL REVEAL — fade-in al scrollear ----
+// Observer único compartido para todos los .reveal y .reveal-stagger de la página.
+// Una vez que un elemento entra al viewport, recibe la clase .is-visible y
+// deja de ser observado (animación one-shot, evita jank en scroll-up/down).
+let revealObserver = null;
+function initScrollReveal(){
+  // Respeto de accesibilidad: si el usuario pidió reducir motion, revelamos todo inmediato
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => el.classList.add('is-visible','done'));
+    return;
+  }
+
+  const targets = document.querySelectorAll('.reveal, .reveal-stagger');
+  if(!targets.length) return;
+
+  // Fallback para browsers sin IntersectionObserver (muy antiguos): mostrar todo
+  if(!('IntersectionObserver' in window)){
+    targets.forEach(el => el.classList.add('is-visible','done'));
+    return;
+  }
+
+  if(!revealObserver){
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add('is-visible');
+        // Limpiar will-change cuando la animación termine para liberar GPU memory
+        // La transición más larga del sistema es 0.8s + 0.56s de stagger = 1.36s
+        setTimeout(() => el.classList.add('done'), 1400);
+        revealObserver.unobserve(el);
+      });
+    }, {
+      threshold: 0.12,         // dispara cuando ~12% del elemento es visible
+      rootMargin: '0px 0px -40px 0px'  // requiere que esté 40px dentro del viewport
+    });
+  }
+
+  targets.forEach(el => revealObserver.observe(el));
+}
+// Llamada al DOMContentLoaded + re-llamada tras renderizar contenido dinámico
+// (propiedades, zonas, etc. que se pintan por JS también pueden recibir .reveal)
+
 // ---- LAZY LOADING — bento-bg y zone-card con data-bg ----
 let bgObserver = null;
 function initLazyBg(){
@@ -2206,6 +2371,7 @@ function initLazyBg(){
 document.addEventListener('DOMContentLoaded', ()=>{
   initLazyBg();
   initZoneAutocomplete();
+  initScrollReveal();
 });
 
 // ---- LEAFLET — carga dinámica solo al abrir el modal ----
