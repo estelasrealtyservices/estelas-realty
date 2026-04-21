@@ -88,6 +88,11 @@
   .search-btn{background:var(--accent);color:var(--primary);border:none;padding:12px 24px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;transition:var(--transition);white-space:nowrap;}
   .search-btn:hover{background:#e6a800;}
 
+  /* En desktop: pill de zona contiene input + botón. El botón va pegado a la derecha. */
+  .search-field-zone{flex:1.6;gap:10px;}
+  .search-field-zone > div:first-of-type{flex:1;min-width:0;}
+  .search-field-zone .search-btn{margin-left:auto;}
+
   /* ============================================
      ZONE AUTOCOMPLETE (mismo sistema que admin)
      ============================================ */
@@ -494,7 +499,7 @@
     .search-field{
       background:white;
       border:none;
-      border-right:none;       /* elimina los separadores del desktop */
+      border-right:none;
       border-bottom:none;
       border-radius:14px;
       padding:0 16px;
@@ -505,7 +510,6 @@
       gap:10px;
       box-shadow:0 4px 16px rgba(0,0,0,0.12);
     }
-    .search-field:last-of-type{border-bottom:none;}
     /* Ocultar labels: los selects se leen solos por su valor actual */
     .search-field label{display:none;}
     /* Ocultar iconos de operación y tipo para ganar espacio */
@@ -528,77 +532,76 @@
       cursor:pointer;
     }
 
-    /* Pill de zona: ocupa las 2 columnas y contiene input + botón Buscar */
-    .search-bar .search-field:nth-of-type(3){
-      grid-column:1 / -1;
-      padding:0 6px 0 16px;
+    /* ============================================
+       PILL DE ZONA: full-width, contiene [pin] [input] [ | ] [botón Buscar]
+       ============================================ */
+    .search-field-zone{
+      grid-column:1 / -1;   /* ocupa ambas columnas */
+      padding:0 6px 0 16px; /* menos padding a la derecha para el botón */
       gap:10px;
-      position:relative;
     }
-    .search-bar .search-field:nth-of-type(3) > .material-icons{
+    .search-field-zone > .material-icons{
       color:var(--text2);
       font-size:22px;
       flex-shrink:0;
     }
-
-    /* Wrap del autocomplete ocupa el espacio entre icono y botón */
-    .search-bar .zone-autocomplete-wrap{
+    /* El wrap del autocomplete ocupa el espacio disponible */
+    .search-field-zone .zone-autocomplete-wrap{
       flex:1;
       min-width:0;
       display:flex;
       align-items:center;
+      position:relative;
     }
-    .search-bar #zoneInput.zone-autocomplete-input{
+    .search-field-zone #zoneInput.zone-autocomplete-input{
       width:100%;
       font-size:16px;
       color:var(--text);
       background:transparent;
       border:none;
-      padding:18px 24px 18px 0;   /* espacio a la derecha para el botón X */
+      padding:18px 28px 18px 0;  /* espacio derecho para el botón X */
       box-shadow:none;
     }
-    .search-bar #zoneInput.zone-autocomplete-input::placeholder{
+    .search-field-zone #zoneInput.zone-autocomplete-input::placeholder{
       color:var(--text3);
       opacity:1;
     }
-    .search-bar .zone-autocomplete-clear{
-      right:8px;
+    .search-field-zone .zone-autocomplete-clear{
+      right:4px;
     }
 
-    /* Separador vertical entre input de zona y botón Buscar (como en imagen) */
-    .search-bar .search-field:nth-of-type(3)::before{
+    /* Separador vertical entre el wrap de zona y el botón Buscar */
+    .search-field-zone > div + .search-btn{
+      position:relative;
+    }
+    .search-field-zone > div + .search-btn::before{
       content:'';
       position:absolute;
-      right:calc(30% + 12px);  /* separador queda justo al lado izquierdo del botón */
+      left:-6px;
       top:50%;
       transform:translateY(-50%);
       width:1px;
       height:28px;
       background:var(--border);
-      pointer-events:none;
     }
 
-    /* Botón Buscar: grande y prominente como en la imagen */
-    .search-btn{
+    /* Botón Buscar: prominente, tamaño cómodo como en tu imagen */
+    .search-field-zone .search-btn{
       width:auto;
-      min-width:110px;
-      padding:14px 22px;
+      min-width:108px;
+      padding:12px 18px;
       border-radius:10px;
       font-weight:700;
-      font-size:16px;
+      font-size:15px;
       flex-shrink:0;
       box-shadow:0 2px 8px rgba(255,193,69,0.35);
       justify-content:center;
-      gap:8px;
+      gap:6px;
     }
-    .search-btn .material-icons{font-size:20px;}
+    .search-field-zone .search-btn .material-icons{font-size:20px;}
 
-    /* Dropdown de zona ocupa el ancho de la pill */
-    .zone-dropdown{
-      max-height:280px;
-      border-radius:12px;
-      font-size:15px;
-    }
+    /* Dropdown de zona */
+    .zone-dropdown{max-height:280px;border-radius:12px;font-size:15px;}
     .zone-option{padding:14px;}
     .zone-option-name{font-size:15px;}
 
@@ -756,7 +759,13 @@
 
   /* WHATSAPP FLOAT BUTTON */
   .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
-  @media(max-width:768px){.wa-float{display:none;}}
+  /* En móvil: mostrar pero un poco más compacto, y ocultar el tooltip (aparece solo en hover) */
+  @media(max-width:768px){
+    .wa-float{bottom:20px;right:20px;gap:0;}
+    .wa-float-tooltip{display:none;}
+    .wa-float-btn{width:54px;height:54px;}
+    .wa-float-btn svg{width:28px;height:28px;}
+  }
   .wa-float-tooltip{background:var(--primary);color:white;font-size:13px;font-weight:500;padding:8px 14px;border-radius:20px;white-space:nowrap;box-shadow:var(--shadow);opacity:0;transform:translateX(10px);transition:all 0.3s ease;pointer-events:none;}
   .wa-float:hover .wa-float-tooltip{opacity:1;transform:translateX(0);}
   .wa-float-btn{width:58px;height:58px;background:#25D366!important;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.45);transition:transform 0.25s ease,box-shadow 0.25s ease;animation:waPulse 2.5s infinite 2s;text-decoration:none;flex-shrink:0;border:none;}
@@ -1209,7 +1218,7 @@
   <div class="hero-pattern"></div>
   <div class="hero-content">
     <div class="hero-tag" id="heroTag" style="display:none"></div>
-    <h1 id="heroH1">Encuentra la propiedad ideal en Panamá</h1>
+    <h1 id="heroH1">Descubre hoy mismo la propiedad ideal para ti!</h1>
     <p id="heroP">Casas, apartamentos, terrenos y más</p>
     <div class="search-bar">
       <div class="search-field">
@@ -1237,9 +1246,9 @@
           </select>
         </div>
       </div>
-      <div class="search-field">
+      <div class="search-field search-field-zone">
         <span class="material-icons">location_on</span>
-        <div style="flex:1">
+        <div style="flex:1;min-width:0;">
           <label id="zoneLabel">Zona</label>
           <!-- Autocomplete de zonas (mismo sistema que admin.html) -->
           <div class="zone-autocomplete-wrap" id="zoneAutocompleteWrap">
@@ -1253,8 +1262,9 @@
             <div class="zone-dropdown" id="zoneDropdown"></div>
           </div>
         </div>
+        <!-- Botón Buscar integrado dentro del mismo search-field que la zona -->
+        <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span><span id="searchBtnText">Buscar</span></button>
       </div>
-      <button class="search-btn" onclick="doSearch()"><span class="material-icons">search</span><span id="searchBtnText">Buscar</span></button>
     </div>
   </div>
   <div class="hero-dots" id="heroDots"></div>
@@ -2174,7 +2184,7 @@ const SVC_ICONS = {
 const TI = {
   es:{
     heroTag:'',
-    heroH1:'Encuentra la propiedad ideal en Panamá',
+    heroH1:'Descubre hoy mismo la propiedad ideal para ti!',
     heroP:'Casas, apartamentos, terrenos y más',
     searchLabel:'Buscar',searchPh:'',
     typeLabel:'Tipo',typeAll:'Todos',
@@ -2225,7 +2235,7 @@ const TI = {
   },
   en:{
     heroTag:'',
-    heroH1:'Find the ideal property in Panama',
+    heroH1:'Discover today the ideal property for you!',
     heroP:'Houses, apartments, land and more',
     searchLabel:'Search',searchPh:'',
     typeLabel:'Type',typeAll:'All',
