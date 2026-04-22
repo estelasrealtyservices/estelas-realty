@@ -749,11 +749,6 @@
   }
 
   /* ── CAROUSEL TRACK ── */
-  /*
-    Layout: carta central ocupa ~58% del ancho, centrada.
-    Cartas laterales se posicionan con left/right fijo para que
-    asomen con margen visible a cada lado, sin depender de transform %.
-  */
   .destinos-carousel{
     position:relative;
     height:400px;
@@ -764,12 +759,10 @@
 
   .destino-slide{
     position:absolute;
-    width:58%;
-    height:92%;
     top:4%;
-    /* default: oculto a la derecha */
-    left:50%;
-    transform:translateX(-50%);
+    left:-8%;
+    width:65%;
+    height:92%;
     opacity:0;
     border-radius:20px;
     overflow:hidden;
@@ -780,35 +773,37 @@
                 height 0.48s cubic-bezier(0.4,0,0.2,1),
                 opacity 0.48s cubic-bezier(0.4,0,0.2,1),
                 box-shadow 0.48s cubic-bezier(0.4,0,0.2,1);
-    will-change:left,width,height,opacity;
     background:#1A1A2E;
     box-shadow:0 6px 24px rgba(0,0,0,0.15);
   }
-  /* Carta activa: centrada, más grande, al frente */
+
+  /* Carta activa: desplazada al centro-derecha */
   .destino-slide.is-active{
-    width:58%;
-    height:92%;
+    left:24%;
     top:4%;
-    left:21%;   /* (100% - 58%) / 2 */
+    width:50%;
+    height:92%;
     opacity:1;
     z-index:3;
     box-shadow:0 16px 48px rgba(0,0,0,0.28);
   }
-  /* Carta izquierda: asoma desde el borde izquierdo */
+
+  /* Carta izquierda: asoma desde el borde izq */
   .destino-slide.is-prev{
-    width:46%;
-    height:82%;
+    left:2%;
     top:9%;
-    left:-8%;
+    width:34%;
+    height:80%;
     opacity:1;
     z-index:2;
   }
-  /* Carta derecha: asoma desde el borde derecho */
+
+  /* Carta derecha: asoma desde el borde der */
   .destino-slide.is-next{
-    width:46%;
-    height:82%;
+    left:64%;
     top:9%;
-    left:62%;
+    width:34%;
+    height:80%;
     opacity:1;
     z-index:2;
   }
@@ -1458,7 +1453,7 @@
     <div class="destinos-carousel" id="destinosCarousel">
 
       <div class="destino-slide" data-href="anuncios.html?zona=Playa">
-        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp" alt="Playa" loading="lazy" width="400" height="520">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp" alt="Playa" loading="eager" width="400" height="520">
         <div class="destino-slide-label">
           <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M13.5 6C10.5 6 7.41 7.34 5.07 9.67L3 7.6V14h6.4l-2.08-2.07C9.07 10.1 11.24 9 13.5 9c3.54 0 6.55 2.31 7.6 5.5l2.87-.96C22.56 9.24 18.34 6 13.5 6z" fill="rgba(255,255,255,0.85)"/></svg>
           <span class="destino-slide-name" id="slideLabel0">Playa</span>
@@ -1466,7 +1461,7 @@
       </div>
 
       <div class="destino-slide" data-href="anuncios.html?zona=Campo">
-        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp" alt="Campo" loading="lazy" width="400" height="520">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp" alt="Campo" loading="eager" width="400" height="520">
         <div class="destino-slide-label">
           <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z" fill="rgba(255,255,255,0.85)"/></svg>
           <span class="destino-slide-name" id="slideLabel1">Campo</span>
@@ -1474,7 +1469,7 @@
       </div>
 
       <div class="destino-slide" data-href="anuncios.html?zona=Ciudad">
-        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp" alt="Ciudad" loading="lazy" width="400" height="520">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp" alt="Ciudad" loading="eager" width="400" height="520">
         <div class="destino-slide-label">
           <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" fill="rgba(255,255,255,0.85)"/></svg>
           <span class="destino-slide-name" id="slideLabel2">Ciudad</span>
