@@ -658,17 +658,15 @@
   /* =============================================
      BENTO GRID — Categorías de ubicación
      ============================================= */
-  /* ── DESTINOS (reemplazo bento optimizado) ── */
-  #bentoCats{background:#fff;padding:0;}
+  /* ── DESTINOS — CARRUSEL MOBILE PRO ── */
+  #bentoCats{background:#FAFAFA;padding:0;}
 
-  /* Layout principal: bloque izquierdo fijo + 3 tarjetas */
+  /* ── DESKTOP: layout grid clásico (sin cambios) ── */
   .destinos-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     min-height:520px;
   }
-
-  /* Bloque izquierdo con color sólido */
   .destinos-left{
     background:#ff853f;
     display:flex;
@@ -685,77 +683,219 @@
     letter-spacing:0.01em;
     margin:0;
   }
-
-  /* Derecha: 3 tarjetas verticales */
   .destinos-cards{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:0;
   }
-
   .destino-card{
     position:relative;
     overflow:hidden;
     cursor:pointer;
     background:#1a1a2e;
   }
-
-  /* Imagen */
   .destino-card img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
+    width:100%;height:100%;
+    object-fit:cover;display:block;
     transition:transform 0.45s cubic-bezier(0.4,0,0.2,1);
   }
   .destino-card:hover img{transform:scale(1.06);}
-
-  /* Overlay oscuro suave */
   .destino-card::after{
-    content:'';
-    position:absolute;
-    inset:0;
+    content:'';position:absolute;inset:0;
     background:linear-gradient(to top,rgba(0,0,0,0.60) 0%,rgba(0,0,0,0.12) 55%,transparent 100%);
     pointer-events:none;
   }
-
-  /* Nombre de categoría */
   .destino-label{
-    position:absolute;
-    bottom:22px;
-    left:0;right:0;
-    text-align:center;
-    font-family:'DM Sans',sans-serif;
-    font-size:15px;
-    font-weight:500;
-    letter-spacing:0.5px;
-    color:#fff;
-    z-index:1;
-    pointer-events:none;
+    position:absolute;bottom:22px;left:0;right:0;
+    text-align:center;font-family:'DM Sans',sans-serif;
+    font-size:15px;font-weight:500;letter-spacing:0.5px;
+    color:#fff;z-index:1;pointer-events:none;
   }
-
-  /* Separador vertical entre tarjetas */
   .destino-card:not(:last-child){border-right:1px solid rgba(255,255,255,0.08);}
 
-  /* ── RESPONSIVE ── */
+  /* ── MOBILE CAROUSEL — oculto en desktop ── */
+  .destinos-mobile{display:none;}
+
   @media(max-width:900px){
-    .destinos-grid{
-      grid-template-columns:1fr;
-      grid-template-rows:auto 360px;
-      height:auto;
-    }
-    .destinos-left{
-      padding:36px 28px;
-      justify-content:center;
-      min-height:220px;
-      display:flex;
-      align-items:center;
-    }
+    /* Ocultar el layout desktop */
+    .destinos-grid{display:none;}
+    /* Mostrar el carrusel mobile */
+    .destinos-mobile{display:block;}
   }
-  @media(max-width:540px){
-    .destinos-grid{grid-template-rows:auto 260px;}
-    .destino-label{font-size:13px;bottom:16px;}
+
+  /* ── CARRUSEL CONTAINER ── */
+  .destinos-mobile{
+    background:#e9dfd3;
+    padding:28px 0 40px;
+    border-radius:25px;
+    margin:30px 16px;
   }
+  .destinos-mobile-header{
+    padding:0 24px 28px;
+  }
+  .destinos-mobile-heading{
+    font-family:'DM Sans',sans-serif;
+    font-size:clamp(32px,4vw,52px);
+    font-weight:200;
+    color:var(--primary);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    margin:0;
+    max-width:14ch;
+  }
+  .destinos-mobile-heading strong{
+    font-weight:400;
+    color:var(--primary);
+  }
+
+  /* ── CAROUSEL TRACK ── */
+  /*
+    Layout: carta central ocupa ~58% del ancho, centrada.
+    Cartas laterales se posicionan con left/right fijo para que
+    asomen con margen visible a cada lado, sin depender de transform %.
+  */
+  .destinos-carousel{
+    position:relative;
+    height:400px;
+    overflow:hidden;
+    touch-action:pan-y;
+    user-select:none;
+  }
+
+  .destino-slide{
+    position:absolute;
+    width:58%;
+    height:92%;
+    top:4%;
+    /* default: oculto a la derecha */
+    left:50%;
+    transform:translateX(-50%);
+    opacity:0;
+    border-radius:20px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:left 0.48s cubic-bezier(0.4,0,0.2,1),
+                top 0.48s cubic-bezier(0.4,0,0.2,1),
+                width 0.48s cubic-bezier(0.4,0,0.2,1),
+                height 0.48s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.48s cubic-bezier(0.4,0,0.2,1),
+                box-shadow 0.48s cubic-bezier(0.4,0,0.2,1);
+    will-change:left,width,height,opacity;
+    background:#1A1A2E;
+    box-shadow:0 6px 24px rgba(0,0,0,0.15);
+  }
+  /* Carta activa: centrada, más grande, al frente */
+  .destino-slide.is-active{
+    width:58%;
+    height:92%;
+    top:4%;
+    left:21%;   /* (100% - 58%) / 2 */
+    opacity:1;
+    z-index:3;
+    box-shadow:0 16px 48px rgba(0,0,0,0.28);
+  }
+  /* Carta izquierda: asoma desde el borde izquierdo */
+  .destino-slide.is-prev{
+    width:46%;
+    height:82%;
+    top:9%;
+    left:-8%;
+    opacity:1;
+    z-index:2;
+  }
+  /* Carta derecha: asoma desde el borde derecho */
+  .destino-slide.is-next{
+    width:46%;
+    height:82%;
+    top:9%;
+    left:62%;
+    opacity:1;
+    z-index:2;
+  }
+
+  .destino-slide img{
+    width:100%;height:100%;
+    object-fit:cover;display:block;
+    pointer-events:none;
+    transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .destino-slide.is-active img{transform:scale(1.03);}
+
+  /* Gradient overlay */
+  .destino-slide::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(
+      to top,
+      rgba(0,0,0,0.70) 0%,
+      rgba(0,0,0,0.15) 45%,
+      transparent 75%
+    );
+    pointer-events:none;
+    border-radius:24px;
+  }
+
+  /* Label inside card */
+  .destino-slide-label{
+    position:absolute;
+    bottom:28px;left:0;right:0;
+    text-align:center;
+    z-index:2;
+    pointer-events:none;
+  }
+  .destino-slide-icon{
+    display:block;
+    margin:0 auto 8px;
+    opacity:0.9;
+  }
+  .destino-slide-name{
+    font-family:'DM Sans',sans-serif;
+    font-size:20px;
+    font-weight:600;
+    color:#fff;
+    letter-spacing:0.3px;
+    display:block;
+  }
+
+  /* ── DOTS ── */
+  .destinos-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:22px;
+  }
+  .destinos-dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:rgba(26,26,46,0.2);
+    transition:all 0.3s ease;
+    border:none;padding:0;cursor:pointer;
+  }
+  .destinos-dot.is-active{
+    width:22px;
+    border-radius:4px;
+    background:#ff853f;
+  }
+
+  /* ── SWIPE HINT ── */
+  .destinos-swipe-hint{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-top:18px;
+    font-family:'DM Sans',sans-serif;
+    font-size:12px;
+    color:rgba(26,26,46,0.45);
+    letter-spacing:0.3px;
+    animation:hint-fade 3s ease 1.5s both;
+  }
+  @keyframes hint-fade{
+    0%{opacity:0;transform:translateY(4px);}
+    30%{opacity:1;transform:translateY(0);}
+    70%{opacity:1;}
+    100%{opacity:0;}
+  }
+  .swipe-hand-icon{font-size:18px;}
 
   /* WHATSAPP FLOAT BUTTON */
   .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;animation:waEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;}
@@ -965,6 +1105,9 @@
     }
     .property-card:hover, .destino-card:hover{
       transform:none !important;
+    }
+    .destino-slide{
+      transition:none !important;
     }
   }
 
@@ -1284,48 +1427,75 @@
 
 <!-- BENTO GRID — Categorías de ubicación -->
 <section id="bentoCats">
+
+  <!-- ── DESKTOP: layout grid clásico ── -->
   <div class="destinos-grid">
-
-    <!-- Bloque izquierdo: fondo sólido + texto -->
     <div class="destinos-left reveal reveal-left">
-      <h2 class="destinos-heading" id="bentoKicker">Descubre tu nuevo destino</h2>
+      <h2 class="destinos-heading" id="bentoKicker">Escoge tu próximo destino</h2>
     </div>
-
-    <!-- Tres tarjetas verticales -->
     <div class="destinos-cards reveal-stagger">
-
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Playa'" data-val="Playa">
-        <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp"
-          alt="Propiedades en Playa"
-          loading="lazy" width="400" height="520"
-          style="object-fit:cover"
-        >
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp" alt="Propiedades en Playa" loading="lazy" width="400" height="520" style="object-fit:cover">
         <span class="destino-label">Playa</span>
       </div>
-
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Campo'" data-val="Montaña / Campo">
-        <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp"
-          alt="Propiedades en Campo"
-          loading="lazy" width="400" height="520"
-          style="object-fit:cover"
-        >
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp" alt="Propiedades en Campo" loading="lazy" width="400" height="520" style="object-fit:cover">
         <span class="destino-label">Campo</span>
       </div>
-
       <div class="destino-card" onclick="window.location.href='anuncios.html?zona=Ciudad'" data-val="Ciudad">
-        <img
-          src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp"
-          alt="Propiedades en Ciudad"
-          loading="lazy" width="400" height="520"
-          style="object-fit:cover"
-        >
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp" alt="Propiedades en Ciudad" loading="lazy" width="400" height="520" style="object-fit:cover">
         <span class="destino-label">Ciudad</span>
       </div>
+    </div>
+  </div>
 
-    </div><!-- /destinos-cards -->
-  </div><!-- /destinos-grid -->
+  <!-- ── MOBILE: carrusel PRO ── -->
+  <div class="destinos-mobile">
+    <div class="destinos-mobile-header reveal">
+      <h2 class="destinos-mobile-heading" id="bentoKickerMobile">Escoge tu <strong>pr&#xF3;ximo</strong> destino</h2>
+    </div>
+
+    <div class="destinos-carousel" id="destinosCarousel">
+
+      <div class="destino-slide" data-href="anuncios.html?zona=Playa">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_0_1775324563186.webp" alt="Playa" loading="lazy" width="400" height="520">
+        <div class="destino-slide-label">
+          <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M13.5 6C10.5 6 7.41 7.34 5.07 9.67L3 7.6V14h6.4l-2.08-2.07C9.07 10.1 11.24 9 13.5 9c3.54 0 6.55 2.31 7.6 5.5l2.87-.96C22.56 9.24 18.34 6 13.5 6z" fill="rgba(255,255,255,0.85)"/></svg>
+          <span class="destino-slide-name" id="slideLabel0">Playa</span>
+        </div>
+      </div>
+
+      <div class="destino-slide" data-href="anuncios.html?zona=Campo">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_1_1775324427602.webp" alt="Campo" loading="lazy" width="400" height="520">
+        <div class="destino-slide-label">
+          <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z" fill="rgba(255,255,255,0.85)"/></svg>
+          <span class="destino-slide-name" id="slideLabel1">Campo</span>
+        </div>
+      </div>
+
+      <div class="destino-slide" data-href="anuncios.html?zona=Ciudad">
+        <img src="https://cdn.jsdelivr.net/gh/estelasrealtyservices/estelas-realty@main/bento_2_1775325108140.webp" alt="Ciudad" loading="lazy" width="400" height="520">
+        <div class="destino-slide-label">
+          <svg class="destino-slide-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" fill="rgba(255,255,255,0.85)"/></svg>
+          <span class="destino-slide-name" id="slideLabel2">Ciudad</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="destinos-dots" id="destinosDots">
+      <button class="destinos-dot is-active" onclick="goToSlide(0)" aria-label="Playa"></button>
+      <button class="destinos-dot" onclick="goToSlide(1)" aria-label="Campo"></button>
+      <button class="destinos-dot" onclick="goToSlide(2)" aria-label="Ciudad"></button>
+    </div>
+
+    <div class="destinos-swipe-hint">
+      <span style="font-size:18px">&#x1F91A;</span>
+      <span id="destinosHintText">Desliza para descubrir m&#xE1;s destinos</span>
+    </div>
+
+  </div>
+
 </section>
 
 <!-- =========================================
@@ -2210,7 +2380,7 @@ const TI = {
     hab:'Hab.',banos:'Baños',park:'Park.',
     waTooltip:'¡Escríbenos al WhatsApp!',
     navHome:'Inicio',navProps:'Propiedades',navDestinos:'Destinos',navZones:'Zonas',navSvcs:'Servicios',navContact:'Contacto',navNew:'Nuevos',
-    bentoKicker:'Descubre tu nuevo destino',
+    bentoKicker:'Escoge tu próximo destino',bentoKickerMobile:'Escoge tu <strong>pr\u00f3ximo</strong> destino',destinosHint:'Desliza para descubrir más destinos',
     verMasBtn:'Ver más propiedades',
     pnKicker:'En Preventa',
     pnTitle:'Proyectos <em>nuevos</em> en Panamá',
@@ -2261,7 +2431,7 @@ const TI = {
     hab:'Bed.',banos:'Baths',park:'Park.',
     waTooltip:'Chat with us on WhatsApp!',
     navHome:'Home',navProps:'Properties',navDestinos:'Destinations',navZones:'Zones',navSvcs:'Services',navContact:'Contact',navNew:'New',
-    bentoKicker:'Go to your next destination',
+    bentoKicker:'Choose your next destination',bentoKickerMobile:'Choose your <strong>next</strong> destination',destinosHint:'Swipe to discover more destinations',
     verMasBtn:'View more listings',
     pnKicker:'Pre-sale',
     pnTitle:'New <em>projects</em> in Panama',
@@ -2375,6 +2545,13 @@ function setLang(lang){
   setEl('navLinkZones', t.navZones);
   setEl('navLinkDestinos', t.navDestinos);
   setEl('bentoKicker', t.bentoKicker);
+  setElHTML('bentoKickerMobile', t.bentoKickerMobile);
+  setEl('destinosHintText', t.destinosHint);
+  // Update slide labels
+  var slideLabels = [t.slideLabel0||'Playa', t.slideLabel1||'Campo', t.slideLabel2||'Ciudad'];
+  if(typeof t.slideLabel0 !== 'undefined'){
+    for(var _si=0;_si<3;_si++){var _sl=document.getElementById('slideLabel'+_si);if(_sl)_sl.textContent=slideLabels[_si];}
+  }
   setEl('verMasBtnText', t.verMasBtn);
   setEl('trustTitle', t.trustTitle);
   setEl('trustSubtitle', t.trustSubtitle);
@@ -2415,6 +2592,7 @@ function toggleService(card){
 }
 
 function setEl(id, txt){ const el=document.getElementById(id); if(el) el.textContent=txt; }
+function setElHTML(id, html){ const el=document.getElementById(id); if(el) el.innerHTML=html; }
 function setInnerHTML(id, html){ const el=document.getElementById(id); if(el) el.innerHTML=html; }
 function setAttr(id, attr, val){ const el=document.getElementById(id); if(el) el.setAttribute(attr, val); }
 function setOptionText(selId, idx, txt){ const sel=document.getElementById(selId); if(sel&&sel.options[idx]) sel.options[idx].text=txt; }
@@ -2750,6 +2928,94 @@ document.addEventListener('propertiesLoaded', ()=>{
 });
 
 init();
+
+
+// ── CARRUSEL DESTINOS MOBILE ────────────────────────────────────────────────
+(function(){
+  var carousel = document.getElementById('destinosCarousel');
+  if(!carousel) return;
+
+  var slides = Array.from(carousel.querySelectorAll('.destino-slide'));
+  var dots   = Array.from(document.querySelectorAll('#destinosDots .destinos-dot'));
+  var total  = slides.length;
+  var current = 0;
+  var autoplayTimer = null;
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var isDragging = false;
+
+  function updateCarousel(idx, animate){
+    current = ((idx % total) + total) % total;
+    slides.forEach(function(s, i){
+      s.classList.remove('is-active','is-prev','is-next');
+      if(i === current) s.classList.add('is-active');
+      else if(i === (current - 1 + total) % total) s.classList.add('is-prev');
+      else if(i === (current + 1) % total) s.classList.add('is-next');
+    });
+    dots.forEach(function(d, i){
+      d.classList.toggle('is-active', i === current);
+    });
+  }
+
+  function next(){ updateCarousel(current + 1); }
+  function prev(){ updateCarousel(current - 1); }
+
+  function startAutoplay(){
+    stopAutoplay();
+    autoplayTimer = setInterval(next, 3800);
+  }
+  function stopAutoplay(){
+    if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+  }
+
+  // Touch / swipe
+  carousel.addEventListener('touchstart', function(e){
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isDragging = false;
+    stopAutoplay();
+  }, {passive:true});
+
+  carousel.addEventListener('touchmove', function(e){
+    var dx = Math.abs(e.touches[0].clientX - touchStartX);
+    var dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if(dx > dy) isDragging = true;
+  }, {passive:true});
+
+  carousel.addEventListener('touchend', function(e){
+    var diff = touchStartX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 45 && isDragging){
+      diff > 0 ? next() : prev();
+    }
+    startAutoplay();
+  }, {passive:true});
+
+  // Click on active slide → navigate to property page
+  carousel.addEventListener('click', function(e){
+    var slide = e.target.closest('.destino-slide');
+    if(!slide) return;
+    if(slide.classList.contains('is-active')){
+      var href = slide.getAttribute('data-href');
+      if(href) window.location.href = href;
+    } else {
+      // Click on side card → make it active
+      var idx = slides.indexOf(slide);
+      if(idx >= 0){ updateCarousel(idx); stopAutoplay(); startAutoplay(); }
+    }
+  });
+
+  // Init
+  updateCarousel(0);
+  startAutoplay();
+
+  // Expose goToSlide for dot buttons
+  window.goToSlide = function(i){
+    updateCarousel(i);
+    stopAutoplay();
+    startAutoplay();
+  };
+})();
+// ── FIN CARRUSEL DESTINOS ───────────────────────────────────────────────────
 
 // Apply lang AFTER init (data loaded)
 document.addEventListener('DOMContentLoaded',()=>{const saved=localStorage.getItem('ers_lang')||( navigator.language?.startsWith('en')?'en':'es');setLang(saved);});
