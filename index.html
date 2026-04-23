@@ -1301,7 +1301,7 @@
 
     /* ── CONTENEDOR CARD con margen y bordes redondeados ── */
     .pn-mobile-box{
-      background:#f4f4f2;
+      background:#eef0f3;
       border-radius:25px;
       margin:30px 16px;
       padding:25px 15px 40px;
@@ -1314,8 +1314,14 @@
 
     /* Título y subtítulo propios del box mobile */
     .pn-mobile-title{
-      font-size:26px;font-weight:300;max-width:none;
-      margin-bottom:6px;letter-spacing:-0.01em;
+      font-family:'DM Sans',sans-serif;
+      font-size:clamp(32px,4vw,52px);
+      font-weight:200;
+      color:var(--primary);
+      line-height:1.05;
+      letter-spacing:-0.01em;
+      margin:0 0 6px;
+      max-width:14ch;
     }
     .pn-mobile-sub{
       font-size:13px;font-weight:300;color:var(--text2);
@@ -1343,7 +1349,7 @@
       border-radius:16px;
       overflow:hidden;
       box-shadow:none;
-      border:1px solid rgba(0,0,0,0.06);
+      border:none;
       position:relative;
       transform:scale(0.97);
       opacity:0.75;
@@ -1414,7 +1420,8 @@
     }
     .pn-mobile-card-name{
       font-family:'DM Sans',sans-serif;
-      font-size:17px;font-weight:500;color:var(--primary);
+      font-size:20px;
+      font-weight:500;color:var(--primary);
       line-height:1.2;letter-spacing:-0.01em;
       flex:1;min-width:0;
     }
