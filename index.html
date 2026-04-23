@@ -474,9 +474,9 @@
     .nav-cta span{display:none;}
 
     /* HERO */
-    .hero{padding:36px 16px 48px;min-height:auto;}
-    .hero h1{font-size:30px;margin-top:32px;margin-bottom:32px;letter-spacing:0;}
-    .hero p{font-size:14px;margin-bottom:24px;}
+    .hero{padding:36px 16px 80px;min-height:auto;}
+    .hero h1{font-size:30px;margin-top:32px;margin-bottom:36px;letter-spacing:0;}
+    .hero p{font-size:14px;margin-bottom:40px;}
     .hero-tag{font-size:11px;padding:5px 12px;}
 
     /* ============================================
@@ -1291,16 +1291,187 @@
     .pn-hero-main{aspect-ratio:16/10;}
   }
   @media(max-width:768px){
-    #proyectos-nuevos{padding:56px 0 64px;scroll-margin-top:70px;}
-    .pn-header{grid-template-columns:1fr;gap:18px;margin-bottom:32px;}
-    .pn-title{font-size:30px;}
-    .pn-subtitle{text-align:left;max-width:100%;}
-    .pn-hero-main{aspect-ratio:4/3;}
-    .pn-hero-item{grid-template-columns:40px 1fr auto;gap:12px;padding:16px 0;}
-    .pn-hero-info h3{font-size:15px;}
-    .pn-hero-price{font-size:13px;}
-    .pn-badge{top:10px;left:10px;font-size:9px;padding:4px 8px 4px 6px;letter-spacing:1.2px;}
-    .pn-hero-main .pn-badge{top:14px;left:14px;}
+    /* ── SECCIÓN: fondo exterior #FAFAFA sin padding lateral ── */
+    #proyectos-nuevos{
+      padding:0;
+      scroll-margin-top:70px;
+      background:#FAFAFA;
+    }
+    #proyectos-nuevos .container{padding:0;}
+
+    /* ── CONTENEDOR CARD con margen y bordes redondeados ── */
+    .pn-mobile-box{
+      background:#f4f4f2;
+      border-radius:25px;
+      margin:30px 16px;
+      padding:25px 15px 40px;
+      overflow:hidden;
+    }
+
+    /* MOBILE: ocultar todo el layout editorial desktop */
+    .pn-header{display:none;}
+    .pn-hero{display:none;}
+
+    /* Título y subtítulo propios del box mobile */
+    .pn-mobile-title{
+      font-size:26px;font-weight:300;max-width:none;
+      margin-bottom:6px;letter-spacing:-0.01em;
+    }
+    .pn-mobile-sub{
+      font-size:13px;font-weight:300;color:var(--text2);
+      margin-bottom:18px;line-height:1.6;
+    }
+
+    /* SLIDER CARD */
+    .pn-mobile-slider{
+      display:flex;
+      gap:12px;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:4px;
+      scrollbar-width:none;
+      scroll-padding-left:0;
+    }
+    .pn-mobile-slider::-webkit-scrollbar{display:none;}
+
+    /* CARD individual — sin sombra de fondo */
+    .pn-mobile-card{
+      flex:0 0 100%;
+      scroll-snap-align:center;
+      background:var(--surface);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:none;
+      border:1px solid rgba(0,0,0,0.06);
+      position:relative;
+      transform:scale(0.97);
+      opacity:0.75;
+      transition:transform 0.4s ease, opacity 0.4s ease;
+      will-change:transform,opacity;
+    }
+    .pn-mobile-card.is-active{
+      transform:scale(1);
+      opacity:1;
+    }
+
+    /* Imagen card */
+    .pn-mobile-card-img{
+      position:relative;
+      width:100%;
+      aspect-ratio:4/3;
+      overflow:hidden;
+      background:var(--surface2);
+    }
+    /* Shimmer skeleton para lazy-load */
+    .pn-mobile-card-img::before{
+      content:'';
+      position:absolute;inset:0;
+      background:linear-gradient(90deg,#ececec 25%,#f8f8f8 50%,#ececec 75%);
+      background-size:400px 100%;
+      animation:pnShimmer 1.4s ease-in-out infinite;
+      z-index:1;
+      transition:opacity 0.3s ease;
+    }
+    .pn-mobile-card-img.img-loaded::before{opacity:0;pointer-events:none;}
+    @keyframes pnShimmer{
+      0%{background-position:-400px 0;}
+      100%{background-position:400px 0;}
+    }
+    .pn-mobile-card-img img{
+      width:100%;height:100%;object-fit:cover;display:block;
+      position:relative;z-index:2;
+      opacity:0;transition:opacity 0.4s ease;
+    }
+    .pn-mobile-card-img.img-loaded img{opacity:1;}
+
+    /* Badge sobre imagen */
+    .pn-mobile-card-badge{
+      position:absolute;top:12px;left:12px;z-index:3;
+      display:inline-flex;align-items:center;gap:5px;
+      background:rgba(255,255,255,0.95);color:var(--primary);
+      padding:4px 10px 4px 8px;border-radius:20px;
+      font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      box-shadow:0 2px 8px rgba(0,0,0,0.10);
+    }
+    .pn-mobile-card-badge::before{
+      content:'';width:5px;height:5px;border-radius:50%;
+      background:var(--accent);
+      animation:pnPulse 2.2s ease-in-out infinite;
+    }
+
+    /* Cuerpo card */
+    .pn-mobile-card-body{padding:14px 16px 18px;}
+    .pn-mobile-card-status{
+      font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--text3);margin-bottom:8px;
+    }
+
+    /* Nombre + ubicación en la misma fila */
+    .pn-mobile-card-title-row{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      gap:8px;margin-bottom:0;
+    }
+    .pn-mobile-card-name{
+      font-family:'DM Sans',sans-serif;
+      font-size:17px;font-weight:500;color:var(--primary);
+      line-height:1.2;letter-spacing:-0.01em;
+      flex:1;min-width:0;
+    }
+    .pn-mobile-card-zone{
+      display:flex;align-items:center;gap:3px;
+      font-size:11px;color:var(--text3);font-weight:400;
+      white-space:nowrap;flex-shrink:0;padding-top:2px;
+    }
+    .pn-mobile-card-zone .material-icons{font-size:12px;color:var(--accent);}
+
+    .pn-mobile-card-divider{height:1px;background:var(--border);margin:12px 0;}
+    .pn-mobile-card-price-row{display:flex;align-items:center;justify-content:space-between;}
+    .pn-mobile-card-price{
+      font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif;
+      font-size:22px;font-weight:800;color:var(--primary);
+      letter-spacing:-0.5px;line-height:1;
+    }
+    .pn-mobile-card-price small{
+      display:block;font-size:10px;font-weight:400;
+      color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;
+    }
+    .pn-mobile-card-cta{
+      display:inline-flex;align-items:center;justify-content:center;
+      background:var(--primary);color:white;
+      border:none;padding:10px 20px;border-radius:8px;
+      font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+      cursor:pointer;transition:var(--transition);white-space:nowrap;
+    }
+    .pn-mobile-card-cta:active{background:var(--accent);color:var(--primary);}
+
+    /* DOTS indicadores */
+    .pn-mobile-dots{
+      display:flex;align-items:center;justify-content:center;
+      gap:6px;margin-top:18px;
+    }
+    .pn-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:rgba(26,26,46,0.18);transition:all 0.35s ease;
+      border:none;padding:0;cursor:pointer;
+    }
+    .pn-dot.active{background:var(--primary);width:22px;border-radius:4px;}
+
+    /* LINK inferior */
+    .pn-mobile-more{
+      display:flex;align-items:center;justify-content:center;
+      margin-top:22px;
+      font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+      color:var(--primary);text-decoration:underline;text-underline-offset:3px;
+      text-decoration-color:rgba(26,26,46,0.3);
+      transition:var(--transition);gap:4px;
+    }
+    .pn-mobile-more:active{color:var(--accent);}
+  }
+
+  /* En desktop ocultar elementos mobile */
+  @media(min-width:769px){
+    .pn-mobile-box,.pn-mobile-slider,.pn-mobile-dots,.pn-mobile-more,.pn-mobile-sub,.pn-mobile-title{display:none;}
   }
 
 </style>
@@ -1535,6 +1706,20 @@
       </div>
     </div>
 
+    <!-- MOBILE SLIDER (visible solo en ≤768px, renderizado por JS) -->
+    <div class="pn-mobile-box">
+      <h2 class="pn-title pn-mobile-title" id="pnTitleMob">Proyectos <em>nuevos</em> en Panamá</h2>
+      <p class="pn-mobile-sub">Diseños en construcción con precios de lanzamiento.</p>
+      <div class="pn-mobile-slider" id="pnMobileSlider">
+        <!-- cards inyectadas por renderNewProjects() -->
+      </div>
+      <div class="pn-mobile-dots" id="pnMobileDots"></div>
+      <a href="anuncios.html?tipo=proyecto-nuevo" class="pn-mobile-more" id="pnMobileMore">
+        <span>Conocer todos los proyectos en preventa</span>
+        <span class="material-icons" style="font-size:15px">arrow_forward</span>
+      </a>
+    </div>
+
   </div>
 </section>
 
@@ -1759,9 +1944,9 @@ const DEFAULT_HERO = [
 // Proyectos nuevos — default. Puede sobrescribirse desde site_config.new_projects (array de objetos).
 // Campos: name, price, img (URL), status ('preventa'|'construccion'), delivery (año)
 const DEFAULT_NEW_PROJECTS = [
-  { name:'Bosco di Santa Maria',     price:'$485,000', img:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2027' },
-  { name:'Uptown Marbella',          price:'$320,000', img:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80', status:'construccion', delivery:'2028' },
-  { name:'Brisas del Pacífico Sur',  price:'$245,000', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2028' },
+  { name:'Bosco di Santa Maria',     price:'$485,000', img:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2027', zone:'Santa María, Panamá' },
+  { name:'Uptown Marbella',          price:'$320,000', img:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80', status:'construccion', delivery:'2028', zone:'Marbella, Panamá' },
+  { name:'Brisas del Pacífico Sur',  price:'$245,000', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80', status:'preventa',     delivery:'2028', zone:'Playa Coronado' },
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -2008,7 +2193,95 @@ function renderNewProjects(projects){
     it.addEventListener('click', () => { pnSetHero(i); pnStopAuto(); });
   });
 
+  // --- MOBILE SLIDER — lazy-load + is-active scale + autoplay inteligente ---
+  const mobileSlider = document.getElementById('pnMobileSlider');
+  const mobileDots   = document.getElementById('pnMobileDots');
+  if(mobileSlider){
+    mobileSlider.innerHTML = projectsData.map((p,i) => {
+      const waMsg = encodeURIComponent('Hola! Me interesa el proyecto ' + p.name + ' · Precio desde ' + p.price);
+      return '<div class="pn-mobile-card' + (i===0?' is-active':'') + '" data-idx="' + i + '">'
+        + '<div class="pn-mobile-card-img" data-src="' + (p.img||'') + '">'
+        + '<img alt="' + (p.name||'') + '" decoding="async">'
+        + '<span class="pn-mobile-card-badge">' + t.pnBadge + '</span>'
+        + '</div>'
+        + '<div class="pn-mobile-card-body">'
+        + '<div class="pn-mobile-card-status">' + statusLabel(p.status) + ' &middot; ' + t.pnEntrega + ' ' + (p.delivery||'') + '</div>'
+        + '<div class="pn-mobile-card-title-row">'
+        + '<div class="pn-mobile-card-name">' + (p.name||'') + '</div>'
+        + ((p.zone) ? '<div class="pn-mobile-card-zone"><span class="material-icons">location_on</span>' + p.zone + '</div>' : '')
+        + '</div>'
+        + '<div class="pn-mobile-card-divider"></div>'
+        + '<div class="pn-mobile-card-price-row">'
+        + '<div class="pn-mobile-card-price"><small>' + t.pnDesde + '</small>' + (p.price||'') + '</div>'
+        + '<button class="pn-mobile-card-cta" data-wa="' + ('https://wa.me/50766740090?text=' + waMsg) + '">Me interesa</button>'
+        + '</div></div></div>';
+    }).join('');
+
+    // Handler delegado — botón "Me interesa" usa data-wa para evitar conflicto de comillas
+    mobileSlider.addEventListener('click', (e) => {
+      const btn = e.target.closest('.pn-mobile-card-cta');
+      if(btn && btn.dataset.wa) window.open(btn.dataset.wa, '_blank');
+    });
+
+    // Lazy-load: carga img solo cuando la card entra en viewport
+    const lazyLoadCard = (card) => {
+      const imgWrap = card.querySelector('.pn-mobile-card-img');
+      if(!imgWrap || imgWrap.dataset.loaded) return;
+      const src = imgWrap.dataset.src;
+      if(!src) return;
+      imgWrap.dataset.loaded = '1';
+      const img = imgWrap.querySelector('img');
+      img.onload = () => imgWrap.classList.add('img-loaded');
+      img.onerror = () => imgWrap.classList.add('img-loaded');
+      img.src = src;
+    };
+
+    // Primera card de inmediato
+    const firstCard = mobileSlider.querySelector('.pn-mobile-card');
+    if(firstCard) lazyLoadCard(firstCard);
+
+    // IntersectionObserver para lazy-load de las demás
+    if('IntersectionObserver' in window){
+      const imgIO = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if(e.isIntersecting){ lazyLoadCard(e.target); imgIO.unobserve(e.target); } });
+      }, { rootMargin:'100px' });
+      mobileSlider.querySelectorAll('.pn-mobile-card').forEach(c => imgIO.observe(c));
+    } else {
+      mobileSlider.querySelectorAll('.pn-mobile-card').forEach(lazyLoadCard);
+    }
+
+    // Dots
+    if(mobileDots){
+      mobileDots.innerHTML = projectsData.map((_,i) =>
+        '<button class="pn-dot' + (i===0?' active':'') + '" data-idx="' + i + '" onclick="pnMobileGoTo(' + i + ')" aria-label="Proyecto ' + (i+1) + '"></button>'
+      ).join('');
+    }
+
+    // Actualizar is-active + dots en scroll (throttled con rAF)
+    let pnScrollRaf = null;
+    mobileSlider.addEventListener('scroll', () => {
+      if(pnScrollRaf) return;
+      pnScrollRaf = requestAnimationFrame(() => {
+        pnScrollRaf = null;
+        const cardW = (mobileSlider.querySelector('.pn-mobile-card') || {offsetWidth: mobileSlider.offsetWidth}).offsetWidth;
+        const idx = Math.round(mobileSlider.scrollLeft / (cardW + 12));
+        mobileSlider.querySelectorAll('.pn-mobile-card').forEach((c,i) => c.classList.toggle('is-active', i===idx));
+        document.querySelectorAll('.pn-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+        // lazy-load próxima card
+        const nextCard = mobileSlider.querySelector('.pn-mobile-card[data-idx="' + (idx+1) + '"]');
+        if(nextCard) lazyLoadCard(nextCard);
+        // usuario interactuó → pausar autoplay mobile
+        pnMobileUserScrolled = true;
+        pnMobileStopAuto();
+      });
+    }, {passive:true});
+
+    // Iniciar autoplay mobile inteligente
+    pnMobileStartAuto();
+  }
+
   // Auto-rotación con IntersectionObserver — solo instalar una vez
+    // Auto-rotación con IntersectionObserver — solo instalar una vez
   if(!pnIOInstalled){
     const root = document.getElementById('proyectos-nuevos');
     if(root){
@@ -2045,6 +2318,61 @@ function pnStartAuto(){
   pnTimer = setInterval(()=>pnSetHero((pnIdx+1) % projectsData.length), 5000);
 }
 function pnStopAuto(){ if(pnTimer){ clearInterval(pnTimer); pnTimer = null; } }
+
+function pnMobileGoTo(idx){
+  const slider = document.getElementById('pnMobileSlider');
+  if(!slider) return;
+  const card = slider.querySelector('.pn-mobile-card[data-idx="' + idx + '"]');
+  if(card){
+    // scroll programático
+    const cardW = card.offsetWidth;
+    slider.scrollTo({ left: idx * (cardW + 12), behavior: 'smooth' });
+  }
+  slider.querySelectorAll('.pn-mobile-card').forEach((c,i) => c.classList.toggle('is-active', i===idx));
+  document.querySelectorAll('.pn-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+}
+
+// ── Autoplay mobile inteligente ──────────────────────────────────
+let pnMobileTimer = null;
+let pnMobileIdx   = 0;
+let pnMobileUserScrolled = false;
+
+function pnMobileStartAuto(){
+  pnMobileStopAuto();
+  if(typeof projectsData === 'undefined' || projectsData.length < 2) return;
+  // Solo arrancar si la sección es visible
+  const section = document.getElementById('proyectos-nuevos');
+  if(!section) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting && !pnMobileUserScrolled){
+        if(!pnMobileTimer){
+          pnMobileTimer = setInterval(() => {
+            if(pnMobileUserScrolled){ pnMobileStopAuto(); return; }
+            pnMobileIdx = (pnMobileIdx + 1) % projectsData.length;
+            pnMobileGoTo(pnMobileIdx);
+          }, 4000);
+        }
+      } else {
+        pnMobileStopAuto();
+      }
+    });
+  }, { threshold: 0.5 });
+  io.observe(section);
+
+  // Cuando el usuario vuelve a tocar, reseteamos la bandera tras un rato
+  const slider = document.getElementById('pnMobileSlider');
+  if(slider){
+    slider.addEventListener('touchstart', () => {
+      pnMobileUserScrolled = true;
+      pnMobileStopAuto();
+    }, {passive:true, once:false});
+  }
+}
+function pnMobileStopAuto(){
+  if(pnMobileTimer){ clearInterval(pnMobileTimer); pnMobileTimer = null; }
+}
 
 // ---- SOCIAL ICONS ----
 const SOCIAL_SVGS = {
@@ -2399,8 +2727,11 @@ const TI = {
     verMasBtn:'Ver más propiedades',
     pnKicker:'En Preventa',
     pnTitle:'Proyectos <em>nuevos</em> en Panamá',
+    pnTitleMob:'Proyectos <em>nuevos</em> en Panamá',
     pnSubtitle:'Diseños en construcción con precios de lanzamiento. Selección curada por nuestro equipo.',
+    pnMobileSub:'Diseños en construcción con precios de lanzamiento.',
     pnCta:'Ver todos los proyectos nuevos',
+    pnMobileMore:'Conocer todos los proyectos en preventa',
     pnDesde:'Desde',pnBadge:'Nuevo',
     pnPreventa:'Preventa',pnConstruccion:'En construcción',pnEntrega:'Entrega',
     trustTitle:'Somos el referente de confianza en el mercado inmobiliario panameño.',
@@ -2450,8 +2781,11 @@ const TI = {
     verMasBtn:'View more listings',
     pnKicker:'Pre-sale',
     pnTitle:'New <em>projects</em> in Panama',
+    pnTitleMob:'Buy a new property in <em>Panamá</em>',
     pnSubtitle:'Designs under construction at launch prices. Curated selection by our team.',
+    pnMobileSub:'Designs under construction at launch prices.',
     pnCta:'View all new projects',
+    pnMobileMore:'See all pre-sale projects',
     pnDesde:'From',pnBadge:'New',
     pnPreventa:'Pre-sale',pnConstruccion:'Under construction',pnEntrega:'Delivery',
     trustTitle:"We are the trusted benchmark in Panama's real estate market.",
@@ -2588,9 +2922,15 @@ function setLang(lang){
   // Proyectos nuevos (franja)
   setEl('pnKicker', t.pnKicker);
   setInnerHTML('pnTitle', t.pnTitle);
+  setInnerHTML('pnTitleMob', t.pnTitleMob);
   setEl('pnSubtitle', t.pnSubtitle);
   setEl('pnCtaText', t.pnCta);
   setEl('pnBadgeNuevo', t.pnBadge);
+  // Mobile-only strings
+  const pnMobileSubEl = document.querySelector('.pn-mobile-sub');
+  if(pnMobileSubEl) pnMobileSubEl.textContent = t.pnMobileSub;
+  const pnMobileMoreEl = document.getElementById('pnMobileMore');
+  if(pnMobileMoreEl){ const span = pnMobileMoreEl.querySelector('span:first-child'); if(span) span.textContent = t.pnMobileMore; }
   // Re-render lista lateral para traducir etiquetas de estado/entrega/desde
   if(projectsData && projectsData.length) renderNewProjects(projectsData);
 
