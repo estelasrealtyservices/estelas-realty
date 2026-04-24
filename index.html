@@ -2085,16 +2085,14 @@ function renderBento(bentoConfig) {
       <span class="destino-label">${c.tag||c.val}</span>
     </div>`).join('');
 
-  // ── Mobile carousel — actualizar imágenes con URLs reales de Supabase ──
+  // ── Mobile carousel — actualizar background-image con URLs reales de Supabase ──
   const mobileSlides = document.querySelectorAll('#destinosCarousel .destino-slide');
   slice.forEach((c, i) => {
     const slide = mobileSlides[i];
-    if (!slide || !c.img) return;
-    const img = slide.querySelector('img');
-    if (img) {
+    if (!slide) return;
+    if (c.img) {
       const src = IMG.cf(c.img, { w: 600, q: 80 });
-      img.src = src;
-      img.alt = c.tag || c.val;
+      slide.style.backgroundImage = `url('${src}')`;
     }
     // Actualizar también el data-href y el label
     slide.setAttribute('data-href', `anuncios.html?zona=${encodeURIComponent(c.val)}`);
